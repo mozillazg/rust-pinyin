@@ -39,13 +39,13 @@ enum Styles {
 }
 
 // 声母表
-const initials: Vec<&str> = vec![
+const initials: [&'static str; 24] = [
     "zh", "ch", "sh", "b", "p", "m", "f", "d", "t", "n", "l", "g",
     "k", "h", "j", "q", "x", "r", "z", "c", "s", "yu", "y", "w",
 ];
 
 // 所有带声调的字符
-const rePhoneticSymbol: &str = (
+const rePhoneticSymbol: &'static str = (
     "āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň"
 );
 
@@ -63,42 +63,45 @@ pub struct Args {
 }
 //
 // 默认配置：风格
-const Style: Styles = NORMAL;
+const Style: Styles = Styles::NORMAL;
 
 // 默认配置：是否启用多音字模式
 const Heteronym: bool = false;
 
 // 默认配置： `Slug` 中 Join 所用的分隔符
-const Separator: String = "-";
+const Separator: &'static str = "-";
 
 // NewArgs 返回包含默认配置的 `Args`
 pub fn NewArgs() -> Args {
     return Args{
         style: Style,
         heteronym: Heteronym,
-        separator: Separator,
+        separator: Separator.to_string(),
     }
 }
 
 // 获取单个拼音中的声母
-fn initial(p: &str) -> &str {
-    let s = "";
-    for v in initials {
+fn initial(p: &str) -> String {
+    let mut s = "".to_string();
+    for v in initials.iter() {
         if p.starts_with(v) {
-            s = v;
+            s = v.to_string();
             break;
         }
     }
-    return s;
+    s
 }
 
 // 获取单个拼音中的韵母
-fn _final(p: &str) -> &str {
-    let i = initial(p);
+fn _final(p: &str) -> String {
+    let i = initial(&p);
     if i == "" {
-        return p;
+        return p.to_string();
     }
-    return p.splitn(2, i).collect().concat();
+    // let s: Vec<&str> = p.splitn(2, i).collect();
+    let s = p.splitn(2, i);
+    // s.concat()
+    s.to_string()
 }
 
 // func toFixed(p string, a Args) string {
