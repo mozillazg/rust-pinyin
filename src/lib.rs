@@ -4,18 +4,15 @@ extern crate lazy_static;
 use std::ascii::AsciiExt;
 use std::collections::HashMap;
 
-// pub use pinyin_dict;
 mod pinyin_dict;
 mod phonetic_symbol;
 
 lazy_static! {
     static ref PINYINMAP: HashMap<&'static str, &'static str> = {
-        let m = pinyin_dict::init();
-        m
+        pinyin_dict::init()
     };
     static ref PHONETICSYMBOL: HashMap<&'static str, &'static str> = {
-        let m = phonetic_symbol::init();
-        m
+        phonetic_symbol::init()
     };
 }
 
@@ -55,7 +52,6 @@ const rePhoneticSymbol: &'static str = (
 // // 匹配使用数字标识声调的字符的正则表达式
 // var reTone2 = regexp.MustCompile("([aeoiuvnm])([0-4])$")
 //
-// Args 配置信息
 pub struct Args {
     style:     Style,    // 拼音风格（默认： NORMAL)
     heteronym: bool,   // 是否启用多音字模式（默认：禁用）
@@ -63,8 +59,8 @@ pub struct Args {
 }
 
 impl Args {
-    fn New() -> Args {
-        Args{
+    pub fn new() -> Args {
+        Args {
             style: Style::Normal,
             heteronym: false,
             separator: "-".to_string(),
@@ -135,36 +131,33 @@ fn _final(p: &str) -> String {
 //     return newP
 // }
 //
-// // SinglePinyin 把单个 `rune` 类型的汉字转换为拼音.
-// func SinglePinyin(r rune, a Args) []string {
-//     value, ok := PinyinDict[int(r)]
-//     pys := []string{}
-//     if ok {
-//         if len(value) < 1 || a.Heteronym {
-//             pys = strings.Split(value, ",")
-//         } else {
-//             pys = strings.Split(value, ",")[:1]
-//         }
-//     }
-//     return applyStyle(pys, a)
-// }
+fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<&'a str> {
+    let ret: Vec<&str>;
+    let x: String = c.escape_unicode().collect();
+    let s: &str = &x;
 
-// Pinyin 汉字转拼音，支持多音字模式.
-pub fn pinyin(s: &str) -> Vec<&str> {
-    let mut ret = vec![""];
-    let v: Vec<char> = s.chars().collect();
-    for n in v {
-        let m1: String = n.escape_unicode().collect();
-        // let m2: String = m1.trim_matches(' ').to_ascii_uppercase();
-        // let m: &str = m2.trim_matches(' ');
-        let m: &str = m1.trim_matches(' ');
-        match PINYINMAP.get(m) {
-            Some(&pys) => {
-                ret = pys.split(',').collect();
-            },
-            None => {
+    match PINYINMAP.get(s) {
+        Some(&pys) => {
+            let x: Vec<&str> = pys.split(',').collect();
+            if a.heteronym {
+                ret = x;
+            } else {
+                ret = vec![x[0]];
             }
+        },
+        None => {
+            ret = vec![];
         }
+    }
+    return ret;
+    // return applyStyle(pys, a)
+}
+
+pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<&'a str> {
+    let mut ret = vec![""];
+    let chars: Vec<char> = s.chars().collect();
+    for c in chars {
+        ret = single_pinyin(c, a);
     }
     return ret
 }
