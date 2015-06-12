@@ -19,23 +19,23 @@ lazy_static! {
     };
 }
 
-const NORMAL: u32       = 0; // 普通风格，不带声调（默认风格）。如： pin yin
-const TONE: u32         = 1; // 声调风格1，拼音声调在韵母第一个字母上。如： pīn yīn
-const TONE2: u32        = 2; // 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： pi1n yi1n
-const INITIALS: u32     = 3; // 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 zh g
-const FIRST_LETTER: u32 = 4; // 首字母风格，只返回拼音的首字母部分。如： p y
-const FINALS: u32       = 5; // 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： ong uo
-const FINALS_TONE: u32  = 6; // 韵母风格2，带声调，声调在韵母第一个字母上。如： ōng uó
-const FINALS_TONE2: u32 = 7; // 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： o1ng uo2
-enum Styles {
-    NORMAL,
-    TONE,
-    TONE2,
-    INITIALS,
-    FIRST_LETTER,
-    FINALS,
-    FINALS_TONE,
-    FINALS_TONE2,
+enum Style {
+    // 普通风格，不带声调（默认风格）。如： pin yin
+    Normal,
+    // 声调风格1，拼音声调在韵母第一个字母上。如： pīn yīn
+    Tone,
+    // 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： pi1n yi1n
+    Tone2,
+    // 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 zh g
+    Initials,
+    // 首字母风格，只返回拼音的首字母部分。如： p y
+    FirstLetter,
+    // 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： ong uo
+    Finals,
+    // 韵母风格2，带声调，声调在韵母第一个字母上。如： ōng uó
+    FinalsTone,
+    // 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： o1ng uo2
+    FinalsTone2,
 }
 
 // 声母表
@@ -57,35 +57,27 @@ const rePhoneticSymbol: &'static str = (
 //
 // Args 配置信息
 pub struct Args {
-    style:     Styles,    // 拼音风格（默认： NORMAL)
+    style:     Style,    // 拼音风格（默认： NORMAL)
     heteronym: bool,   // 是否启用多音字模式（默认：禁用）
     separator: String, // Slug 中使用的分隔符（默认：-)
 }
-//
-// 默认配置：风格
-const Style: Styles = Styles::NORMAL;
 
-// 默认配置：是否启用多音字模式
-const Heteronym: bool = false;
-
-// 默认配置： `Slug` 中 Join 所用的分隔符
-const Separator: &'static str = "-";
-
-// NewArgs 返回包含默认配置的 `Args`
-pub fn NewArgs() -> Args {
-    return Args{
-        style: Style,
-        heteronym: Heteronym,
-        separator: Separator.to_string(),
+impl Args {
+    fn New() -> Args {
+        Args{
+            style: Style::Normal,
+            heteronym: false,
+            separator: "-".to_string(),
+        }
     }
 }
 
 // 获取单个拼音中的声母
-fn initial(p: &str) -> String {
-    let mut s = "".to_string();
+fn initial(p: &str) -> &str {
+    let mut s = "";
     for v in initials.iter() {
         if p.starts_with(v) {
-            s = v.to_string();
+            s = v;
             break;
         }
     }
@@ -94,14 +86,12 @@ fn initial(p: &str) -> String {
 
 // 获取单个拼音中的韵母
 fn _final(p: &str) -> String {
-    let i = initial(&p);
+    let i = initial(p);
     if i == "" {
         return p.to_string();
     }
-    // let s: Vec<&str> = p.splitn(2, i).collect();
-    let s = p.splitn(2, i);
-    // s.concat()
-    s.to_string()
+    let s: Vec<&str> = p.splitn(2, i).collect();
+    s.concat()
 }
 
 // func toFixed(p string, a Args) string {
@@ -177,27 +167,4 @@ pub fn pinyin(s: &str) -> Vec<&str> {
         }
     }
     return ret
-}
-
-// LazyPinyin 汉字转拼音，与 `Pinyin` 的区别是：
-// 返回值类型不同，并且不支持多音字模式，每个汉字只取第一个音.
-// func LazyPinyin(s string, a Args) []string {
-//     a.Heteronym = false
-//     pys := []string{}
-//     for _, v := range Pinyin(s, a) {
-//         pys = append(pys, v[0])
-//     }
-//     return pys
-// }
-
-// // Slug join `LazyPinyin` 的返回值.
-// func Slug(s string, a Args) string {
-//     separator := a.Separator
-//     return strings.Join(LazyPinyin(s, a), separator)
-// }
-
-
-#[test]
-fn it_works() {
-    // assert_eq!(PINYINMAP.get(&0x36B0), Some(&"bǐ"));
 }
