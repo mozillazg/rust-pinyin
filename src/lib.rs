@@ -8,7 +8,7 @@ mod pinyin_dict;
 mod phonetic_symbol;
 
 lazy_static! {
-    static ref PINYINMAP: HashMap<&'static str, &'static str> = {
+    static ref PINYINMAP: HashMap<u32, &'static str> = {
         pinyin_dict::init()
     };
     static ref PHONETICSYMBOL: HashMap<&'static str, &'static str> = {
@@ -134,9 +134,9 @@ fn _final(p: &str) -> String {
 fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<&'a str> {
     let ret: Vec<&str>;
     let x: String = c.escape_unicode().collect();
-    let s: &str = &x;
+    let n: u32 = x.parse().unwrap();
 
-    match PINYINMAP.get(s) {
+    match PINYINMAP.get(&n) {
         Some(&pys) => {
             let x: Vec<&str> = pys.split(',').collect();
             if a.heteronym {
