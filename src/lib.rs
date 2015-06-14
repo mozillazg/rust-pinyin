@@ -6,22 +6,22 @@ use std::collections::HashMap;
 static PINYINMAP: phf::Map<u32, &'static str> =
     include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
-enum Style {
-    // 普通风格，不带声调（默认风格）。如： pin yin
+pub enum Style {
+    // 普通风格，不带声调（默认风格）。如： `pin yin`
     Normal,
-    // 声调风格1，拼音声调在韵母第一个字母上。如： pīn yīn
+    // 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`
     Tone,
-    // 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： pi1n yi1n
+    // 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
     Tone2,
-    // 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 zh g
+    // 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`
     Initials,
-    // 首字母风格，只返回拼音的首字母部分。如： p y
+    // 首字母风格，只返回拼音的首字母部分。如： `p y`
     FirstLetter,
-    // 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： ong uo
+    // 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
     Finals,
-    // 韵母风格2，带声调，声调在韵母第一个字母上。如： ōng uó
+    // 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`
     FinalsTone,
-    // 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： o1ng uo2
+    // 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
     FinalsTone2,
 }
 
@@ -43,9 +43,9 @@ const rePhoneticSymbol: &'static str = (
 // var reTone2 = regexp.MustCompile("([aeoiuvnm])([0-4])$")
 //
 pub struct Args {
-    style:     Style,    // 拼音风格（默认： NORMAL)
-    heteronym: bool,   // 是否启用多音字模式（默认：禁用）
-    separator: String, // Slug 中使用的分隔符（默认：-)
+    pub style:     Style,    // 拼音风格（默认： NORMAL)
+    pub heteronym: bool,   // 是否启用多音字模式（默认：禁用）
+    pub separator: String, // Slug 中使用的分隔符（默认：-)
 }
 
 impl Args {

@@ -1,7 +1,9 @@
 extern crate pinyin;
 
 pub fn main() {
-    for v in  pinyin::pinyin("中", &pinyin::Args::new()) {
+    let mut args = pinyin::Args::new();
+    args.heteronym = true;
+    for v in  pinyin::pinyin("中", &args) {
         println!("{}", v);
     }
 }
