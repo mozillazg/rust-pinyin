@@ -133,13 +133,15 @@ fn _final(p: &str) -> String {
 //
 fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<&'a str> {
     let ret: Vec<&str>;
-    let x: String = c.escape_unicode().collect();
-    let n: u32 = x.parse().unwrap();
+    // let x: String = c.escape_unicode().collect();
+    println!("{}", c);
+    let n: u32 = c as u32;
+    println!("{}", n);
 
     match PINYINMAP.get(&n) {
         Some(&pys) => {
             let x: Vec<&str> = pys.split(',').collect();
-            if a.heteronym {
+            if x.len() == 0 || a.heteronym {
                 ret = x;
             } else {
                 ret = vec![x[0]];
