@@ -9,7 +9,11 @@ repository = "https://github.com/mozillazg/rust-pinyin"
 description = "Convert Chinese to pinyin"
 documentation = "http://www.rust-ci.org/mozillazg/rust-pinyin/doc/pinyin/"
 keywords = ["拼音", "pinyin"]
+build = "src/build.rs"
 
 [dependencies]
 regex = "0.1.8"
-lazy_static = "0.1.*"
+phf = "*"
+
+[build-dependencies]
+phf_codegen = "*"

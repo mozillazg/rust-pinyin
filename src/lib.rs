@@ -1,20 +1,10 @@
-#[macro_use]
-extern crate lazy_static;
+extern crate phf;
 
 use std::ascii::AsciiExt;
 use std::collections::HashMap;
 
-mod pinyin_dict;
-mod phonetic_symbol;
-
-lazy_static! {
-    static ref PINYINMAP: HashMap<u32, &'static str> = {
-        pinyin_dict::init()
-    };
-    static ref PHONETICSYMBOL: HashMap<&'static str, &'static str> = {
-        phonetic_symbol::init()
-    };
-}
+static PINYINMAP: phf::Map<u32, &'static str> =
+    include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
 enum Style {
     // 普通风格，不带声调（默认风格）。如： pin yin
