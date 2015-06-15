@@ -2,6 +2,7 @@
 name = "pinyin"
 version = "0.1.0"
 dependencies = [
+ "log 0.3.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "phf 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "phf_codegen 0.7.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "regex 0.1.33 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -16,6 +17,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 name = "libc"
 version = "0.1.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
+name = "log"
+version = "0.3.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.1.8 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
 [[package]]
 name = "phf"

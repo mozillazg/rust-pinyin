@@ -1,11 +1,14 @@
+#[macro_use]
+extern crate log;
 extern crate phf;
+extern crate regex;
 
-use std::ascii::AsciiExt;
-use std::collections::HashMap;
+use regex::Captures;
+use regex::Regex;
 
-static PINYINMAP: phf::Map<u32, &'static str> =
-    include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
+include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
+#[derive(Debug)]
 pub enum Style {
     // 普通风格，不带声调（默认风格）。如： `pin yin`
     Normal,
@@ -26,21 +29,25 @@ pub enum Style {
 }
 
 // 声母表
-const initials: [&'static str; 24] = [
+const _INITIALS: [&'static str; 24] = [
     "zh", "ch", "sh", "b", "p", "m", "f", "d", "t", "n", "l", "g",
     "k", "h", "j", "q", "x", "r", "z", "c", "s", "yu", "y", "w",
 ];
 
-// 所有带声调的字符
-const rePhoneticSymbol: &'static str = (
-    "āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň"
-);
+// 带声调字符
+// const phonetic_symbol: [&'static str; 27] = [
+//     "ā", "á", "ǎ", "à", "ē", "é", "ě", "è", "ō", "ó", "ǒ", "ò",
+//     "ī", "í", "ǐ", "ì", "ū", "ú", "ǔ", "ù", "ü", "ǘ", "ǚ", "ǜ",
+//     "ń", "ň", "",
+// ];
+// 匹配带声调字符的正则表达式
+// const re_phonetic_symbol: Regex = Regex::new(
+//     r"[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]"
+// ).unwrap();
 
-// // 匹配带声调字符的正则表达式
-// var rePhoneticSymbol = regexp.MustCompile("[" + rePhoneticSymbolSource + "]")
-//
-// // 匹配使用数字标识声调的字符的正则表达式
-// var reTone2 = regexp.MustCompile("([aeoiuvnm])([0-4])$")
+// 匹配使用数字标识声调的字符的正则表达式
+// const re_tone2:Regex = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
+
 //
 pub struct Args {
     pub style:     Style,    // 拼音风格（默认： NORMAL)
@@ -59,11 +66,11 @@ impl Args {
 }
 
 // 获取单个拼音中的声母
-fn initial(p: &str) -> &str {
-    let mut s = "";
-    for v in initials.iter() {
+fn initial(p: String) -> String {
+    let mut s = "".to_string();
+    for v in _INITIALS.iter() {
         if p.starts_with(v) {
-            s = v;
+            s = v.to_string();
             break;
         }
     }
@@ -72,84 +79,117 @@ fn initial(p: &str) -> &str {
 
 // 获取单个拼音中的韵母
 fn _final(p: &str) -> String {
-    let i = initial(p);
+    let i = initial(p.to_string());
     if i == "" {
         return p.to_string();
     }
-    let s: Vec<&str> = p.splitn(2, i).collect();
+    let s: Vec<&str> = p.splitn(2, &i).collect();
     s.concat()
 }
 
-// func toFixed(p string, a Args) string {
-//     if a.Style == Initials {
-//         return initial(p)
-//     }
-//
-//     // 替换拼音中的带声调字符
-//     py := rePhoneticSymbol.ReplaceAllStringFunc(p, func(m string) string {
-//         symbol, _ := phoneticSymbol[m]
-//         switch a.Style {
-//         // 不包含声调
-//         case Normal, FirstLetter, Finals:
-//             // 去掉声调: a1 -> a
-//             m = reTone2.ReplaceAllString(symbol, "$1")
-//         case Tone2, FinalsTone2:
-//             // 返回使用数字标识声调的字符
-//             m = symbol
-//         default:
-//             //  // 声调在头上
-//         }
-//         return m
-//     })
-//
-//     switch a.Style {
-//     // 首字母
-//     case FirstLetter:
-//         py = string([]byte(py)[0])
-//     // 韵母
-//     case Finals, FinalsTone, FinalsTone2:
-//         py = final(py)
-//     }
-//     return py
-// }
-//
-// func applyStyle(p []string, a Args) []string {
-//     newP := []string{}
-//     for _, v := range p {
-//         newP = append(newP, toFixed(v, a))
-//     }
-//     return newP
-// }
-//
-fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<&'a str> {
-    let ret: Vec<&str>;
-    // let x: String = c.escape_unicode().collect();
-    println!("{}", c);
-    let n: u32 = c as u32;
-    println!("{}", n);
+fn to_fixed<'a>(p: String, a: &'a Args) -> String {
+    match a.style {
+        Style::Initials => {
+            return initial(p).to_string();
+        },
+        _ => {},
+    };
 
-    match PINYINMAP.get(&n) {
+    let re_phonetic_symbol = Regex::new(
+        r"(?i)[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]"
+    ).unwrap();
+
+    // 匹配使用数字标识声调的字符的正则表达式
+    let re_tone2 = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
+
+    // 替换拼音中的带声调字符
+    let py = re_phonetic_symbol.replace_all(&p, |caps: &Captures| {
+        let cap = caps.at(0).unwrap();
+        println!("{}", cap);
+
+        let symbol = match PHONETIC_SYMBOL_MAP.get(&cap) {
+            Some(&v) => v,
+            None => "",
+        };
+        println!("{}", symbol);
+
+        let m: String;
+        match a.style {
+            // 不包含声调
+            Style::Normal | Style::FirstLetter | Style::Finals => {
+                // 去掉声调: a1 -> a
+                m = re_tone2.replace_all(symbol, "$1");
+            },
+            Style::Tone2 | Style::FinalsTone2 => {
+                // 返回使用数字标识声调的字符
+                m = symbol.to_string();
+            },
+            _ => {
+                // 声调在头上
+                m = cap.to_string();
+            },
+        }
+        m
+    });
+    println!("{}", py);
+
+    let ret = match a.style {
+        // 首字母
+        Style::FirstLetter => {
+            py.chars().nth(0).unwrap().to_string()
+        },
+        // 韵母
+        Style::Finals | Style::Tone | Style::Tone2 => {
+            _final(&py)
+        },
+        _ => py,
+    };
+
+    println!("{}", ret);
+    ret
+}
+
+fn apply_style<'a>(pys: Vec<String>, a: &'a Args) -> Vec<String> {
+    let mut new_pys: Vec<String> = vec![];
+    for v in pys {
+        let s = to_fixed(v, a);
+        new_pys.push(s);
+    }
+    new_pys
+}
+
+fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<String> {
+    let mut ret: Vec<String> = vec![];
+    let n: u32 = c as u32;
+
+    match PINYIN_MAP.get(&n) {
         Some(&pys) => {
             let x: Vec<&str> = pys.split(',').collect();
             if x.len() == 0 || a.heteronym {
-                ret = x;
+                for s in x {
+                    ret.push(s.to_string());
+                };
             } else {
-                ret = vec![x[0]];
+                ret = vec![x[0].to_string()];
             }
         },
         None => {
             ret = vec![];
         }
-    }
-    return ret;
-    // return applyStyle(pys, a)
+    };
+
+    println!("{:?}", ret);
+    apply_style(ret, a)
 }
 
-pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<&'a str> {
-    let mut ret = vec![""];
+pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<Vec<String>> {
+    println!("{}, {:?}, {}, {}", s, a.style, a.heteronym, a.separator);
+
+    let mut ret: Vec<Vec<String>> = Vec::new();
     let chars: Vec<char> = s.chars().collect();
     for c in chars {
-        ret = single_pinyin(c, a);
+        ret.push(single_pinyin(c, a));
     }
+
     return ret
 }
