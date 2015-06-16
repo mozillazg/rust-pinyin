@@ -1,6 +1,6 @@
 [package]
 name = "pinyin"
-version = "0.1.0"
+version = "0.0.1"
 authors = ["mozillazg <mozillazg101@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -12,9 +12,8 @@ keywords = ["拼音", "pinyin"]
 build = "src/build.rs"
 
 [dependencies]
-regex = "0.1.8"
-phf = "*"
-log = "*"
+regex = "~0.1.8"
+phf = "~0.7.3"
 
 [build-dependencies]
-phf_codegen = "*"
+phf_codegen = "~0.7.3"
