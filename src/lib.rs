@@ -7,6 +7,7 @@ use regex::Regex;
 
 include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
+#[derive(Debug)]
 pub enum Style {
     // 普通风格，不带声调（默认风格）。如： `pin yin`
     Normal,
