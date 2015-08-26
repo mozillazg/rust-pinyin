@@ -1,6 +1,7 @@
 # rust-pinyin
 
 [![Build Status](https://travis-ci.org/mozillazg/rust-pinyin.svg?branch=develop)](https://travis-ci.org/mozillazg/rust-pinyin)
+[![Coverage Status](https://coveralls.io/repos/mozillazg/rust-pinyin/badge.svg?branch=develop&service=github)](https://coveralls.io/github/mozillazg/rust-pinyin?branch=develop)
 
 汉语拼音转换工具 Rust 版
 

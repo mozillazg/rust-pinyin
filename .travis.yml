@@ -26,5 +26,5 @@ after_success:
   # measure code coverage and upload to coveralls.io
   - travis-cargo coveralls --no-sudo
 matrix:
-  allow_failure:
+  allow_failures:
     - rust: nightly
