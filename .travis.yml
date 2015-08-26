@@ -22,7 +22,7 @@ script:
   - |
       travis-cargo build &&
       travis-cargo test
-after_success: |
+after_success:
   # measure code coverage and upload to coveralls.io
   - travis-cargo coveralls --no-sudo
 matrix:
