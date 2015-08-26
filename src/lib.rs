@@ -7,7 +7,7 @@ use regex::Regex;
 
 include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Style {
     // 普通风格，不带声调（默认风格）。如： `pin yin`
     Normal,
@@ -35,6 +35,7 @@ const _INITIALS: [&'static str; 21] = [
 
 
 //
+#[derive(PartialEq, Eq, Hash)]
 pub struct Args {
     pub style:     Style,    // 拼音风格（默认： NORMAL)
     pub heteronym: bool,   // 是否启用多音字模式（默认：禁用）
