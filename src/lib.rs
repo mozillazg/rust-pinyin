@@ -28,24 +28,11 @@ pub enum Style {
 }
 
 // 声母表
-const _INITIALS: [&'static str; 24] = [
-    "zh", "ch", "sh", "b", "p", "m", "f", "d", "t", "n", "l", "g",
-    "k", "h", "j", "q", "x", "r", "z", "c", "s", "yu", "y", "w",
+const _INITIALS: [&'static str; 21] = [
+    "b", "p", "m", "f", "d", "t", "n", "l", "g",
+    "k", "h", "j", "q", "x", "r", "zh", "ch", "sh", "z", "c", "s",
 ];
 
-// 带声调字符
-// const phonetic_symbol: [&'static str; 27] = [
-//     "ā", "á", "ǎ", "à", "ē", "é", "ě", "è", "ō", "ó", "ǒ", "ò",
-//     "ī", "í", "ǐ", "ì", "ū", "ú", "ǔ", "ù", "ü", "ǘ", "ǚ", "ǜ",
-//     "ń", "ň", "",
-// ];
-// 匹配带声调字符的正则表达式
-// const re_phonetic_symbol: Regex = Regex::new(
-//     r"[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]"
-// ).unwrap();
-
-// 匹配使用数字标识声调的字符的正则表达式
-// const re_tone2:Regex = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
 
 //
 pub struct Args {

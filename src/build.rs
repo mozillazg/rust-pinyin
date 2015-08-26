@@ -14,10 +14,12 @@ fn main() {
         let (k, v) = data[i];
         builder.entry(k, &escape_str(v));
     }
+    // 拼音库
     write!(&mut file, "static PINYIN_MAP: ::phf::Map<u32, &'static str> = ").unwrap();
     builder.build(&mut file).unwrap();
     write!(&mut file, ";\n").unwrap();
 
+    // 带声调字符
     write!(&mut file, "static PHONETIC_SYMBOL_MAP: ::phf::Map<&'static str, &'static str> = ").unwrap();
     phf_codegen::Map::new()
         .entry("ā", "\"a1\"")
