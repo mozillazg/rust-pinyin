@@ -1,8 +1,5 @@
 extern crate pinyin;
 
-use std::collections::HashMap;
-
-#[derive(PartialEq, Eq, Hash)]
 struct TestCase {
     args: pinyin::Args,
     result: Vec<Vec<String>>,
@@ -18,66 +15,115 @@ impl TestCase {
 #[test]
 fn test_pinyin() {
     let hans = "中国人";
-    let mut testDate = HashMap::new();
-
-    testDate.insert(TestCase::new(pinyin::Args::new(),
-                                  vec![vec!["zhong".to_string()],
-                                       vec!["guo".to_string()],
-                                       vec!["ren".to_string()]]
-                                  ));
-    for (args, result) in &testDate {
-         assert_eq!(result, pinyin::pinyin(hans, args));
+    let test_data = vec![
+        TestCase::new(
+            pinyin::Args::new(),
+            vec![vec!["zhong".to_string()],
+                 vec!["guo".to_string()],
+                 vec!["ren".to_string()]
+                 ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::Normal,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["zhong".to_string()],
+               vec!["guo".to_string()],
+               vec!["ren".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::Tone,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["zhōng".to_string()],
+               vec!["guó".to_string()],
+               vec!["rén".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::Tone2,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["zho1ng".to_string()],
+               vec!["guo2".to_string()],
+               vec!["re2n".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::Initials,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["zh".to_string()],
+               vec!["g".to_string()],
+               vec!["r".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::FirstLetter,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["z".to_string()],
+               vec!["g".to_string()],
+               vec!["r".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::Finals,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["ong".to_string()],
+               vec!["uo".to_string()],
+               vec!["en".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::FinalsTone,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["ōng".to_string()],
+               vec!["uó".to_string()],
+               vec!["én".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::FinalsTone2,
+                heteronym: false,
+                separator: "-".to_string(),
+            },
+            vec![vec!["o1ng".to_string()],
+               vec!["uo2".to_string()],
+               vec!["e2n".to_string()]
+               ]
+        ),
+        TestCase::new(
+            pinyin::Args{
+                style: pinyin::Style::Normal,
+                heteronym: true,
+                separator: "-".to_string(),
+            },
+            vec![vec!["zhong".to_string(), "zhong".to_string()],
+               vec!["guo".to_string()],
+               vec!["ren".to_string()]
+               ]
+        ),
+       ];
+    for data in &test_data {
+         assert_eq!(data.result, pinyin::pinyin(hans, &data.args));
     }
-    // let testData = map[Args][][]string{
-    //     Args{}: [][]string{
-    //         []string{"zhong"},
-    //         []string{"guo"},
-    //         []string{"ren"},
-    //     },
-    //     Args{Style: Normal}: [][]string{
-    //         []string{"zhong"},
-    //         []string{"guo"},
-    //         []string{"ren"},
-    //     },
-    //     Args{Style: Tone}: [][]string{
-    //         []string{"zhōng"},
-    //         []string{"guó"},
-    //         []string{"rén"},
-    //     },
-    //     Args{Style: Tone2}: [][]string{
-    //         []string{"zho1ng"},
-    //         []string{"guo2"},
-    //         []string{"re2n"},
-    //     },
-    //     Args{Style: Initials}: [][]string{
-    //         []string{"zh"},
-    //         []string{"g"},
-    //         []string{"r"},
-    //     },
-    //     Args{Style: FirstLetter}: [][]string{
-    //         []string{"z"},
-    //         []string{"g"},
-    //         []string{"r"},
-    //     },
-    //     Args{Style: Finals}: [][]string{
-    //         []string{"ong"},
-    //         []string{"uo"},
-    //         []string{"en"},
-    //     },
-    //     Args{Style: FinalsTone}: [][]string{
-    //         []string{"ōng"},
-    //         []string{"uó"},
-    //         []string{"én"},
-    //     },
-    //     Args{Style: FinalsTone2}: [][]string{
-    //         []string{"o1ng"},
-    //         []string{"uo2"},
-    //         []string{"e2n"},
-    //     },
-    //     Args{Heteronym: true}: [][]string{
-    //         []string{"zhong", "zhong"},
-    //         []string{"guo"},
-    //         []string{"ren"},
-    //     },
-    // }
 }

@@ -35,7 +35,7 @@ const _INITIALS: [&'static str; 21] = [
 
 
 //
-#[derive(PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Args {
     pub style:     Style,    // 拼音风格（默认： NORMAL)
     pub heteronym: bool,   // 是否启用多音字模式（默认：禁用）
@@ -126,7 +126,7 @@ fn to_fixed<'a>(p: String, a: &'a Args) -> String {
             py.chars().nth(0).unwrap().to_string()
         },
         // 韵母
-        Style::Finals | Style::Tone | Style::Tone2 => {
+        Style::Finals | Style::FinalsTone | Style::FinalsTone2 => {
             _final(&py)
         },
         _ => py,
