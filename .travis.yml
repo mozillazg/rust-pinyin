@@ -15,7 +15,7 @@ after_success: |
   tar xzf master.tar.gz && mkdir kcov-master/build &&
   cd kcov-master/build && cmake .. && make &&
   sudo make install && cd ../.. &&
-  kcov --coveralls-id=$TRAVIS_JOB_ID --include-pattern=src/pinyin --exclude-pattern=/.cargo target/kcov target/debug/pinyin-*
+  kcov --coveralls-id=$TRAVIS_JOB_ID --exclude-pattern=~/.cargo,/usr target/kcov target/debug/pinyin-*
 matrix:
   allow_failure:
     - rust: nightly
