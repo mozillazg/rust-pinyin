@@ -3,12 +3,13 @@ name = "pinyin"
 version = "0.0.1"
 authors = ["mozillazg <mozillazg101@gmail.com>"]
 license = "MIT"
+license-file = "LICENSE"
 readme = "README.md"
 homepage = "https://github.com/mozillazg/rust-pinyin"
 repository = "https://github.com/mozillazg/rust-pinyin"
 description = "Convert Chinese to pinyin"
 documentation = "http://www.rust-ci.org/mozillazg/rust-pinyin/doc/pinyin/"
-keywords = ["拼音", "pinyin"]
+keywords = ["pinyin", "hanzi", "Chinese"]
 build = "src/build.rs"
 
 [dependencies]
