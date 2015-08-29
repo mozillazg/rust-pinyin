@@ -27,7 +27,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::Normal,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["zhong".to_string()],
                vec!["guo".to_string()],
@@ -38,7 +37,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::Tone,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["zhōng".to_string()],
                vec!["guó".to_string()],
@@ -49,7 +47,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::Tone2,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["zho1ng".to_string()],
                vec!["guo2".to_string()],
@@ -60,7 +57,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::Initials,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["zh".to_string()],
                vec!["g".to_string()],
@@ -71,7 +67,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::FirstLetter,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["z".to_string()],
                vec!["g".to_string()],
@@ -82,7 +77,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::Finals,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["ong".to_string()],
                vec!["uo".to_string()],
@@ -93,7 +87,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::FinalsTone,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["ōng".to_string()],
                vec!["uó".to_string()],
@@ -104,7 +97,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::FinalsTone2,
                 heteronym: false,
-                separator: "-".to_string(),
             },
             vec![vec!["o1ng".to_string()],
                vec!["uo2".to_string()],
@@ -115,7 +107,6 @@ fn test_pinyin() {
             pinyin::Args{
                 style: pinyin::Style::Normal,
                 heteronym: true,
-                separator: "-".to_string(),
             },
             vec![vec!["zhong".to_string(), "zhong".to_string()],
                vec!["guo".to_string()],

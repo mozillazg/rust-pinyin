@@ -1,3 +1,57 @@
+//! 汉语拼音转换工具 Rust 版。
+//! [![Build Status](https://travis-ci.org/mozillazg/rust-pinyin.svg?branch=master)](https://travis-ci.org/mozillazg/rust-pinyin)
+//! [![Coverage Status](https://coveralls.io/repos/mozillazg/rust-pinyin/badge.svg?branch=master&service=github)](https://coveralls.io/github/mozillazg/rust-pinyin?branch=master)
+//! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
+//! [![GitHub
+//! stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&label=Star)](https://github.com/mozillazg/rust-pinyin)
+//!
+//! # Usage
+//!
+//! This crate is [on crates.io](https://crates.io/crates/pinyin) and can be
+//! used by adding `pinyin` to your dependencies in your project's `Cargo.toml`.
+//!
+//! ```toml
+//! [dependencies]
+//! pinyin = "*"
+//! ```
+//!
+//! and this to your crate root:
+//!
+//! ```rust
+//! extern crate pinyin;
+//! ```
+//!
+//! # 示例
+//!
+//! ```
+//! extern crate pinyin;
+//!
+//! pub fn main() {
+//!     let hans = "中国人";
+//!     let mut args = pinyin::Args::new();
+//!
+//!     // 默认输出 [["zhong"] ["guo"] ["ren"]]
+//!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!
+//!     // 包含声调 [["zh\u{14d}ng"], ["gu\u{f3}"], ["r\u{e9}n"]]
+//!     args.style = pinyin::Style::Tone;
+//!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!
+//!     // 声调用数字表示 [["zho1ng"] ["guo2"] ["re2n"]]
+//!     args.style = pinyin::Style::Tone2;
+//!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!
+//!     // 开启多音字模式
+//!     args = pinyin::Args::new();
+//!     args.heteronym = true;
+//!     // [["zhong", "zhong"] ["guo"] ["ren"]]
+//!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!     // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
+//!     args.style = pinyin::Style::Tone2;
+//!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//! }
+//! ```
+
 #[macro_use]
 extern crate phf;
 extern crate regex;
@@ -7,23 +61,24 @@ use regex::Regex;
 
 include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
 
+/// 拼音风格
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Style {
-    // 普通风格，不带声调（默认风格）。如： `pin yin`
+    /// 普通风格，不带声调（默认风格）。如： `pin yin`
     Normal,
-    // 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`
+    /// 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`
     Tone,
-    // 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
+    /// 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
     Tone2,
-    // 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`
+    /// 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`
     Initials,
-    // 首字母风格，只返回拼音的首字母部分。如： `p y`
+    /// 首字母风格，只返回拼音的首字母部分。如： `p y`
     FirstLetter,
-    // 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
+    /// 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
     Finals,
-    // 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`
+    /// 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`
     FinalsTone,
-    // 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
+    /// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
     FinalsTone2,
 }
 
@@ -34,20 +89,28 @@ const _INITIALS: [&'static str; 21] = [
 ];
 
 
-//
+/// 参数
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Args {
-    pub style:     Style,    // 拼音风格（默认： NORMAL)
-    pub heteronym: bool,   // 是否启用多音字模式（默认：禁用）
-    pub separator: String, // Slug 中使用的分隔符（默认：-)
+    /// 拼音风格
+    pub style:     Style,
+    /// 是否启用多音字模式
+    pub heteronym: bool,
 }
 
 impl Args {
+    /// 返回一个默认参数
+    ///
+    /// ```ignore
+    /// Args {
+    ///    style: Style::Normal,
+    ///    heteronym: false,
+    /// }
+    /// ```
     pub fn new() -> Args {
         Args {
             style: Style::Normal,
             heteronym: false,
-            separator: "-".to_string(),
         }
     }
 }
@@ -92,13 +155,10 @@ fn to_fixed<'a>(p: String, a: &'a Args) -> String {
     // 替换拼音中的带声调字符
     let py = re_phonetic_symbol.replace_all(&p, |caps: &Captures| {
         let cap = caps.at(0).unwrap();
-        println!("{}", cap);
-
         let symbol = match PHONETIC_SYMBOL_MAP.get(&cap) {
             Some(&v) => v,
             None => "",
         };
-        println!("{}", symbol);
 
         let m: String;
         match a.style {
@@ -118,7 +178,6 @@ fn to_fixed<'a>(p: String, a: &'a Args) -> String {
         }
         m
     });
-    println!("{}", py);
 
     let ret = match a.style {
         // 首字母
@@ -132,7 +191,6 @@ fn to_fixed<'a>(p: String, a: &'a Args) -> String {
         _ => py,
     };
 
-    println!("{}", ret);
     ret
 }
 
@@ -165,13 +223,19 @@ fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<String> {
         }
     };
 
-    println!("{:?}", ret);
     apply_style(ret, a)
 }
 
+/// 汉字转拼音
+///
+/// ```
+/// let hans = "中国人";
+/// let args = pinyin::Args::new();
+///
+/// // 默认输出 [["zhong"] ["guo"] ["ren"]]
+/// println!("{:?}",  pinyin::pinyin(hans, &args));
+/// ```
 pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<Vec<String>> {
-    println!("{}, {:?}, {}, {}", s, a.style, a.heteronym, a.separator);
-
     let mut ret: Vec<Vec<String>> = Vec::new();
     let chars: Vec<char> = s.chars().collect();
     for c in chars {

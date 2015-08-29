@@ -2,8 +2,70 @@
 
 [![Build Status](https://travis-ci.org/mozillazg/rust-pinyin.svg?branch=develop)](https://travis-ci.org/mozillazg/rust-pinyin)
 [![Coverage Status](https://coveralls.io/repos/mozillazg/rust-pinyin/badge.svg?branch=develop&service=github)](https://coveralls.io/github/mozillazg/rust-pinyin?branch=develop)
+<!--
+[![Crates.io Downloads](https://img.shields.io/crates/d/pinyin.svg)](https://crates.io/crates/pinyin)
+-->
+[![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
+[![Doc](https://img.shields.io/badge/doc-reference-blue.svg)](http://mozillazg.com/rust-pinyin)
 
 汉语拼音转换工具 Rust 版
+
+
+Installation
+------------
+
+Add this to your `Cargo.toml`:
+
+```
+[dependencies]
+pinyin = "*"
+```
+
+and this to your crate root:
+
+```
+extern crate pinyin;
+```
+
+
+Documentation
+--------------
+
+API documentation can be found here: http://mozillazg.com/rust-pinyin/
+
+
+Usage
+------
+
+```rust
+extern crate pinyin;
+
+pub fn main() {
+    let hans = "中国人";
+    let mut args = pinyin::Args::new();
+
+    // 默认输出 [["zhong"] ["guo"] ["ren"]]
+    println!("{:?}",  pinyin::pinyin(hans, &args));
+
+    // 包含声调 [["zh\u{14d}ng"], ["gu\u{f3}"], ["r\u{e9}n"]]
+    args.style = pinyin::Style::Tone;
+    println!("{:?}",  pinyin::pinyin(hans, &args));
+
+    // 声调用数字表示 [["zho1ng"] ["guo2"] ["re2n"]]
+    args.style = pinyin::Style::Tone2;
+    println!("{:?}",  pinyin::pinyin(hans, &args));
+
+    // 开启多音字模式
+    args = pinyin::Args::new();
+    args.heteronym = true;
+    // [["zhong", "zhong"] ["guo"] ["ren"]]
+    println!("{:?}",  pinyin::pinyin(hans, &args));
+    // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
+    args.style = pinyin::Style::Tone2;
+    println!("{:?}",  pinyin::pinyin(hans, &args));
+}
+```
+
 
 
 Related Projects
