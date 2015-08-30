@@ -43,8 +43,53 @@
     <section id='main' class="content mod">
 <h1 class='fqn'><span class='in-band'>Crate <a class='mod' href=''>pinyin</a><wbr></span><span class='out-of-band'><a href='stability.html'>[stability]</a> <span id='render-detail'>
             <a id="collapse-all" href="#">[-]</a>&nbsp;<a id="expand-all" href="#">[+]</a>
-        </span><a id='src-0' href='../src/pinyin/lib.rs.html#1-225'>[src]</a></span></h1>
-<h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+        </span><a id='src-0' href='../src/pinyin/lib.rs.html#1-241'>[src]</a></span></h1>
+<div class='docblock'><p>汉语拼音转换工具 Rust 版。</p>
+
+<h1 id="usage" class='section-header'><a
+                           href="#usage">Usage</a></h1>
+<p>This crate is <a href="https://crates.io/crates/pinyin">on crates.io</a> and can be
+used by adding <code>pinyin</code> to your dependencies in your project&#39;s <code>Cargo.toml</code>.</p>
+
+<pre><code class="language-toml">[dependencies]
+pinyin = &quot;*&quot;
+</code></pre>
+
+<p>and this to your crate root:</p>
+<pre id='rust-example-rendered' class='rust '>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pinyin</span>;
+</pre>
+
+<h1 id="示例" class='section-header'><a
+                           href="#示例">示例</a></h1><pre id='rust-example-rendered' class='rust '>
+<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>pinyin</span>;
+
+<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>main</span>() {
+    <span class='kw'>let</span> <span class='ident'>hans</span> <span class='op'>=</span> <span class='string'>&quot;中国人&quot;</span>;
+    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>args</span> <span class='op'>=</span> <span class='ident'>pinyin</span>::<span class='ident'>Args</span>::<span class='ident'>new</span>();
+
+    <span class='comment'>// 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>,  <span class='ident'>pinyin</span>::<span class='ident'>pinyin</span>(<span class='ident'>hans</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>));
+
+    <span class='comment'>// 包含声调 [[&quot;zh\u{14d}ng&quot;], [&quot;gu\u{f3}&quot;], [&quot;r\u{e9}n&quot;]]</span>
+    <span class='ident'>args</span>.<span class='ident'>style</span> <span class='op'>=</span> <span class='ident'>pinyin</span>::<span class='ident'>Style</span>::<span class='ident'>Tone</span>;
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>,  <span class='ident'>pinyin</span>::<span class='ident'>pinyin</span>(<span class='ident'>hans</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>));
+
+    <span class='comment'>// 声调用数字表示 [[&quot;zho1ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
+    <span class='ident'>args</span>.<span class='ident'>style</span> <span class='op'>=</span> <span class='ident'>pinyin</span>::<span class='ident'>Style</span>::<span class='ident'>Tone2</span>;
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>,  <span class='ident'>pinyin</span>::<span class='ident'>pinyin</span>(<span class='ident'>hans</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>));
+
+    <span class='comment'>// 开启多音字模式</span>
+    <span class='ident'>args</span> <span class='op'>=</span> <span class='ident'>pinyin</span>::<span class='ident'>Args</span>::<span class='ident'>new</span>();
+    <span class='ident'>args</span>.<span class='ident'>heteronym</span> <span class='op'>=</span> <span class='boolval'>true</span>;
+    <span class='comment'>// [[&quot;zhong&quot;, &quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>,  <span class='ident'>pinyin</span>::<span class='ident'>pinyin</span>(<span class='ident'>hans</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>));
+    <span class='comment'>// [[&quot;zho1ng&quot;, &quot;zho4ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
+    <span class='ident'>args</span>.<span class='ident'>style</span> <span class='op'>=</span> <span class='ident'>pinyin</span>::<span class='ident'>Style</span>::<span class='ident'>Tone2</span>;
+    <span class='macro'>println</span><span class='macro'>!</span>(<span class='string'>&quot;{:?}&quot;</span>,  <span class='ident'>pinyin</span>::<span class='ident'>pinyin</span>(<span class='ident'>hans</span>, <span class='kw-2'>&amp;</span><span class='ident'>args</span>));
+}
+</pre>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table>
                     <tr>
                         <td><a class='stability Unmarked' title='No stability level'></a><a class='struct' href='struct.Args.html'

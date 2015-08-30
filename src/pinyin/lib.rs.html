@@ -265,39 +265,71 @@
 <span id="223">223</span>
 <span id="224">224</span>
 <span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
+<span id="241">241</span>
 </pre><pre class='rust '>
-<span class='doccomment'>/// 汉语拼音转换工具 Rust 版。</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// 示例:</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// extern crate pinyin;</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// pub fn main() {</span>
-<span class='doccomment'>///     let hans = &quot;中国人&quot;;</span>
-<span class='doccomment'>///     let mut args = pinyin::Args::new();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///     // 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
-<span class='doccomment'>///     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///     // 包含声调 [[&quot;zh\u{14d}ng&quot;], [&quot;gu\u{f3}&quot;], [&quot;r\u{e9}n&quot;]]</span>
-<span class='doccomment'>///     args.style = pinyin::Style::Tone;</span>
-<span class='doccomment'>///     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///     // 声调用数字表示 [[&quot;zho1ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
-<span class='doccomment'>///     args.style = pinyin::Style::Tone2;</span>
-<span class='doccomment'>///     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>///     // 开启多音字模式</span>
-<span class='doccomment'>///     args = pinyin::Args::new();</span>
-<span class='doccomment'>///     args.heteronym = true;</span>
-<span class='doccomment'>///     // [[&quot;zhong&quot;, &quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
-<span class='doccomment'>///     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>///     // [[&quot;zho1ng&quot;, &quot;zho4ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
-<span class='doccomment'>///     args.style = pinyin::Style::Tone2;</span>
-<span class='doccomment'>///     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>/// }</span>
-<span class='doccomment'>/// ```</span>
+<span class='doccomment'>//! 汉语拼音转换工具 Rust 版。</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # Usage</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! This crate is [on crates.io](https://crates.io/crates/pinyin) and can be</span>
+<span class='doccomment'>//! used by adding `pinyin` to your dependencies in your project&#39;s `Cargo.toml`.</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```toml</span>
+<span class='doccomment'>//! [dependencies]</span>
+<span class='doccomment'>//! pinyin = &quot;*&quot;</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! and this to your crate root:</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```rust</span>
+<span class='doccomment'>//! extern crate pinyin;</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! # 示例</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! ```</span>
+<span class='doccomment'>//! extern crate pinyin;</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//! pub fn main() {</span>
+<span class='doccomment'>//!     let hans = &quot;中国人&quot;;</span>
+<span class='doccomment'>//!     let mut args = pinyin::Args::new();</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // 包含声调 [[&quot;zh\u{14d}ng&quot;], [&quot;gu\u{f3}&quot;], [&quot;r\u{e9}n&quot;]]</span>
+<span class='doccomment'>//!     args.style = pinyin::Style::Tone;</span>
+<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // 声调用数字表示 [[&quot;zho1ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
+<span class='doccomment'>//!     args.style = pinyin::Style::Tone2;</span>
+<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class='doccomment'>//!</span>
+<span class='doccomment'>//!     // 开启多音字模式</span>
+<span class='doccomment'>//!     args = pinyin::Args::new();</span>
+<span class='doccomment'>//!     args.heteronym = true;</span>
+<span class='doccomment'>//!     // [[&quot;zhong&quot;, &quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class='doccomment'>//!     // [[&quot;zho1ng&quot;, &quot;zho4ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
+<span class='doccomment'>//!     args.style = pinyin::Style::Tone2;</span>
+<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class='doccomment'>//! }</span>
+<span class='doccomment'>//! ```</span>
 
 <span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
 <span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>phf</span>;
@@ -348,7 +380,7 @@
 <span class='kw'>impl</span> <span class='ident'>Args</span> {
     <span class='doccomment'>/// 返回一个默认参数</span>
     <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```</span>
+    <span class='doccomment'>/// ```ignore</span>
     <span class='doccomment'>/// Args {</span>
     <span class='doccomment'>///    style: Style::Normal,</span>
     <span class='doccomment'>///    heteronym: false,</span>
