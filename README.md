@@ -1,7 +1,7 @@
 # rust-pinyin
 
-[![Build Status](https://travis-ci.org/mozillazg/rust-pinyin.svg?branch=develop)](https://travis-ci.org/mozillazg/rust-pinyin)
-[![Coverage Status](https://coveralls.io/repos/mozillazg/rust-pinyin/badge.svg?branch=develop&service=github)](https://coveralls.io/github/mozillazg/rust-pinyin?branch=develop)
+[![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)
+[![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)
 [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
 [![Doc](https://img.shields.io/badge/doc-reference-blue.svg)](http://mozillazg.com/rust-pinyin)
 <!--
