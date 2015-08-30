@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/mozillazg/rust-pinyin.svg?branch=develop)](https://travis-ci.org/mozillazg/rust-pinyin)
 [![Coverage Status](https://coveralls.io/repos/mozillazg/rust-pinyin/badge.svg?branch=develop&service=github)](https://coveralls.io/github/mozillazg/rust-pinyin?branch=develop)
+[![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
+[![Doc](https://img.shields.io/badge/doc-reference-blue.svg)](http://mozillazg.com/rust-pinyin)
 <!--
 [![Crates.io Downloads](https://img.shields.io/crates/d/pinyin.svg)](https://crates.io/crates/pinyin)
 -->
-[![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
-[![Doc](https://img.shields.io/badge/doc-reference-blue.svg)](http://mozillazg.com/rust-pinyin)
 
 汉语拼音转换工具 Rust 版
 
