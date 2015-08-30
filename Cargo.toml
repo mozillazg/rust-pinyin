@@ -1,0 +1,19 @@
+[package]
+name = "pinyin"
+version = "0.0.2"
+authors = ["mozillazg <mozillazg101@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/mozillazg/rust-pinyin"
+repository = "https://github.com/mozillazg/rust-pinyin"
+description = "Convert Chinese to pinyin"
+documentation = "http://mozillazg.com/rust-pinyin/"
+keywords = ["pinyin", "hanzi", "Chinese"]
+build = "src/build.rs"
+
+[dependencies]
+regex = "~0.1.8"
+phf = "~0.7.3"
+
+[build-dependencies]
+phf_codegen = "~0.7.3"
