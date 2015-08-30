@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["pinyin","汉字转拼音"]],"enum":[["Style","拼音风格"]],"struct":[["Args","参数"]]});
+initSidebarItems({"struct":[["Args","参数"]],"enum":[["Style","拼音风格"]],"fn":[["pinyin","汉字转拼音"]]});
