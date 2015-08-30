@@ -281,8 +281,18 @@
 <span id="239">239</span>
 <span id="240">240</span>
 <span id="241">241</span>
+<span id="242">242</span>
+<span id="243">243</span>
+<span id="244">244</span>
+<span id="245">245</span>
+<span id="246">246</span>
 </pre><pre class='rust '>
 <span class='doccomment'>//! 汉语拼音转换工具 Rust 版。</span>
+<span class='doccomment'>//! [![Build Status](https://travis-ci.org/mozillazg/rust-pinyin.svg?branch=master)](https://travis-ci.org/mozillazg/rust-pinyin)</span>
+<span class='doccomment'>//! [![Coverage Status](https://coveralls.io/repos/mozillazg/rust-pinyin/badge.svg?branch=master&amp;service=github)](https://coveralls.io/github/mozillazg/rust-pinyin?branch=master)</span>
+<span class='doccomment'>//! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)</span>
+<span class='doccomment'>//! [![GitHub</span>
+<span class='doccomment'>//! stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&amp;label=Star)](https://github.com/mozillazg/rust-pinyin)</span>
 <span class='doccomment'>//!</span>
 <span class='doccomment'>//! # Usage</span>
 <span class='doccomment'>//!</span>
@@ -371,9 +381,9 @@
 <span class='doccomment'>/// 参数</span>
 <span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Args</span> {
-    <span class='doccomment'>/// 拼音风格（默认： NORMAL)</span>
+    <span class='doccomment'>/// 拼音风格</span>
     <span class='kw'>pub</span> <span class='ident'>style</span>:     <span class='ident'>Style</span>,
-    <span class='doccomment'>/// 是否启用多音字模式（默认：禁用）</span>
+    <span class='doccomment'>/// 是否启用多音字模式</span>
     <span class='kw'>pub</span> <span class='ident'>heteronym</span>: <span class='ident'>bool</span>,
 }
 
