@@ -11,6 +11,9 @@ documentation = "http://mozillazg.com/rust-pinyin/"
 keywords = ["pinyin", "hanzi", "Chinese"]
 build = "build.rs"
 
+[features]
+unstable = []
+
 [dependencies]
 regex = "~0.1.8"
 phf = "~0.7.3"
