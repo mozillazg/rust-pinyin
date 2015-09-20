@@ -1,6 +1,7 @@
 help:
 	@echo	"test		run tests"
 	@echo	"doc		build document"
+	@echo	"publish	publish"
 
 test:
 	cargo test
@@ -8,4 +9,9 @@ test:
 doc:
 	cargo doc -p pinyin --no-deps
 
-.PHONY: help test doc
+publish:
+	git checkout master && make test && make doc && git checkout master &&\
+		cargo publish
+
+
+.PHONY: help test doc publish
