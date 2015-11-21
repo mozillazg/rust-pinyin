@@ -1,17 +1,19 @@
+.PHONY: help
 help:
-	@echo	"test		run tests"
-	@echo	"doc		build document"
-	@echo	"publish	publish"
+	@echo	"test			run tests"
+	@echo	"doc			build document"
+	@echo	"publish		publish"
 
+.PHONY: test
 test:
-	cargo test
+	@cargo test
 
+.PHONY: doc
 doc:
-	cargo doc -p pinyin --no-deps
+	@cargo doc -p pinyin --no-deps
 
+.PHONY: publish
 publish:
-	git checkout master && make test && make doc && git checkout master &&\
-		cargo publish
-
-
-.PHONY: help test doc publish
+	@git checkout master && make test &&\
+	git checkout gh-pages && make doc &&\
+	git checkout master && cargo publish
