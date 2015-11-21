@@ -15,5 +15,6 @@ doc:
 .PHONY: publish
 publish:
 	@git checkout master && make test &&\
+	make doc && cargo publish &&\
 	git checkout gh-pages && make doc &&\
-	git checkout master && cargo publish
+	git checkout master
