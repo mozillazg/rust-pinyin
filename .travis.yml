@@ -29,4 +29,7 @@ after_success:
   - travis-cargo coveralls --no-sudo
 matrix:
   allow_failures:
-    - rust: nightly
+    - rust:
+      - 1.0.0
+      - 1.1.0
+      - nightly
