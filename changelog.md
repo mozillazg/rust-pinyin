@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.0.5 (2015-11-21)
+
+* Fixed a regression that caused the crate to stop compiling on    
+  current rust nightly and beta versions.
+  (via [#1](https://github.com/mozillazg/rust-pinyin/pull/1). Thanks
+   [@bluss](https://github.com/bluss))
+* Drop support for Rust < 1.2.0
+
 
 ## 0.0.4 (2015-09-20)
 
