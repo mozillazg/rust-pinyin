@@ -155,7 +155,7 @@ fn to_fixed<'a>(p: String, a: &'a Args) -> String {
     // 替换拼音中的带声调字符
     let py = re_phonetic_symbol.replace_all(&p, |caps: &Captures| {
         let cap = caps.at(0).unwrap();
-        let symbol = match PHONETIC_SYMBOL_MAP.get(&cap) {
+        let symbol = match PHONETIC_SYMBOL_MAP.get(cap) {
             Some(&v) => v,
             None => "",
         };
