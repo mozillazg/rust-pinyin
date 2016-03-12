@@ -1,5 +1,7 @@
 # rust-pinyin
 
+[![Join the chat at https://gitter.im/mozillazg/rust-pinyin](https://badges.gitter.im/mozillazg/rust-pinyin.svg)](https://gitter.im/mozillazg/rust-pinyin?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 [![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)
 [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)
 [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
