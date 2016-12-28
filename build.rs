@@ -1,11 +1,12 @@
 extern crate phf_codegen;
 
+use std::env;
 use std::fs::File;
 use std::io::{BufWriter, Write};
 use std::path::Path;
 
 fn main() {
-    let path = Path::new(env!("OUT_DIR")).join("codegen.rs");
+    let path = Path::new(&env::var_os("OUT_DIR").unwrap()).join("codegen.rs");
     let mut file = BufWriter::new(File::create(&path).unwrap());
 
     let mut builder = phf_codegen::Map::new();
