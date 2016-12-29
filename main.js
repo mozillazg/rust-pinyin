@@ -34,7 +34,8 @@
                      "primitive",
                      "associatedtype",
                      "constant",
-                     "associatedconstant"];
+                     "associatedconstant",
+                     "union"];
 
     // used for special search precedence
     var TY_PRIMITIVE = itemTypes.indexOf("primitive");
@@ -54,7 +55,8 @@
     }
 
     function browserSupportsHistoryApi() {
-        return window.history && typeof window.history.pushState === "function";
+        return document.location.protocol != "file:" &&
+          window.history && typeof window.history.pushState === "function";
     }
 
     function highlightSourceLines(ev) {
@@ -100,6 +102,10 @@
         if (document.activeElement.tagName == "INPUT")
             return;
 
+        // Don't interfere with browser shortcuts
+        if (ev.ctrlKey || ev.altKey || ev.metaKey)
+            return;
+
         switch (getVirtualKey(ev)) {
         case "Escape":
             if (!$("#help").hasClass("hidden")) {
@@ -119,6 +125,11 @@
             focusSearchBar();
             break;
 
+        case "+":
+            ev.preventDefault();
+            toggleAllDocs();
+            break;
+
         case "?":
             if (ev.shiftKey && $("#help").hasClass("hidden")) {
                 ev.preventDefault();
@@ -132,7 +143,7 @@
     $(document).on("keypress", handleShortcut);
     $(document).on("keydown", handleShortcut);
     $(document).on("click", function(ev) {
-        if (!$(e.target).closest("#help > div").length) {
+        if (!$(ev.target).closest("#help > div").length) {
             $("#help").addClass("hidden");
             $("body").removeClass("blur");
         }
@@ -275,7 +286,7 @@
                 var parts = val.split("->").map(trimmer);
                 var input = parts[0];
                 // sort inputs so that order does not matter
-                var inputs = input.split(",").map(trimmer).sort();
+                var inputs = input.split(",").map(trimmer).sort().toString();
                 var output = parts[1];
 
                 for (var i = 0; i < nSearchWords; ++i) {
@@ -291,8 +302,8 @@
 
                     // allow searching for void (no output) functions as well
                     var typeOutput = type.output ? type.output.name : "";
-                    if (inputs.toString() === typeInputs.toString() &&
-                        output == typeOutput) {
+                    if ((inputs === "*" || inputs === typeInputs.toString()) &&
+                        (output === "*" || output == typeOutput)) {
                         results.push({id: i, index: -1, dontValidate: true});
                     }
                 }
@@ -384,6 +395,9 @@
                 // special precedence for primitive pages
                 if ((aaa.item.ty === TY_PRIMITIVE) && (bbb.item.ty !== TY_PRIMITIVE)) {
                     return -1;
+                }
+                if ((bbb.item.ty === TY_PRIMITIVE) && (aaa.item.ty !== TY_PRIMITIVE)) {
+                    return 1;
                 }
 
                 // sort by description (no description goes later)
@@ -511,7 +525,6 @@
                 var $active = $results.filter('.highlighted');
 
                 if (e.which === 38) { // up
-                    e.preventDefault();
                     if (!$active.length || !$active.prev()) {
                         return;
                     }
@@ -519,7 +532,6 @@
                     $active.prev().addClass('highlighted');
                     $active.removeClass('highlighted');
                 } else if (e.which === 40) { // down
-                    e.preventDefault();
                     if (!$active.length) {
                         $results.first().addClass('highlighted');
                     } else if ($active.next().length) {
@@ -527,7 +539,6 @@
                         $active.removeClass('highlighted');
                     }
                 } else if (e.which === 13) { // return
-                    e.preventDefault();
                     if ($active.length) {
                         document.location.href = $active.find('a').prop('href');
                     }
@@ -567,16 +578,24 @@
                         displayPath = item.path + '::';
                         href = rootPath + item.path.replace(/::/g, '/') + '/' +
                                name + '/index.html';
-                    } else if (type === 'static' || type === 'reexport') {
-                        displayPath = item.path + '::';
+                    } else if (type === "primitive") {
+                        displayPath = "";
                         href = rootPath + item.path.replace(/::/g, '/') +
-                               '/index.html';
+                               '/' + type + '.' + name + '.html';
+                    } else if (type === "externcrate") {
+                        displayPath = "";
+                        href = rootPath + name + '/index.html';
                     } else if (item.parent !== undefined) {
                         var myparent = item.parent;
                         var anchor = '#' + type + '.' + name;
-                        displayPath = item.path + '::' + myparent.name + '::';
+                        var parentType = itemTypes[myparent.ty];
+                        if (parentType === "primitive") {
+                            displayPath = myparent.name + '::';
+                        } else {
+                            displayPath = item.path + '::' + myparent.name + '::';
+                        }
                         href = rootPath + item.path.replace(/::/g, '/') +
-                               '/' + itemTypes[myparent.ty] +
+                               '/' + parentType +
                                '.' + myparent.name +
                                '.html' + anchor;
                     } else {
@@ -669,6 +688,16 @@
             for (var crate in rawSearchIndex) {
                 if (!rawSearchIndex.hasOwnProperty(crate)) { continue; }
 
+                searchWords.push(crate);
+                searchIndex.push({
+                    crate: crate,
+                    ty: 1, // == ExternCrate
+                    name: crate,
+                    path: "",
+                    desc: rawSearchIndex[crate].doc,
+                    type: null,
+                });
+
                 // an array of [(Number) item type,
                 //              (String) name,
                 //              (String) full path or empty string for previous path,
@@ -714,11 +743,31 @@
         }
 
         function startSearch() {
-            var keyUpTimeout;
-            $('.do-search').on('click', search);
-            $('.search-input').on('keyup', function() {
-                clearTimeout(keyUpTimeout);
-                keyUpTimeout = setTimeout(search, 500);
+            var searchTimeout;
+            $(".search-input").on("keyup input",function() {
+                clearTimeout(searchTimeout);
+                if ($(this).val().length === 0) {
+                    if (browserSupportsHistoryApi()) {
+                        history.replaceState("", "std - Rust", "?search=");
+                    }
+                    $('#main.content').removeClass('hidden');
+                    $('#search.content').addClass('hidden');
+                } else {
+                    searchTimeout = setTimeout(search, 500);
+                }
+            });
+            $('.search-form').on('submit', function(e){
+                e.preventDefault();
+                clearTimeout(searchTimeout);
+                search();
+            });
+            $('.search-input').on('change paste', function(e) {
+                // Do NOT e.preventDefault() here. It will prevent pasting.
+                clearTimeout(searchTimeout);
+                // zero-timeout necessary here because at the time of event handler execution the
+                // pasted content is not in the input field yet. Shouldn’t make any difference for
+                // change, though.
+                setTimeout(search, 0);
             });
 
             // Push and pop states are used to add search results to the browser
@@ -837,12 +886,16 @@
             sidebar.append(div);
         }
 
+        block("primitive", "Primitive Types");
         block("mod", "Modules");
+        block("macro", "Macros");
         block("struct", "Structs");
         block("enum", "Enums");
+        block("constant", "Constants");
+        block("static", "Statics");
         block("trait", "Traits");
         block("fn", "Functions");
-        block("macro", "Macros");
+        block("type", "Type Definitions");
     }
 
     window.initSidebarItems = initSidebarItems;
@@ -889,7 +942,7 @@
         return "\u2212"; // "\u2212" is '−' minus sign
     }
 
-    $("#toggle-all-docs").on("click", function() {
+    function toggleAllDocs() {
         var toggle = $("#toggle-all-docs");
         if (toggle.hasClass("will-expand")) {
             toggle.removeClass("will-expand");
@@ -908,7 +961,9 @@
             $(".toggle-wrapper").addClass("collapsed");
             $(".collapse-toggle").children(".inner").text(labelForToggleButton(true));
         }
-    });
+    }
+
+    $("#toggle-all-docs").on("click", toggleAllDocs);
 
     $(document).on("click", ".collapse-toggle", function() {
         var toggle = $(this);
@@ -939,7 +994,7 @@
         $(".method").each(function() {
             if ($(this).next().is(".docblock") ||
                 ($(this).next().is(".stability") && $(this).next().next().is(".docblock"))) {
-                    $(this).children().first().after(toggle.clone());
+                    $(this).children().last().after(toggle.clone());
             }
         });
 
@@ -956,7 +1011,7 @@
         var prev_id = 0;
 
         function set_fragment(name) {
-            if (history.replaceState) {
+            if (browserSupportsHistoryApi()) {
                 history.replaceState(null, null, '#' + name);
                 $(window).trigger('hashchange');
             } else {
