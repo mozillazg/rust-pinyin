@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.0.6 (2016-12-29)
+
+* Use `env::var_os` intead of `env!` in build script
+  (via [#5](https://github.com/mozillazg/rust-pinyin/pull/5). Thanks
+   [@alexcrichton](https://github.com/alexcrichton))
+
+* Drop support for Rust < 1.3.0
+
+
 ## 0.0.5 (2015-11-21)
 
 * Fixed a regression that caused the crate to stop compiling on    
