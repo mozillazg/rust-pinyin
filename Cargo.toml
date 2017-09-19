@@ -8,7 +8,7 @@ homepage = "https://github.com/mozillazg/rust-pinyin"
 repository = "https://github.com/mozillazg/rust-pinyin"
 description = "Convert Chinese to pinyin"
 documentation = "http://mozillazg.com/rust-pinyin/"
-keywords = ["pinyin", "hanzi", "Chinese", "拼音"]
+keywords = ["pinyin", "hanzi", "Chinese"]
 build = "build.rs"
 
 [features]
@@ -20,4 +20,3 @@ phf = "~0.7.3"
 
 [build-dependencies]
 phf_codegen = "~0.7.3"
-regex = "*"
