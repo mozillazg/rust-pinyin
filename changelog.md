@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.0 (2017-mm-dd)
+
+* 改为使用 [pinyin-data](https://github.com/mozillazg/pinyin-data) v0.4.1 的拼音数据
+
+
 ## 0.0.6 (2016-12-29)
 
 * Use `env::var_os` intead of `env!` in build script

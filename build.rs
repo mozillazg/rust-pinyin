@@ -1,27 +1,47 @@
 extern crate phf_codegen;
+extern crate regex;
 
 use std::env;
 use std::fs::File;
-use std::io::{BufWriter, Write};
+use std::io::{BufWriter, Read, Write};
 use std::path::Path;
 
 fn main() {
     let path = Path::new(&env::var_os("OUT_DIR").unwrap()).join("codegen.rs");
-    let mut file = BufWriter::new(File::create(&path).unwrap());
+    let mut out_file = BufWriter::new(File::create(&path).unwrap());
+
+    let mut pinyin_data = String::new();
+    File::open("./pinyin-data/pinyin.txt")
+        .unwrap()
+        .read_to_string(&mut pinyin_data)
+        .unwrap();
+    let re_line = regex::Regex::new(r"^U\+([a-zA-Z\d]+):\s*([^\s]+)\s*#").unwrap();
 
     let mut builder = phf_codegen::Map::new();
-    let data = include!("data");
-    for i in 0..data.len() {
-        let (k, v) = data[i];
-        builder.entry(k, &escape_str(v));
+    for line in pinyin_data.lines() {
+        match re_line.captures(line) {
+            Some(group) => {
+                let hex = &group[1];
+                let code_point = u32::from_str_radix(hex, 16).unwrap();
+                let pinyin = &group[2];
+                builder.entry(code_point, &format!("\"{}\"", pinyin));
+            }
+            None => continue,
+        }
     }
     // 拼音库
-    write!(&mut file, "static PINYIN_MAP: ::phf::Map<u32, &'static str> = ").unwrap();
-    builder.build(&mut file).unwrap();
-    write!(&mut file, ";\n").unwrap();
+    write!(
+        &mut out_file,
+        "static PINYIN_MAP: ::phf::Map<u32, &'static str> = "
+    ).unwrap();
+    builder.build(&mut out_file).unwrap();
+    write!(&mut out_file, ";\n").unwrap();
 
     // 带声调字符
-    write!(&mut file, "static PHONETIC_SYMBOL_MAP: ::phf::Map<&'static str, &'static str> = ").unwrap();
+    write!(
+        &mut out_file,
+        "static PHONETIC_SYMBOL_MAP: ::phf::Map<&'static str, &'static str> = "
+    ).unwrap();
     phf_codegen::Map::new()
         .entry("ā", "\"a1\"")
         .entry("á", "\"a2\"")
@@ -50,17 +70,7 @@ fn main() {
         .entry("ń", "\"n2\"")
         .entry("ň", "\"n3\"")
         .entry("", "\"m2\"")
-        .build(&mut file)
+        .build(&mut out_file)
         .unwrap();
-    write!(&mut file, ";\n").unwrap();
-}
-
-fn escape_str(s: &str) -> String {
-    let mut res = String::new();
-    res.push('"');
-    for ch in s.chars() {
-        res.push_str(&format!("\\u{{{:x}}}", ch as u32));
-    }
-    res.push('"');
-    res
+    write!(&mut out_file, ";\n").unwrap();
 }
