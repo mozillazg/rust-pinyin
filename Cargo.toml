@@ -1,6 +1,6 @@
 [package]
 name = "pinyin"
-version = "0.0.6"
+version = "0.1.0"
 authors = ["mozillazg <mozillazg101@gmail.com>"]
 license = "MIT"
 readme = "README.md"
