@@ -15,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.1"
+pinyin = "0.2"
 ```
 
 and this to your crate root:
@@ -44,7 +44,7 @@ pub fn main() {
     // 默认输出 [["zhong"] ["guo"] ["ren"]]
     println!("{:?}",  pinyin::pinyin(hans, &args));
 
-    // 包含声调 [["zh\u{14d}ng"], ["gu\u{f3}"], ["r\u{e9}n"]]
+    // 包含声调 [["zhōng"], ["guó"], ["rén"]]
     args.style = pinyin::Style::Tone;
     println!("{:?}",  pinyin::pinyin(hans, &args));
 
