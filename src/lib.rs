@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! pinyin = "*"
+//! pinyin = "0.1"
 //! ```
 //!
 //! and this to your crate root:
@@ -137,7 +137,7 @@ fn _final(p: &str) -> String {
     s.concat()
 }
 
-fn to_fixed<'a>(p: String, a: &'a Args) -> String {
+fn to_fixed(p: String, a: &Args) -> String {
     match a.style {
         Style::Initials => {
             return initial(p).to_string();
@@ -194,7 +194,7 @@ fn to_fixed<'a>(p: String, a: &'a Args) -> String {
     ret
 }
 
-fn apply_style<'a>(pys: Vec<String>, a: &'a Args) -> Vec<String> {
+fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
     let mut new_pys: Vec<String> = vec![];
     for v in pys {
         let s = to_fixed(v, a);
@@ -203,7 +203,7 @@ fn apply_style<'a>(pys: Vec<String>, a: &'a Args) -> Vec<String> {
     new_pys
 }
 
-fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<String> {
+fn single_pinyin(c: char, a: &Args) -> Vec<String> {
     let mut ret: Vec<String> = vec![];
     let n: u32 = c as u32;
 
@@ -235,7 +235,7 @@ fn single_pinyin<'a>(c: char, a: &'a Args) -> Vec<String> {
 /// // 默认输出 [["zhong"] ["guo"] ["ren"]]
 /// println!("{:?}",  pinyin::pinyin(hans, &args));
 /// ```
-pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<Vec<String>> {
+pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
     let mut ret: Vec<Vec<String>> = Vec::new();
     let chars: Vec<char> = s.chars().collect();
     for c in chars {
