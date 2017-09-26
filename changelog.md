@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0 (2017-mm-dd)
+## 0.1.0 (2017-09-26)
 
 * 改为使用 [pinyin-data](https://github.com/mozillazg/pinyin-data) v0.4.1 的拼音数据
 
