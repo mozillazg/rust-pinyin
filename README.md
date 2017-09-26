@@ -15,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "*"
+pinyin = "0.1"
 ```
 
 and this to your crate root:
