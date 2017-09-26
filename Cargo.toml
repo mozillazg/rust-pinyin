@@ -8,7 +8,7 @@ homepage = "https://github.com/mozillazg/rust-pinyin"
 repository = "https://github.com/mozillazg/rust-pinyin"
 description = "Convert Chinese to pinyin"
 documentation = "https://docs.rs/pinyin/"
-keywords = ["pinyin", "hanzi", "Chinese", "拼音"]
+keywords = ["pinyin", "hanzi", "Chinese"]
 build = "build.rs"
 
 [features]
