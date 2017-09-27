@@ -6,6 +6,8 @@
   ``pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<Vec<String>>``
   改为
   ``pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>>``
+* 增加 ``lazy_pinyin`` 函数:
+  ``pub fn lazy_pinyin(s: &str, a: &Args) -> Vec<String>``
 
 
 ## 0.1.0 (2017-09-26)

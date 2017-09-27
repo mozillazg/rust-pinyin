@@ -128,6 +128,15 @@ fn test_pinyin() {
         ),
     ];
     for data in &test_data {
-        assert_eq!(data.result, pinyin::pinyin(hans, &data.args));
+        assert_eq!(&data.result, &pinyin::pinyin(hans, &data.args));
+
+        let mut lazy_result: Vec<String> = Vec::new();
+        for ret in &data.result {
+            for pinyin in ret {
+                lazy_result.push(pinyin.to_string());
+                break;
+            }
+        }
+        assert_eq!(lazy_result, pinyin::lazy_pinyin(hans, &data.args));
     }
 }
