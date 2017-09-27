@@ -52,7 +52,6 @@
 //! }
 //! ```
 
-#[macro_use]
 extern crate phf;
 extern crate regex;
 
@@ -84,8 +83,27 @@ pub enum Style {
 
 // 声母表
 const _INITIALS: [&'static str; 21] = [
-    "b", "p", "m", "f", "d", "t", "n", "l", "g",
-    "k", "h", "j", "q", "x", "r", "zh", "ch", "sh", "z", "c", "s",
+    "b",
+    "p",
+    "m",
+    "f",
+    "d",
+    "t",
+    "n",
+    "l",
+    "g",
+    "k",
+    "h",
+    "j",
+    "q",
+    "x",
+    "r",
+    "zh",
+    "ch",
+    "sh",
+    "z",
+    "c",
+    "s",
 ];
 
 
@@ -93,7 +111,7 @@ const _INITIALS: [&'static str; 21] = [
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub struct Args {
     /// 拼音风格
-    pub style:     Style,
+    pub style: Style,
     /// 是否启用多音字模式
     pub heteronym: bool,
 }
@@ -141,13 +159,12 @@ fn to_fixed(p: String, a: &Args) -> String {
     match a.style {
         Style::Initials => {
             return initial(p).to_string();
-        },
-        _ => {},
+        }
+        _ => {}
     };
 
-    let re_phonetic_symbol = Regex::new(
-        r"(?i)[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]"
-    ).unwrap();
+    let re_phonetic_symbol =
+        Regex::new(r"(?i)[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]").unwrap();
 
     // 匹配使用数字标识声调的字符的正则表达式
     let re_tone2 = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
@@ -166,28 +183,24 @@ fn to_fixed(p: String, a: &Args) -> String {
             Style::Normal | Style::FirstLetter | Style::Finals => {
                 // 去掉声调: a1 -> a
                 m = re_tone2.replace_all(symbol, "$1");
-            },
+            }
             Style::Tone2 | Style::FinalsTone2 => {
                 // 返回使用数字标识声调的字符
                 m = symbol.to_string();
-            },
+            }
             _ => {
                 // 声调在头上
                 m = cap.to_string();
-            },
+            }
         }
         m
     });
 
     let ret = match a.style {
         // 首字母
-        Style::FirstLetter => {
-            py.chars().nth(0).unwrap().to_string()
-        },
+        Style::FirstLetter => py.chars().nth(0).unwrap().to_string(),
         // 韵母
-        Style::Finals | Style::FinalsTone | Style::FinalsTone2 => {
-            _final(&py)
-        },
+        Style::Finals | Style::FinalsTone | Style::FinalsTone2 => _final(&py),
         _ => py,
     };
 
@@ -213,11 +226,11 @@ fn single_pinyin(c: char, a: &Args) -> Vec<String> {
             if x.len() == 0 || a.heteronym {
                 for s in x {
                     ret.push(s.to_string());
-                };
+                }
             } else {
                 ret = vec![x[0].to_string()];
             }
-        },
+        }
         None => {
             ret = vec![];
         }
@@ -242,5 +255,5 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
         ret.push(single_pinyin(c, a));
     }
 
-    return ret
+    return ret;
 }
