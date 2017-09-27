@@ -43,6 +43,8 @@ pub fn main() {
 
     // 默认输出 [["zhong"] ["guo"] ["ren"]]
     println!("{:?}",  pinyin::pinyin(hans, &args));
+    // ["zhong", "guo", "ren"]
+    println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
 
     // 包含声调 [["zhōng"], ["guó"], ["rén"]]
     args.style = pinyin::Style::Tone;

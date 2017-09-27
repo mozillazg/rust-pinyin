@@ -32,6 +32,8 @@
 //!
 //!     // 默认输出 [["zhong"] ["guo"] ["ren"]]
 //!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!     // ["zhong", "guo", "ren"]
+//!     println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
 //!
 //!     // 包含声调 [["zhōng"], ["guó"], ["rén"]]
 //!     args.style = pinyin::Style::Tone;
@@ -253,6 +255,28 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
     let chars: Vec<char> = s.chars().collect();
     for c in chars {
         ret.push(single_pinyin(c, a));
+    }
+
+    return ret;
+}
+
+/// 汉字转拼音, 与 ``pinyin`` 的区别是返回值不同，每个汉字只取一个音
+///
+/// ```
+/// let hans = "中国人";
+/// let args = pinyin::Args::new();
+///
+/// // 默认输出 ["zhong", "guo", "ren"]
+/// println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
+/// ```
+pub fn lazy_pinyin(s: &str, a: &Args) -> Vec<String> {
+    let mut ret: Vec<String> = Vec::new();
+    let chars: Vec<char> = s.chars().collect();
+    for c in chars {
+        for pinyin in single_pinyin(c, a) {
+            ret.push(pinyin);
+            break;
+        }
     }
 
     return ret;
