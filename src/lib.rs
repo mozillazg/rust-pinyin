@@ -271,9 +271,8 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
 /// ```
 pub fn lazy_pinyin(s: &str, a: &Args) -> Vec<String> {
     let mut ret: Vec<String> = Vec::new();
-    let chars: Vec<char> = s.chars().collect();
-    for c in chars {
-        for pinyin in single_pinyin(c, a) {
+    for pinyin_vc in pinyin(s, a) {
+        for pinyin in pinyin_vc {
             ret.push(pinyin);
             break;
         }
