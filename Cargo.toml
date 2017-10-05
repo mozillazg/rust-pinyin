@@ -11,6 +11,11 @@ documentation = "https://docs.rs/pinyin/"
 keywords = ["pinyin", "hanzi", "Chinese"]
 build = "build.rs"
 
+[badges]
+travis-ci = { repository = "mozillazg/rust-pinyin" }
+coveralls = { repository = "mozillazg/rust-pinyin" }
+
+
 [features]
 unstable = []
 
