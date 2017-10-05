@@ -140,3 +140,10 @@ fn test_pinyin() {
         assert_eq!(lazy_result, pinyin::lazy_pinyin(hans, &data.args));
     }
 }
+
+#[test]
+fn test_new_args() {
+    let args = pinyin::Args::new();
+    assert_eq!(pinyin::Style::Normal, args.style);
+    assert_eq!(false, args.heteronym);
+}
