@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (2017-mm-dd)
+## 0.2.0 (2017-10-05)
 
 * 修改 ``pinyin`` 函数，由
   ``pub fn pinyin<'a>(s: &'a str, a: &'a Args) -> Vec<Vec<String>>``
