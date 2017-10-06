@@ -132,9 +132,8 @@ fn test_pinyin() {
 
         let mut lazy_result: Vec<String> = Vec::new();
         for ret in &data.result {
-            for pinyin in ret {
-                lazy_result.push(pinyin.to_string());
-                break;
+            if !ret.is_empty() {
+                lazy_result.push(ret[0].to_string());
             }
         }
         assert_eq!(lazy_result, pinyin::lazy_pinyin(hans, &data.args));
