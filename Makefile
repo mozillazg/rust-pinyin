@@ -5,12 +5,13 @@ help:
 	@echo	"publish        publish"
 
 .PHONY: test
-test:
+test: lint
 	@cargo test
 
 .PHONY: lint
 lint:
 	@cargo fmt
+	@cargo clippy -- -A unreadable_literal
 
 .PHONY: publish
 publish: test
