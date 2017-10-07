@@ -135,10 +135,17 @@ impl Args {
     }
 }
 
+impl Default for Args {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+
 // 获取单个拼音中的声母
-fn initial(p: String) -> String {
+fn initial(p: &str) -> String {
     let mut s = "".to_string();
-    for v in _INITIALS.iter() {
+    for v in &_INITIALS {
         if p.starts_with(v) {
             s = v.to_string();
             break;
@@ -149,7 +156,7 @@ fn initial(p: String) -> String {
 
 // 获取单个拼音中的韵母
 fn _final(p: &str) -> String {
-    let i = initial(p.to_string());
+    let i = initial(p);
     if i == "" {
         return p.to_string();
     }
@@ -157,12 +164,9 @@ fn _final(p: &str) -> String {
     s.concat()
 }
 
-fn to_fixed(p: String, a: &Args) -> String {
-    match a.style {
-        Style::Initials => {
-            return initial(p).to_string();
-        }
-        _ => {}
+fn to_fixed(p: &str, a: &Args) -> String {
+    if let Style::Initials = a.style {
+        return initial(p).to_string();
     };
 
     let re_phonetic_symbol =
@@ -172,7 +176,7 @@ fn to_fixed(p: String, a: &Args) -> String {
     let re_tone2 = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
 
     // 替换拼音中的带声调字符
-    let py = re_phonetic_symbol.replace_all(&p, |caps: &Captures| {
+    let py = re_phonetic_symbol.replace_all(p, |caps: &Captures| {
         let cap = caps.at(0).unwrap();
         let symbol = match PHONETIC_SYMBOL_MAP.get(cap) {
             Some(&v) => v,
@@ -198,21 +202,19 @@ fn to_fixed(p: String, a: &Args) -> String {
         m
     });
 
-    let ret = match a.style {
+    match a.style {
         // 首字母
         Style::FirstLetter => py.chars().nth(0).unwrap().to_string(),
         // 韵母
         Style::Finals | Style::FinalsTone | Style::FinalsTone2 => _final(&py),
         _ => py,
-    };
-
-    ret
+    }
 }
 
 fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
     let mut new_pys: Vec<String> = vec![];
     for v in pys {
-        let s = to_fixed(v, a);
+        let s = to_fixed(&v, a);
         new_pys.push(s);
     }
     new_pys
@@ -225,7 +227,7 @@ fn single_pinyin(c: char, a: &Args) -> Vec<String> {
     match PINYIN_MAP.get(&n) {
         Some(&pys) => {
             let x: Vec<&str> = pys.split(',').collect();
-            if x.len() == 0 || a.heteronym {
+            if x.is_empty() || a.heteronym {
                 for s in x {
                     ret.push(s.to_string());
                 }
@@ -257,7 +259,7 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
         ret.push(single_pinyin(c, a));
     }
 
-    return ret;
+    ret
 }
 
 /// 汉字转拼音, 与 ``pinyin`` 的区别是返回值不同，每个汉字只取一个音
@@ -272,11 +274,10 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
 pub fn lazy_pinyin(s: &str, a: &Args) -> Vec<String> {
     let mut ret: Vec<String> = Vec::new();
     for pinyin_vc in pinyin(s, a) {
-        for pinyin in pinyin_vc {
-            ret.push(pinyin);
-            break;
+        if !pinyin_vc.is_empty() {
+            ret.push(pinyin_vc[0].to_string());
         }
     }
 
-    return ret;
+    ret
 }
