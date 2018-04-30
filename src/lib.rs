@@ -32,6 +32,7 @@
 //!
 //!     // 默认输出 [["zhong"] ["guo"] ["ren"]]
 //!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!
 //!     // ["zhong", "guo", "ren"]
 //!     println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
 //!
@@ -156,31 +157,33 @@ fn to_fixed(p: &str, a: &Args) -> String {
     let re_tone2 = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
 
     // 替换拼音中的带声调字符
-    let py = re_phonetic_symbol.replace_all(p, |caps: &Captures| {
-        let cap = caps.at(0).unwrap();
-        let symbol = match PHONETIC_SYMBOL_MAP.get(cap) {
-            Some(&v) => v,
-            None => "",
-        };
+    let py = re_phonetic_symbol
+        .replace_all(p, |caps: &Captures| {
+            let cap = &caps[0];
+            let symbol = match PHONETIC_SYMBOL_MAP.get(cap) {
+                Some(&v) => v,
+                None => "",
+            };
 
-        let m: String;
-        match a.style {
-            // 不包含声调
-            Style::Normal | Style::FirstLetter | Style::Finals => {
-                // 去掉声调: a1 -> a
-                m = re_tone2.replace_all(symbol, "$1");
+            let m: String;
+            match a.style {
+                // 不包含声调
+                Style::Normal | Style::FirstLetter | Style::Finals => {
+                    // 去掉声调: a1 -> a
+                    m = re_tone2.replace_all(symbol, "$1").to_string();
+                }
+                Style::Tone2 | Style::FinalsTone2 => {
+                    // 返回使用数字标识声调的字符
+                    m = symbol.to_string();
+                }
+                _ => {
+                    // 声调在头上
+                    m = cap.to_string();
+                }
             }
-            Style::Tone2 | Style::FinalsTone2 => {
-                // 返回使用数字标识声调的字符
-                m = symbol.to_string();
-            }
-            _ => {
-                // 声调在头上
-                m = cap.to_string();
-            }
-        }
-        m
-    });
+            m
+        })
+        .to_string();
 
     match a.style {
         // 首字母
