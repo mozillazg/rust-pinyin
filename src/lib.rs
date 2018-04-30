@@ -84,30 +84,10 @@ pub enum Style {
 }
 
 // 声母表
-const _INITIALS: [&'static str; 21] = [
-    "b",
-    "p",
-    "m",
-    "f",
-    "d",
-    "t",
-    "n",
-    "l",
-    "g",
-    "k",
-    "h",
-    "j",
-    "q",
-    "x",
-    "r",
-    "zh",
-    "ch",
-    "sh",
-    "z",
-    "c",
-    "s",
+const _INITIALS: [&str; 21] = [
+    "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch", "sh",
+    "z", "c", "s",
 ];
-
 
 /// 参数
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -140,7 +120,6 @@ impl Default for Args {
         Self::new()
     }
 }
-
 
 // 获取单个拼音中的声母
 fn initial(p: &str) -> String {

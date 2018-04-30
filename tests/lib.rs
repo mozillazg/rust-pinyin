@@ -9,13 +9,12 @@ struct TestCase {
 impl TestCase {
     pub fn new(args: pinyin::Args, result: Vec<Vec<String>>, lazy_result: Vec<String>) -> TestCase {
         TestCase {
-            args: args,
-            result: result,
-            lazy_result: lazy_result,
+            args,
+            result,
+            lazy_result,
         }
     }
 }
-
 
 #[test]
 fn test_pinyin() {
