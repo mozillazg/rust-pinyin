@@ -20,12 +20,12 @@ coveralls = { repository = "mozillazg/rust-pinyin" }
 unstable = []
 
 [dependencies]
-regex = "~0.1.8"
-phf = "~0.7.3"
+regex = "0.2"
+phf = "0.7"
 
 [build-dependencies]
-phf_codegen = "~0.7.3"
-regex = "~0.1.8"
+phf_codegen = "0.7"
+regex = "0.2"
 
 [[example]]
 name = "main"
