@@ -199,6 +199,12 @@ fn test_new_args() {
     let args = pinyin::Args::new();
     assert_eq!(pinyin::Style::Normal, args.style);
     assert_eq!(false, args.heteronym);
+
+    let expected = pinyin::Args {
+        style: pinyin::Style::Normal,
+        heteronym: false,
+    };
+    assert_eq!(expected, args);
 }
 
 #[test]
@@ -206,20 +212,46 @@ fn test_default_args() {
     let args = pinyin::Args::default();
     assert_eq!(pinyin::Style::Normal, args.style);
     assert_eq!(false, args.heteronym);
+
+    let expected = pinyin::Args {
+        style: pinyin::Style::Normal,
+        heteronym: false,
+    };
+    assert_eq!(expected, args);
 }
 
 #[test]
 fn test_no_initial() {
     let hans = "安";
-    let expect = vec!["an".to_string()];
-    let result = pinyin::lazy_pinyin(hans, &pinyin::Args::new());
+    let mut expect = vec!["an".to_string()];
+    let mut result = pinyin::lazy_pinyin(hans, &pinyin::Args::new());
+    assert_eq!(expect, result);
+
+    expect = vec!["an".to_string()];
+    result = pinyin::lazy_pinyin(
+        hans,
+        &pinyin::Args {
+            style: pinyin::Style::Finals,
+            heteronym: false,
+        },
+    );
     assert_eq!(expect, result);
 }
 
 #[test]
 fn test_no_phonetic_symbol() {
     let hans = "啊";
-    let expect = vec!["a".to_string()];
-    let result = pinyin::lazy_pinyin(hans, &pinyin::Args::new());
+    let mut expect = vec!["a".to_string()];
+    let mut result = pinyin::lazy_pinyin(hans, &pinyin::Args::new());
+    assert_eq!(expect, result);
+
+    expect = vec!["a".to_string()];
+    result = pinyin::lazy_pinyin(
+        hans,
+        &pinyin::Args {
+            style: pinyin::Style::Finals,
+            heteronym: false,
+        },
+    );
     assert_eq!(expect, result);
 }
