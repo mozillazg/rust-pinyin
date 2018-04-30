@@ -26,3 +26,7 @@ phf = "~0.7.3"
 [build-dependencies]
 phf_codegen = "~0.7.3"
 regex = "~0.1.8"
+
+[[example]]
+name = "main"
+crate-type = ["bin"]

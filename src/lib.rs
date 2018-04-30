@@ -48,6 +48,7 @@
 //!     args.heteronym = true;
 //!     // [["zhong", "zhong"] ["guo"] ["ren"]]
 //!     println!("{:?}",  pinyin::pinyin(hans, &args));
+//!
 //!     // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
 //!     args.style = pinyin::Style::Tone2;
 //!     println!("{:?}",  pinyin::pinyin(hans, &args));
