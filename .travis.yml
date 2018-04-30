@@ -1,33 +1,64 @@
 language: rust
-sudo: false
-# necessary for `travis-cargo coveralls --no-sudo`
+sudo: required
+
+cache: cargo
+
 addons:
   apt:
     packages:
       - libcurl4-openssl-dev
       - libelf-dev
       - libdw-dev
+      - binutils-dev
+      - cmake
+    sources:
+      - kalakris-cmake
+
 rust:
-  - 1.16.0
   - 1.17.0
   - 1.18.0
   - 1.19.0
   - 1.20.0
+  - 1.21.0
+  - 1.22.0
+  - 1.23.0
+  - 1.24.0
+  - 1.25.0
   - stable
   - beta
   - nightly
-# load travis-cargo
+
 before_script:
+  - export PATH=$HOME/.cargo/bin:$PATH
+  - export DISABLE_COVERALLS=0
   - |
-      pip install 'travis-cargo<0.2' --user &&
-      export PATH=$HOME/.local/bin:$PATH
+    if [[ $TRAVIS_RUST_VERSION == 1.17.* || \
+          $TRAVIS_RUST_VERSION == 1.18.* || \
+          $TRAVIS_RUST_VERSION == 1.19.* ]]; then
+      export DISABLE_COVERALLS=1
+      echo "disable coveralls"
+    else
+      cargo install cargo-update || echo "cargo-update already installed"
+      cargo install cargo-travis || echo "cargo-travis already installed"
+      cargo install-update -a
+    fi
+
 script:
   - |
-      travis-cargo build &&
-      travis-cargo test
+      cargo build &&
+      cargo test &&
+      cargo doc -p pinyin --no-deps &&
+      cargo run --example main &&
+      cargo bench
+
 after_success:
-  # measure code coverage and upload to coveralls.io
-  - travis-cargo coveralls --no-sudo
+  - |
+    if [[ $DISABLE_COVERALLS == 1* ]]; then
+      echo "disable coveralls"
+    else
+      cargo coveralls
+    fi
+
 matrix:
   allow_failures:
     - rust: nightly

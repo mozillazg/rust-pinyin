@@ -15,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.2"
+pinyin = "0.3"
 ```
 
 and this to your crate root:
@@ -59,6 +59,7 @@ pub fn main() {
     args.heteronym = true;
     // [["zhong", "zhong"] ["guo"] ["ren"]]
     println!("{:?}",  pinyin::pinyin(hans, &args));
+
     // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
     args.style = pinyin::Style::Tone2;
     println!("{:?}",  pinyin::pinyin(hans, &args));
