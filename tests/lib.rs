@@ -202,6 +202,13 @@ fn test_new_args() {
 }
 
 #[test]
+fn test_default_args() {
+    let args = pinyin::Args::default();
+    assert_eq!(pinyin::Style::Normal, args.style);
+    assert_eq!(false, args.heteronym);
+}
+
+#[test]
 fn test_no_initial() {
     let hans = "安";
     let expect = vec!["an".to_string()];
