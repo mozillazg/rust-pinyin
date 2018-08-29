@@ -83,8 +83,9 @@ fn main() {
     }
     assert_eq!(pinyin_map.len(), pinyin_set.len());
 
-    phonetic_symbol_map.sort_unstable_by_key(| &(k, _)| k );
-    pinyin_map.sort_unstable_by_key(| &(k, _)| k );
+    // NOTE: 使用稳定版的 sort
+    phonetic_symbol_map.sort_by_key(| &(k, _)| k );
+    pinyin_map.sort_by_key(| &(k, _)| k );
 
     let template = format!("
 

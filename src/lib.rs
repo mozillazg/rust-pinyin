@@ -61,6 +61,13 @@ mod dict;
 pub use dict::{ PINYIN_MAP, PHONETIC_SYMBOL_MAP };
 
 
+// 声母表
+const _INITIALS: [&str; 21] = [
+    "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch", "sh",
+    "z", "c", "s",
+];
+
+
 /// 拼音风格
 #[derive(Debug, PartialEq, Eq, Hash)]
 pub enum Style {
@@ -81,12 +88,6 @@ pub enum Style {
     /// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
     FinalsTone2,
 }
-
-// 声母表
-const _INITIALS: [&str; 21] = [
-    "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch", "sh",
-    "z", "c", "s",
-];
 
 /// 参数
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -152,12 +153,15 @@ fn to_fixed(p: &str, a: &Args) -> String {
         match PHONETIC_SYMBOL_MAP.binary_search_by_key(&c, |&(k, _)| k ) {
             Ok(index) => {
                 let symbol = PHONETIC_SYMBOL_MAP[index].1;
-
                 match a.style {
                     // 不包含声调
                     Style::Normal | Style::FirstLetter | Style::Finals => {
                         // 去掉声调: a1 -> a
-                        symbol.chars().filter(|c| !c.is_ascii_digit()).collect::<String>()
+                        symbol.chars().filter(|c: &char| {
+                            // NOTE: 该方法在 rustc 1.17.0 (56124baa9 2017-04-24) 版本当中需要引入 `use std::ascii::AsciiExt;`
+                            // !c.is_ascii_digit()
+                            *c != '0' && *c != '1' && *c != '2' && *c != '3' && *c != '4'
+                        }).collect::<String>()
                     }
                     Style::Tone2 | Style::FinalsTone2 => {
                         // 返回使用数字标识声调的字符
