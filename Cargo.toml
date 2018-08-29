@@ -9,24 +9,22 @@ repository = "https://github.com/mozillazg/rust-pinyin"
 description = "Convert Chinese to pinyin"
 documentation = "https://docs.rs/pinyin/"
 keywords = ["pinyin", "hanzi", "Chinese"]
-build = "build.rs"
 
 [badges]
 travis-ci = { repository = "mozillazg/rust-pinyin" }
 coveralls = { repository = "mozillazg/rust-pinyin" }
 
-
-[features]
-unstable = []
-
-[dependencies]
-regex = "0.2"
-phf = "0.7"
-
-[build-dependencies]
-phf_codegen = "0.7"
-regex = "0.2"
+[[bin]]
+name = "mk_dict"
+path = "./src/bin/mk_dict.rs"
 
 [[example]]
 name = "main"
-crate-type = ["bin"]
+path = "./examples/main.rs"
+
+
+[dependencies]
+
+
+[features]
+unstable = []

@@ -55,13 +55,11 @@
 //! }
 //! ```
 
-extern crate phf;
-extern crate regex;
 
-use regex::Captures;
-use regex::Regex;
+mod dict;
 
-include!(concat!(env!("OUT_DIR"), "/codegen.rs"));
+pub use dict::{ PINYIN_MAP, PHONETIC_SYMBOL_MAP };
+
 
 /// 拼音风格
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -149,40 +147,33 @@ fn to_fixed(p: &str, a: &Args) -> String {
         return initial(p).to_string();
     };
 
-    let re_phonetic_symbol =
-        Regex::new(r"(?i)[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]").unwrap();
-
-    // 匹配使用数字标识声调的字符的正则表达式
-    let re_tone2 = Regex::new(r"([aeoiuvnm])([0-4])$").unwrap();
-
     // 替换拼音中的带声调字符
-    let py = re_phonetic_symbol
-        .replace_all(p, |caps: &Captures| {
-            let cap = &caps[0];
-            let symbol = match PHONETIC_SYMBOL_MAP.get(cap) {
-                Some(&v) => v,
-                None => "",
-            };
+    let py = p.chars().map(|c| {
+        match PHONETIC_SYMBOL_MAP.binary_search_by_key(&c, |&(k, _)| k ) {
+            Ok(index) => {
+                let symbol = PHONETIC_SYMBOL_MAP[index].1;
 
-            let m: String;
-            match a.style {
-                // 不包含声调
-                Style::Normal | Style::FirstLetter | Style::Finals => {
-                    // 去掉声调: a1 -> a
-                    m = re_tone2.replace_all(symbol, "$1").to_string();
+                match a.style {
+                    // 不包含声调
+                    Style::Normal | Style::FirstLetter | Style::Finals => {
+                        // 去掉声调: a1 -> a
+                        symbol.chars().filter(|c| !c.is_ascii_digit()).collect::<String>()
+                    }
+                    Style::Tone2 | Style::FinalsTone2 => {
+                        // 返回使用数字标识声调的字符
+                        symbol.to_string()
+                    }
+                    _ => {
+                        // 声调在头上
+                        c.to_string()
+                    }
                 }
-                Style::Tone2 | Style::FinalsTone2 => {
-                    // 返回使用数字标识声调的字符
-                    m = symbol.to_string();
-                }
-                _ => {
-                    // 声调在头上
-                    m = cap.to_string();
-                }
+            },
+            Err(_) => {
+                c.to_string()
             }
-            m
-        })
-        .to_string();
+        }
+    }).collect::<String>();
 
     match a.style {
         // 首字母
@@ -203,25 +194,16 @@ fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {
-    let mut ret: Vec<String> = vec![];
-    let n: u32 = c as u32;
-
-    match PINYIN_MAP.get(&n) {
-        Some(&pys) => {
-            let x: Vec<&str> = pys.split(',').collect();
-            if x.is_empty() || a.heteronym {
-                for s in x {
-                    ret.push(s.to_string());
+    let ret: Vec<String> = PINYIN_MAP.binary_search_by_key(&c, |&(k, _)| k )
+            .map(|index| {
+                let pinyin_list = PINYIN_MAP[index].1.split(',').collect::<Vec<&str>>();
+                if pinyin_list.is_empty() || a.heteronym {
+                    pinyin_list.iter().map(|pinyin| pinyin.to_string()).collect::<Vec<String>>()
+                } else {
+                    vec![pinyin_list[0].to_string()]
                 }
-            } else {
-                ret = vec![x[0].to_string()];
-            }
-        }
-        None => {
-            ret = vec![];
-        }
-    };
-
+            })
+            .unwrap_or(vec![]);
     apply_style(ret, a)
 }
 
