@@ -15,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.3"
+pinyin = "0.4"
 ```
 
 and this to your crate root:
@@ -66,6 +66,20 @@ pub fn main() {
 }
 ```
 
+
+Build
+------------
+
+```
+$ make build
+```
+
+Test
+------------
+
+```
+$ make test
+```
 
 
 Related Projects

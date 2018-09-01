@@ -209,6 +209,10 @@ fn test_new_args() {
 
 #[test]
 fn test_default_args() {
+    let args: pinyin::Args = Default::default();
+    assert_eq!(pinyin::Style::Normal, args.style);
+    assert_eq!(false, args.heteronym);
+
     let args = pinyin::Args::default();
     assert_eq!(pinyin::Style::Normal, args.style);
     assert_eq!(false, args.heteronym);

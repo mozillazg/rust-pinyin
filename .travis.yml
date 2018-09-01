@@ -1,18 +1,13 @@
 language: rust
 sudo: required
+dist: trusty
 
 cache: cargo
 
 addons:
   apt:
     packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
-      - cmake
-    sources:
-      - kalakris-cmake
+      - libssl-dev
 
 rust:
   - 1.17.0
@@ -24,27 +19,16 @@ rust:
   - 1.23.0
   - 1.24.0
   - 1.25.0
+  - 1.26.0
+  - 1.27.0
+  - 1.28.0
   - stable
   - beta
   - nightly
 
-before_script:
-  - export PATH=$HOME/.cargo/bin:$PATH
-  - export DISABLE_COVERALLS=0
-  - |
-    if [[ $TRAVIS_RUST_VERSION == 1.17.* || \
-          $TRAVIS_RUST_VERSION == 1.18.* || \
-          $TRAVIS_RUST_VERSION == 1.19.* ]]; then
-      export DISABLE_COVERALLS=1
-      echo "disable coveralls"
-    else
-      cargo install cargo-update || echo "cargo-update already installed"
-      cargo install cargo-travis || echo "cargo-travis already installed"
-      cargo install-update -a
-    fi
-
 script:
   - |
+      cargo clean &&
       cargo build &&
       cargo test &&
       cargo doc -p pinyin --no-deps &&
@@ -53,11 +37,11 @@ script:
 
 after_success:
   - |
-    if [[ $DISABLE_COVERALLS == 1* ]]; then
-      echo "disable coveralls"
-    else
-      cargo coveralls
-    fi
+      if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+        RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-tarpaulin
+        cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
+          --exclude-files 'tests/*' --exclude-files 'src/bin/*'
+      fi
 
 matrix:
   allow_failures:
