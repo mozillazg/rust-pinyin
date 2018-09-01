@@ -1,46 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `src/lib.rs`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang">
-
-    <title>lib.rs.html -- source</title>
-
-    <link rel="stylesheet" type="text/css" href="../../main.css">
-
-    
-    
-</head>
-<body class="rustdoc">
-    <!--[if lte IE 8]>
-    <div class="warning">
-        This old browser is unsupported and will most likely display funky
-        things.
-    </div>
-    <![endif]-->
-
-    
-
-    <nav class="sidebar">
-        
-        
-    </nav>
-
-    <nav class="sub">
-        <form class="search-form js-only">
-            <div class="search-container">
-                <input class="search-input" name="search"
-                       autocomplete="off"
-                       placeholder="Click or press ‘S’ to search, ‘?’ for more options…"
-                       type="search">
-            </div>
-        </form>
-    </nav>
-
-    <section id='main' class="content source"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -286,313 +244,266 @@
 <span id="244">244</span>
 <span id="245">245</span>
 <span id="246">246</span>
-</pre><pre class='rust '>
-<span class='doccomment'>//! 汉语拼音转换工具 Rust 版。</span>
-<span class='doccomment'>//! [![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)</span>
-<span class='doccomment'>//! [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)</span>
-<span class='doccomment'>//! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)</span>
-<span class='doccomment'>//! [![GitHub</span>
-<span class='doccomment'>//! stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&amp;label=Star)](https://github.com/mozillazg/rust-pinyin)</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # Usage</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! This crate is [on crates.io](https://crates.io/crates/pinyin) and can be</span>
-<span class='doccomment'>//! used by adding `pinyin` to your dependencies in your project&#39;s `Cargo.toml`.</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```toml</span>
-<span class='doccomment'>//! [dependencies]</span>
-<span class='doccomment'>//! pinyin = &quot;*&quot;</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! and this to your crate root:</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```rust</span>
-<span class='doccomment'>//! extern crate pinyin;</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! # 示例</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! ```</span>
-<span class='doccomment'>//! extern crate pinyin;</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//! pub fn main() {</span>
-<span class='doccomment'>//!     let hans = &quot;中国人&quot;;</span>
-<span class='doccomment'>//!     let mut args = pinyin::Args::new();</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
-<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // 包含声调 [[&quot;zh\u{14d}ng&quot;], [&quot;gu\u{f3}&quot;], [&quot;r\u{e9}n&quot;]]</span>
-<span class='doccomment'>//!     args.style = pinyin::Style::Tone;</span>
-<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // 声调用数字表示 [[&quot;zho1ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
-<span class='doccomment'>//!     args.style = pinyin::Style::Tone2;</span>
-<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>//!</span>
-<span class='doccomment'>//!     // 开启多音字模式</span>
-<span class='doccomment'>//!     args = pinyin::Args::new();</span>
-<span class='doccomment'>//!     args.heteronym = true;</span>
-<span class='doccomment'>//!     // [[&quot;zhong&quot;, &quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
-<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>//!     // [[&quot;zho1ng&quot;, &quot;zho4ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
-<span class='doccomment'>//!     args.style = pinyin::Style::Tone2;</span>
-<span class='doccomment'>//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>//! }</span>
-<span class='doccomment'>//! ```</span>
+<span id="247">247</span>
+<span id="248">248</span>
+<span id="249">249</span>
+<span id="250">250</span>
+<span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
+</pre><pre class="rust ">
+<span class="doccomment">//! 汉语拼音转换工具 Rust 版。</span>
+<span class="doccomment">//! [![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)</span>
+<span class="doccomment">//! [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)</span>
+<span class="doccomment">//! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)</span>
+<span class="doccomment">//! [![GitHub stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&amp;label=Star)](https://github.com/mozillazg/rust-pinyin)</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # Usage</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! This crate is [on crates.io](https://crates.io/crates/pinyin) and can be</span>
+<span class="doccomment">//! used by adding `pinyin` to your dependencies in your project&#39;s `Cargo.toml`.</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```toml</span>
+<span class="doccomment">//! [dependencies]</span>
+<span class="doccomment">//! pinyin = &quot;0.4&quot;</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! and this to your crate root:</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```rust</span>
+<span class="doccomment">//! extern crate pinyin;</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! # 示例</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! ```</span>
+<span class="doccomment">//! extern crate pinyin;</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! pub fn main() {</span>
+<span class="doccomment">//!     let hans = &quot;中国人&quot;;</span>
+<span class="doccomment">//!     let mut args = pinyin::Args::new();</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+<span class="doccomment">//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // [&quot;zhong&quot;, &quot;guo&quot;, &quot;ren&quot;]</span>
+<span class="doccomment">//!     println!(&quot;{:?}&quot;,  pinyin::lazy_pinyin(hans, &amp;args));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // 包含声调 [[&quot;zhōng&quot;], [&quot;guó&quot;], [&quot;rén&quot;]]</span>
+<span class="doccomment">//!     args.style = pinyin::Style::Tone;</span>
+<span class="doccomment">//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // 声调用数字表示 [[&quot;zho1ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
+<span class="doccomment">//!     args.style = pinyin::Style::Tone2;</span>
+<span class="doccomment">//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // 开启多音字模式</span>
+<span class="doccomment">//!     args = pinyin::Args::new();</span>
+<span class="doccomment">//!     args.heteronym = true;</span>
+<span class="doccomment">//!     // [[&quot;zhong&quot;, &quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+<span class="doccomment">//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//!     // [[&quot;zho1ng&quot;, &quot;zho4ng&quot;] [&quot;guo2&quot;] [&quot;re2n&quot;]]</span>
+<span class="doccomment">//!     args.style = pinyin::Style::Tone2;</span>
+<span class="doccomment">//!     println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class="doccomment">//! }</span>
+<span class="doccomment">//! ```</span>
 
-<span class='attribute'>#[<span class='ident'>macro_use</span>]</span>
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>phf</span>;
-<span class='kw'>extern</span> <span class='kw'>crate</span> <span class='ident'>regex</span>;
+<span class="kw">mod</span> <span class="ident">dict</span>;
 
-<span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>Captures</span>;
-<span class='kw'>use</span> <span class='ident'>regex</span>::<span class='ident'>Regex</span>;
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">dict</span>::{<span class="ident">PHONETIC_SYMBOL_MAP</span>, <span class="ident">PINYIN_MAP</span>};
 
-<span class='macro'>include</span><span class='macro'>!</span>(<span class='macro'>concat</span><span class='macro'>!</span>(<span class='macro'>env</span><span class='macro'>!</span>(<span class='string'>&quot;OUT_DIR&quot;</span>), <span class='string'>&quot;/codegen.rs&quot;</span>));
-
-<span class='doccomment'>/// 拼音风格</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>Style</span> {
-    <span class='doccomment'>/// 普通风格，不带声调（默认风格）。如： `pin yin`</span>
-    <span class='ident'>Normal</span>,
-    <span class='doccomment'>/// 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`</span>
-    <span class='ident'>Tone</span>,
-    <span class='doccomment'>/// 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`</span>
-    <span class='ident'>Tone2</span>,
-    <span class='doccomment'>/// 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`</span>
-    <span class='ident'>Initials</span>,
-    <span class='doccomment'>/// 首字母风格，只返回拼音的首字母部分。如： `p y`</span>
-    <span class='ident'>FirstLetter</span>,
-    <span class='doccomment'>/// 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`</span>
-    <span class='ident'>Finals</span>,
-    <span class='doccomment'>/// 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`</span>
-    <span class='ident'>FinalsTone</span>,
-    <span class='doccomment'>/// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`</span>
-    <span class='ident'>FinalsTone2</span>,
-}
-
-<span class='comment'>// 声母表</span>
-<span class='kw'>const</span> <span class='ident'>_INITIALS</span>: [<span class='kw-2'>&amp;</span><span class='lifetime'>&#39;static</span> <span class='ident'>str</span>; <span class='number'>21</span>] <span class='op'>=</span> [
-    <span class='string'>&quot;b&quot;</span>, <span class='string'>&quot;p&quot;</span>, <span class='string'>&quot;m&quot;</span>, <span class='string'>&quot;f&quot;</span>, <span class='string'>&quot;d&quot;</span>, <span class='string'>&quot;t&quot;</span>, <span class='string'>&quot;n&quot;</span>, <span class='string'>&quot;l&quot;</span>, <span class='string'>&quot;g&quot;</span>,
-    <span class='string'>&quot;k&quot;</span>, <span class='string'>&quot;h&quot;</span>, <span class='string'>&quot;j&quot;</span>, <span class='string'>&quot;q&quot;</span>, <span class='string'>&quot;x&quot;</span>, <span class='string'>&quot;r&quot;</span>, <span class='string'>&quot;zh&quot;</span>, <span class='string'>&quot;ch&quot;</span>, <span class='string'>&quot;sh&quot;</span>, <span class='string'>&quot;z&quot;</span>, <span class='string'>&quot;c&quot;</span>, <span class='string'>&quot;s&quot;</span>,
+<span class="comment">// 声母表</span>
+<span class="kw">const</span> <span class="ident">_INITIALS</span>: [<span class="kw-2">&amp;</span><span class="ident">str</span>; <span class="number">21</span>] <span class="op">=</span> [
+    <span class="string">&quot;b&quot;</span>, <span class="string">&quot;p&quot;</span>, <span class="string">&quot;m&quot;</span>, <span class="string">&quot;f&quot;</span>, <span class="string">&quot;d&quot;</span>, <span class="string">&quot;t&quot;</span>, <span class="string">&quot;n&quot;</span>, <span class="string">&quot;l&quot;</span>, <span class="string">&quot;g&quot;</span>, <span class="string">&quot;k&quot;</span>, <span class="string">&quot;h&quot;</span>, <span class="string">&quot;j&quot;</span>, <span class="string">&quot;q&quot;</span>, <span class="string">&quot;x&quot;</span>, <span class="string">&quot;r&quot;</span>, <span class="string">&quot;zh&quot;</span>, <span class="string">&quot;ch&quot;</span>, <span class="string">&quot;sh&quot;</span>,
+    <span class="string">&quot;z&quot;</span>, <span class="string">&quot;c&quot;</span>, <span class="string">&quot;s&quot;</span>,
 ];
 
-
-<span class='doccomment'>/// 参数</span>
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>PartialEq</span>, <span class='ident'>Eq</span>, <span class='ident'>Hash</span>)]</span>
-<span class='kw'>pub</span> <span class='kw'>struct</span> <span class='ident'>Args</span> {
-    <span class='doccomment'>/// 拼音风格</span>
-    <span class='kw'>pub</span> <span class='ident'>style</span>:     <span class='ident'>Style</span>,
-    <span class='doccomment'>/// 是否启用多音字模式</span>
-    <span class='kw'>pub</span> <span class='ident'>heteronym</span>: <span class='ident'>bool</span>,
+<span class="doccomment">/// 拼音风格</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
+<span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">Style</span> {
+    <span class="doccomment">/// 普通风格，不带声调（默认风格）。如： `pin yin`</span>
+    <span class="ident">Normal</span>,
+    <span class="doccomment">/// 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`</span>
+    <span class="ident">Tone</span>,
+    <span class="doccomment">/// 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`</span>
+    <span class="ident">Tone2</span>,
+    <span class="doccomment">/// 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`</span>
+    <span class="ident">Initials</span>,
+    <span class="doccomment">/// 首字母风格，只返回拼音的首字母部分。如： `p y`</span>
+    <span class="ident">FirstLetter</span>,
+    <span class="doccomment">/// 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`</span>
+    <span class="ident">Finals</span>,
+    <span class="doccomment">/// 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`</span>
+    <span class="ident">FinalsTone</span>,
+    <span class="doccomment">/// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`</span>
+    <span class="ident">FinalsTone2</span>,
 }
 
-<span class='kw'>impl</span> <span class='ident'>Args</span> {
-    <span class='doccomment'>/// 返回一个默认参数</span>
-    <span class='doccomment'>///</span>
-    <span class='doccomment'>/// ```ignore</span>
-    <span class='doccomment'>/// Args {</span>
-    <span class='doccomment'>///    style: Style::Normal,</span>
-    <span class='doccomment'>///    heteronym: false,</span>
-    <span class='doccomment'>/// }</span>
-    <span class='doccomment'>/// ```</span>
-    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>new</span>() <span class='op'>-&gt;</span> <span class='ident'>Args</span> {
-        <span class='ident'>Args</span> {
-            <span class='ident'>style</span>: <span class='ident'>Style</span>::<span class='ident'>Normal</span>,
-            <span class='ident'>heteronym</span>: <span class='boolval'>false</span>,
+<span class="doccomment">/// 参数</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Hash</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Args</span> {
+    <span class="doccomment">/// 拼音风格</span>
+    <span class="kw">pub</span> <span class="ident">style</span>: <span class="ident">Style</span>,
+    <span class="doccomment">/// 是否启用多音字模式</span>
+    <span class="kw">pub</span> <span class="ident">heteronym</span>: <span class="ident">bool</span>,
+}
+
+<span class="kw">impl</span> <span class="ident">Args</span> {
+    <span class="doccomment">/// 返回一个默认参数</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```ignore</span>
+    <span class="doccomment">/// Args {</span>
+    <span class="doccomment">///    style: Style::Normal,</span>
+    <span class="doccomment">///    heteronym: false,</span>
+    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>() <span class="op">-&gt;</span> <span class="ident">Args</span> {
+        <span class="ident">Args</span> {
+            <span class="ident">style</span>: <span class="ident">Style</span>::<span class="ident">Normal</span>,
+            <span class="ident">heteronym</span>: <span class="bool-val">false</span>,
         }
     }
 }
 
-<span class='comment'>// 获取单个拼音中的声母</span>
-<span class='kw'>fn</span> <span class='ident'>initial</span>(<span class='ident'>p</span>: <span class='ident'>String</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='string'>&quot;&quot;</span>.<span class='ident'>to_string</span>();
-    <span class='kw'>for</span> <span class='ident'>v</span> <span class='kw'>in</span> <span class='ident'>_INITIALS</span>.<span class='ident'>iter</span>() {
-        <span class='kw'>if</span> <span class='ident'>p</span>.<span class='ident'>starts_with</span>(<span class='ident'>v</span>) {
-            <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>v</span>.<span class='ident'>to_string</span>();
-            <span class='kw'>break</span>;
+<span class="kw">impl</span> <span class="ident">Default</span> <span class="kw">for</span> <span class="ident">Args</span> {
+    <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="self">Self</span>::<span class="ident">new</span>()
+    }
+}
+
+<span class="comment">// 获取单个拼音中的声母</span>
+<span class="kw">fn</span> <span class="ident">initial</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">s</span> <span class="op">=</span> <span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>();
+    <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">_INITIALS</span> {
+        <span class="kw">if</span> <span class="ident">p</span>.<span class="ident">starts_with</span>(<span class="ident">v</span>) {
+            <span class="ident">s</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">to_string</span>();
+            <span class="kw">break</span>;
         }
     }
-    <span class='ident'>s</span>
+    <span class="ident">s</span>
 }
 
-<span class='comment'>// 获取单个拼音中的韵母</span>
-<span class='kw'>fn</span> <span class='ident'>_final</span>(<span class='ident'>p</span>: <span class='kw-2'>&amp;</span><span class='ident'>str</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='kw'>let</span> <span class='ident'>i</span> <span class='op'>=</span> <span class='ident'>initial</span>(<span class='ident'>p</span>.<span class='ident'>to_string</span>());
-    <span class='kw'>if</span> <span class='ident'>i</span> <span class='op'>==</span> <span class='string'>&quot;&quot;</span> {
-        <span class='kw'>return</span> <span class='ident'>p</span>.<span class='ident'>to_string</span>();
+<span class="comment">// 获取单个拼音中的韵母</span>
+<span class="kw">fn</span> <span class="ident">_final</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">initial</span>(<span class="ident">p</span>);
+    <span class="kw">if</span> <span class="ident">i</span> <span class="op">==</span> <span class="string">&quot;&quot;</span> {
+        <span class="kw">return</span> <span class="ident">p</span>.<span class="ident">to_string</span>();
     }
-    <span class='kw'>let</span> <span class='ident'>s</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>p</span>.<span class='ident'>splitn</span>(<span class='number'>2</span>, <span class='kw-2'>&amp;</span><span class='ident'>i</span>).<span class='ident'>collect</span>();
-    <span class='ident'>s</span>.<span class='ident'>concat</span>()
+    <span class="kw">let</span> <span class="ident">s</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">p</span>.<span class="ident">splitn</span>(<span class="number">2</span>, <span class="kw-2">&amp;</span><span class="ident">i</span>).<span class="ident">collect</span>();
+    <span class="ident">s</span>.<span class="ident">concat</span>()
 }
 
-<span class='kw'>fn</span> <span class='ident'>to_fixed</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>p</span>: <span class='ident'>String</span>, <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Args</span>) <span class='op'>-&gt;</span> <span class='ident'>String</span> {
-    <span class='kw'>match</span> <span class='ident'>a</span>.<span class='ident'>style</span> {
-        <span class='ident'>Style</span>::<span class='ident'>Initials</span> <span class='op'>=&gt;</span> {
-            <span class='kw'>return</span> <span class='ident'>initial</span>(<span class='ident'>p</span>).<span class='ident'>to_string</span>();
-        },
-        _ <span class='op'>=&gt;</span> {},
+<span class="kw">fn</span> <span class="ident">to_fixed</span>(<span class="ident">p</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Args</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+    <span class="kw">if</span> <span class="kw">let</span> <span class="ident">Style</span>::<span class="ident">Initials</span> <span class="op">=</span> <span class="ident">a</span>.<span class="ident">style</span> {
+        <span class="kw">return</span> <span class="ident">initial</span>(<span class="ident">p</span>).<span class="ident">to_string</span>();
     };
 
-    <span class='kw'>let</span> <span class='ident'>re_phonetic_symbol</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(
-        <span class='string'>r&quot;(?i)[āáǎàēéěèōóǒòīíǐìūúǔùüǘǚǜńň]&quot;</span>
-    ).<span class='ident'>unwrap</span>();
-
-    <span class='comment'>// 匹配使用数字标识声调的字符的正则表达式</span>
-    <span class='kw'>let</span> <span class='ident'>re_tone2</span> <span class='op'>=</span> <span class='ident'>Regex</span>::<span class='ident'>new</span>(<span class='string'>r&quot;([aeoiuvnm])([0-4])$&quot;</span>).<span class='ident'>unwrap</span>();
-
-    <span class='comment'>// 替换拼音中的带声调字符</span>
-    <span class='kw'>let</span> <span class='ident'>py</span> <span class='op'>=</span> <span class='ident'>re_phonetic_symbol</span>.<span class='ident'>replace_all</span>(<span class='kw-2'>&amp;</span><span class='ident'>p</span>, <span class='op'>|</span><span class='ident'>caps</span>: <span class='kw-2'>&amp;</span><span class='ident'>Captures</span><span class='op'>|</span> {
-        <span class='kw'>let</span> <span class='ident'>cap</span> <span class='op'>=</span> <span class='ident'>caps</span>.<span class='ident'>at</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>();
-        <span class='kw'>let</span> <span class='ident'>symbol</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>PHONETIC_SYMBOL_MAP</span>.<span class='ident'>get</span>(<span class='ident'>cap</span>) {
-            <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>v</span>) <span class='op'>=&gt;</span> <span class='ident'>v</span>,
-            <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> <span class='string'>&quot;&quot;</span>,
-        };
-
-        <span class='kw'>let</span> <span class='ident'>m</span>: <span class='ident'>String</span>;
-        <span class='kw'>match</span> <span class='ident'>a</span>.<span class='ident'>style</span> {
-            <span class='comment'>// 不包含声调</span>
-            <span class='ident'>Style</span>::<span class='ident'>Normal</span> <span class='op'>|</span> <span class='ident'>Style</span>::<span class='ident'>FirstLetter</span> <span class='op'>|</span> <span class='ident'>Style</span>::<span class='ident'>Finals</span> <span class='op'>=&gt;</span> {
-                <span class='comment'>// 去掉声调: a1 -&gt; a</span>
-                <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>re_tone2</span>.<span class='ident'>replace_all</span>(<span class='ident'>symbol</span>, <span class='string'>&quot;$1&quot;</span>);
-            },
-            <span class='ident'>Style</span>::<span class='ident'>Tone2</span> <span class='op'>|</span> <span class='ident'>Style</span>::<span class='ident'>FinalsTone2</span> <span class='op'>=&gt;</span> {
-                <span class='comment'>// 返回使用数字标识声调的字符</span>
-                <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>symbol</span>.<span class='ident'>to_string</span>();
-            },
-            _ <span class='op'>=&gt;</span> {
-                <span class='comment'>// 声调在头上</span>
-                <span class='ident'>m</span> <span class='op'>=</span> <span class='ident'>cap</span>.<span class='ident'>to_string</span>();
-            },
-        }
-        <span class='ident'>m</span>
-    });
-
-    <span class='kw'>let</span> <span class='ident'>ret</span> <span class='op'>=</span> <span class='kw'>match</span> <span class='ident'>a</span>.<span class='ident'>style</span> {
-        <span class='comment'>// 首字母</span>
-        <span class='ident'>Style</span>::<span class='ident'>FirstLetter</span> <span class='op'>=&gt;</span> {
-            <span class='ident'>py</span>.<span class='ident'>chars</span>().<span class='ident'>nth</span>(<span class='number'>0</span>).<span class='ident'>unwrap</span>().<span class='ident'>to_string</span>()
-        },
-        <span class='comment'>// 韵母</span>
-        <span class='ident'>Style</span>::<span class='ident'>Finals</span> <span class='op'>|</span> <span class='ident'>Style</span>::<span class='ident'>FinalsTone</span> <span class='op'>|</span> <span class='ident'>Style</span>::<span class='ident'>FinalsTone2</span> <span class='op'>=&gt;</span> {
-            <span class='ident'>_final</span>(<span class='kw-2'>&amp;</span><span class='ident'>py</span>)
-        },
-        _ <span class='op'>=&gt;</span> <span class='ident'>py</span>,
-    };
-
-    <span class='ident'>ret</span>
-}
-
-<span class='kw'>fn</span> <span class='ident'>apply_style</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>pys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span>, <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Args</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>new_pys</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
-    <span class='kw'>for</span> <span class='ident'>v</span> <span class='kw'>in</span> <span class='ident'>pys</span> {
-        <span class='kw'>let</span> <span class='ident'>s</span> <span class='op'>=</span> <span class='ident'>to_fixed</span>(<span class='ident'>v</span>, <span class='ident'>a</span>);
-        <span class='ident'>new_pys</span>.<span class='ident'>push</span>(<span class='ident'>s</span>);
-    }
-    <span class='ident'>new_pys</span>
-}
-
-<span class='kw'>fn</span> <span class='ident'>single_pinyin</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>c</span>: <span class='ident'>char</span>, <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Args</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
-    <span class='kw'>let</span> <span class='ident'>n</span>: <span class='ident'>u32</span> <span class='op'>=</span> <span class='ident'>c</span> <span class='kw'>as</span> <span class='ident'>u32</span>;
-
-    <span class='kw'>match</span> <span class='ident'>PINYIN_MAP</span>.<span class='ident'>get</span>(<span class='kw-2'>&amp;</span><span class='ident'>n</span>) {
-        <span class='prelude-val'>Some</span>(<span class='kw-2'>&amp;</span><span class='ident'>pys</span>) <span class='op'>=&gt;</span> {
-            <span class='kw'>let</span> <span class='ident'>x</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='kw-2'>&amp;</span><span class='ident'>str</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>pys</span>.<span class='ident'>split</span>(<span class='string'>&#39;,&#39;</span>).<span class='ident'>collect</span>();
-            <span class='kw'>if</span> <span class='ident'>x</span>.<span class='ident'>len</span>() <span class='op'>==</span> <span class='number'>0</span> <span class='op'>||</span> <span class='ident'>a</span>.<span class='ident'>heteronym</span> {
-                <span class='kw'>for</span> <span class='ident'>s</span> <span class='kw'>in</span> <span class='ident'>x</span> {
-                    <span class='ident'>ret</span>.<span class='ident'>push</span>(<span class='ident'>s</span>.<span class='ident'>to_string</span>());
-                };
-            } <span class='kw'>else</span> {
-                <span class='ident'>ret</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[<span class='ident'>x</span>[<span class='number'>0</span>].<span class='ident'>to_string</span>()];
+    <span class="comment">// 替换拼音中的带声调字符</span>
+    <span class="kw">let</span> <span class="ident">py</span> <span class="op">=</span> <span class="ident">p</span>
+        .<span class="ident">chars</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> {
+            <span class="kw">match</span> <span class="ident">PHONETIC_SYMBOL_MAP</span>.<span class="ident">binary_search_by_key</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="op">|</span><span class="kw-2">&amp;</span>(<span class="ident">k</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">k</span>) {
+                <span class="prelude-val">Ok</span>(<span class="ident">index</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">let</span> <span class="ident">symbol</span> <span class="op">=</span> <span class="ident">PHONETIC_SYMBOL_MAP</span>[<span class="ident">index</span>].<span class="number">1</span>;
+                    <span class="kw">match</span> <span class="ident">a</span>.<span class="ident">style</span> {
+                        <span class="comment">// 不包含声调</span>
+                        <span class="ident">Style</span>::<span class="ident">Normal</span> <span class="op">|</span> <span class="ident">Style</span>::<span class="ident">FirstLetter</span> <span class="op">|</span> <span class="ident">Style</span>::<span class="ident">Finals</span> <span class="op">=&gt;</span> {
+                            <span class="comment">// 去掉声调: a1 -&gt; a</span>
+                            <span class="ident">symbol</span>
+                                .<span class="ident">chars</span>()
+                                .<span class="ident">filter</span>(<span class="op">|</span><span class="ident">c</span>: <span class="kw-2">&amp;</span><span class="ident">char</span><span class="op">|</span> {
+                                    <span class="comment">// NOTE: 该方法在 rustc 1.17.0 (56124baa9 2017-04-24) 版本当中需要引入 `use std::ascii::AsciiExt;`</span>
+                                    <span class="comment">// !c.is_ascii_digit()</span>
+                                    <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!=</span> <span class="string">&#39;0&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!=</span> <span class="string">&#39;1&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!=</span> <span class="string">&#39;2&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!=</span> <span class="string">&#39;3&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">!=</span> <span class="string">&#39;4&#39;</span>
+                                }).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>()
+                        }
+                        <span class="ident">Style</span>::<span class="ident">Tone2</span> <span class="op">|</span> <span class="ident">Style</span>::<span class="ident">FinalsTone2</span> <span class="op">=&gt;</span> {
+                            <span class="comment">// 返回使用数字标识声调的字符</span>
+                            <span class="ident">symbol</span>.<span class="ident">to_string</span>()
+                        }
+                        <span class="kw">_</span> <span class="op">=&gt;</span> {
+                            <span class="comment">// 声调在头上</span>
+                            <span class="ident">c</span>.<span class="ident">to_string</span>()
+                        }
+                    }
+                }
+                <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="ident">c</span>.<span class="ident">to_string</span>(),
             }
-        },
-        <span class='prelude-val'>None</span> <span class='op'>=&gt;</span> {
-            <span class='ident'>ret</span> <span class='op'>=</span> <span class='macro'>vec</span><span class='macro'>!</span>[];
-        }
-    };
+        }).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>();
 
-    <span class='ident'>apply_style</span>(<span class='ident'>ret</span>, <span class='ident'>a</span>)
+    <span class="kw">match</span> <span class="ident">a</span>.<span class="ident">style</span> {
+        <span class="comment">// 首字母</span>
+        <span class="ident">Style</span>::<span class="ident">FirstLetter</span> <span class="op">=&gt;</span> <span class="ident">py</span>.<span class="ident">chars</span>().<span class="ident">nth</span>(<span class="number">0</span>).<span class="ident">unwrap</span>().<span class="ident">to_string</span>(),
+        <span class="comment">// 韵母</span>
+        <span class="ident">Style</span>::<span class="ident">Finals</span> <span class="op">|</span> <span class="ident">Style</span>::<span class="ident">FinalsTone</span> <span class="op">|</span> <span class="ident">Style</span>::<span class="ident">FinalsTone2</span> <span class="op">=&gt;</span> <span class="ident">_final</span>(<span class="kw-2">&amp;</span><span class="ident">py</span>),
+        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">py</span>,
+    }
 }
 
-<span class='doccomment'>/// 汉字转拼音</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// ```</span>
-<span class='doccomment'>/// let hans = &quot;中国人&quot;;</span>
-<span class='doccomment'>/// let args = pinyin::Args::new();</span>
-<span class='doccomment'>///</span>
-<span class='doccomment'>/// // 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
-<span class='doccomment'>/// println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
-<span class='doccomment'>/// ```</span>
-<span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>pinyin</span><span class='op'>&lt;</span><span class='lifetime'>&#39;a</span><span class='op'>&gt;</span>(<span class='ident'>s</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>str</span>, <span class='ident'>a</span>: <span class='kw-2'>&amp;</span><span class='lifetime'>&#39;a</span> <span class='ident'>Args</span>) <span class='op'>-&gt;</span> <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span> {
-    <span class='kw'>let</span> <span class='kw-2'>mut</span> <span class='ident'>ret</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>String</span><span class='op'>&gt;&gt;</span> <span class='op'>=</span> <span class='ident'>Vec</span>::<span class='ident'>new</span>();
-    <span class='kw'>let</span> <span class='ident'>chars</span>: <span class='ident'>Vec</span><span class='op'>&lt;</span><span class='ident'>char</span><span class='op'>&gt;</span> <span class='op'>=</span> <span class='ident'>s</span>.<span class='ident'>chars</span>().<span class='ident'>collect</span>();
-    <span class='kw'>for</span> <span class='ident'>c</span> <span class='kw'>in</span> <span class='ident'>chars</span> {
-        <span class='ident'>ret</span>.<span class='ident'>push</span>(<span class='ident'>single_pinyin</span>(<span class='ident'>c</span>, <span class='ident'>a</span>));
+<span class="kw">fn</span> <span class="ident">apply_style</span>(<span class="ident">pys</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Args</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_pys</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+    <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="ident">pys</span> {
+        <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="ident">to_fixed</span>(<span class="kw-2">&amp;</span><span class="ident">v</span>, <span class="ident">a</span>);
+        <span class="ident">new_pys</span>.<span class="ident">push</span>(<span class="ident">s</span>);
+    }
+    <span class="ident">new_pys</span>
+}
+
+<span class="kw">fn</span> <span class="ident">single_pinyin</span>(<span class="ident">c</span>: <span class="ident">char</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Args</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="ident">ret</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">PINYIN_MAP</span>
+        .<span class="ident">binary_search_by_key</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>, <span class="op">|</span><span class="kw-2">&amp;</span>(<span class="ident">k</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">k</span>)
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">index</span><span class="op">|</span> {
+            <span class="kw">let</span> <span class="ident">pinyin_list</span> <span class="op">=</span> <span class="ident">PINYIN_MAP</span>[<span class="ident">index</span>].<span class="number">1</span>.<span class="ident">split</span>(<span class="string">&#39;,&#39;</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;&gt;</span>();
+            <span class="kw">if</span> <span class="ident">pinyin_list</span>.<span class="ident">is_empty</span>() <span class="op">||</span> <span class="ident">a</span>.<span class="ident">heteronym</span> {
+                <span class="ident">pinyin_list</span>
+                    .<span class="ident">iter</span>()
+                    .<span class="ident">map</span>(<span class="op">|</span><span class="ident">pinyin</span><span class="op">|</span> <span class="ident">pinyin</span>.<span class="ident">to_string</span>())
+                    .<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>()
+            } <span class="kw">else</span> {
+                <span class="macro">vec</span><span class="macro">!</span>[<span class="ident">pinyin_list</span>[<span class="number">0</span>].<span class="ident">to_string</span>()]
+            }
+        }).<span class="ident">unwrap_or_default</span>();
+    <span class="ident">apply_style</span>(<span class="ident">ret</span>, <span class="ident">a</span>)
+}
+
+<span class="doccomment">/// 汉字转拼音</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// let hans = &quot;中国人&quot;;</span>
+<span class="doccomment">/// let args = pinyin::Args::new();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // 默认输出 [[&quot;zhong&quot;] [&quot;guo&quot;] [&quot;ren&quot;]]</span>
+<span class="doccomment">/// println!(&quot;{:?}&quot;,  pinyin::pinyin(hans, &amp;args));</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">pinyin</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Args</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+    <span class="kw">let</span> <span class="ident">chars</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">char</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">s</span>.<span class="ident">chars</span>().<span class="ident">collect</span>();
+    <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">chars</span> {
+        <span class="ident">ret</span>.<span class="ident">push</span>(<span class="ident">single_pinyin</span>(<span class="ident">c</span>, <span class="ident">a</span>));
     }
 
-    <span class='kw'>return</span> <span class='ident'>ret</span>
+    <span class="ident">ret</span>
+}
+
+<span class="doccomment">/// 汉字转拼音, 与 ``pinyin`` 的区别是返回值不同，每个汉字只取一个音</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// let hans = &quot;中国人&quot;;</span>
+<span class="doccomment">/// let args = pinyin::Args::new();</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// // 默认输出 [&quot;zhong&quot;, &quot;guo&quot;, &quot;ren&quot;]</span>
+<span class="doccomment">/// println!(&quot;{:?}&quot;,  pinyin::lazy_pinyin(hans, &amp;args));</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">lazy_pinyin</span>(<span class="ident">s</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">a</span>: <span class="kw-2">&amp;</span><span class="ident">Args</span>) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ret</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">new</span>();
+    <span class="kw">for</span> <span class="ident">pinyin_vc</span> <span class="kw">in</span> <span class="ident">pinyin</span>(<span class="ident">s</span>, <span class="ident">a</span>) {
+        <span class="kw">if</span> <span class="op">!</span><span class="ident">pinyin_vc</span>.<span class="ident">is_empty</span>() {
+            <span class="ident">ret</span>.<span class="ident">push</span>(<span class="ident">pinyin_vc</span>[<span class="number">0</span>].<span class="ident">to_string</span>());
+        }
+    }
+
+    <span class="ident">ret</span>
 }
 </pre>
-</section>
-    <section id='search' class="content hidden"></section>
-
-    <section class="footer"></section>
-
-    <aside id="help" class="hidden">
-        <div>
-            <h1 class="hidden">Help</h1>
-
-            <div class="shortcuts">
-                <h2>Keyboard Shortcuts</h2>
-
-                <dl>
-                    <dt>?</dt>
-                    <dd>Show this help dialog</dd>
-                    <dt>S</dt>
-                    <dd>Focus the search field</dd>
-                    <dt>&larrb;</dt>
-                    <dd>Move up in search results</dd>
-                    <dt>&rarrb;</dt>
-                    <dd>Move down in search results</dd>
-                    <dt>&#9166;</dt>
-                    <dd>Go to active search result</dd>
-                </dl>
-            </div>
-
-            <div class="infos">
-                <h2>Search Tricks</h2>
-
-                <p>
-                    Prefix searches with a type followed by a colon (e.g.
-                    <code>fn:</code>) to restrict the search to a given type.
-                </p>
-
-                <p>
-                    Accepted types are: <code>fn</code>, <code>mod</code>,
-                    <code>struct</code>, <code>enum</code>,
-                    <code>trait</code>, <code>type</code>, <code>macro</code>,
-                    and <code>const</code>.
-                </p>
-
-                <p>
-                    Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
-                </p>
-            </div>
-        </div>
-    </aside>
-
-    
-
-    <script>
-        window.rootPath = "../../";
-        window.currentCrate = "pinyin";
-        window.playgroundUrl = "";
-    </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
-    
-    <script async src="../../search-index.js"></script>
-</body>
-</html>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "pinyin";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

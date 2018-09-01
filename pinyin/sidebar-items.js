@@ -1,1 +1,1 @@
-initSidebarItems({"enum":[["Style","拼音风格"]],"fn":[["pinyin","汉字转拼音"]],"struct":[["Args","参数"]]});
+initSidebarItems({"enum":[["Style","拼音风格"]],"fn":[["lazy_pinyin","汉字转拼音, 与 `pinyin` 的区别是返回值不同，每个汉字只取一个音"],["pinyin","汉字转拼音"]],"static":[["PHONETIC_SYMBOL_MAP",""],["PINYIN_MAP",""]],"struct":[["Args","参数"]]});
