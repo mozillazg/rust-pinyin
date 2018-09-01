@@ -7,6 +7,19 @@
 
 汉语拼音转换工具 Rust 版
 
+Build
+------------
+
+```bash
+
+git clone --recurse-submodules https://github.com/mozillazg/rust-pinyin.git
+cd rust-pinyin
+cargo run --bin mk_dict > src/dict.rs
+cargo test
+cargo build
+cargo run --example main
+```
+
 
 Installation
 ------------
