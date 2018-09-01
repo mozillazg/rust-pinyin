@@ -11,7 +11,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! pinyin = "0.2"
+//! pinyin = "0.4"
 //! ```
 //!
 //! and this to your crate root:
@@ -55,18 +55,15 @@
 //! }
 //! ```
 
-
 mod dict;
 
-pub use dict::{ PINYIN_MAP, PHONETIC_SYMBOL_MAP };
-
+pub use dict::{PHONETIC_SYMBOL_MAP, PINYIN_MAP};
 
 // 声母表
 const _INITIALS: [&str; 21] = [
     "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch", "sh",
     "z", "c", "s",
 ];
-
 
 /// 拼音风格
 #[derive(Debug, PartialEq, Eq, Hash)]
@@ -149,35 +146,37 @@ fn to_fixed(p: &str, a: &Args) -> String {
     };
 
     // 替换拼音中的带声调字符
-    let py = p.chars().map(|c| {
-        match PHONETIC_SYMBOL_MAP.binary_search_by_key(&c, |&(k, _)| k ) {
-            Ok(index) => {
-                let symbol = PHONETIC_SYMBOL_MAP[index].1;
-                match a.style {
-                    // 不包含声调
-                    Style::Normal | Style::FirstLetter | Style::Finals => {
-                        // 去掉声调: a1 -> a
-                        symbol.chars().filter(|c: &char| {
-                            // NOTE: 该方法在 rustc 1.17.0 (56124baa9 2017-04-24) 版本当中需要引入 `use std::ascii::AsciiExt;`
-                            // !c.is_ascii_digit()
-                            *c != '0' && *c != '1' && *c != '2' && *c != '3' && *c != '4'
-                        }).collect::<String>()
-                    }
-                    Style::Tone2 | Style::FinalsTone2 => {
-                        // 返回使用数字标识声调的字符
-                        symbol.to_string()
-                    }
-                    _ => {
-                        // 声调在头上
-                        c.to_string()
+    let py = p
+        .chars()
+        .map(|c| {
+            match PHONETIC_SYMBOL_MAP.binary_search_by_key(&c, |&(k, _)| k) {
+                Ok(index) => {
+                    let symbol = PHONETIC_SYMBOL_MAP[index].1;
+                    match a.style {
+                        // 不包含声调
+                        Style::Normal | Style::FirstLetter | Style::Finals => {
+                            // 去掉声调: a1 -> a
+                            symbol
+                                .chars()
+                                .filter(|c: &char| {
+                                    // NOTE: 该方法在 rustc 1.17.0 (56124baa9 2017-04-24) 版本当中需要引入 `use std::ascii::AsciiExt;`
+                                    // !c.is_ascii_digit()
+                                    *c != '0' && *c != '1' && *c != '2' && *c != '3' && *c != '4'
+                                }).collect::<String>()
+                        }
+                        Style::Tone2 | Style::FinalsTone2 => {
+                            // 返回使用数字标识声调的字符
+                            symbol.to_string()
+                        }
+                        _ => {
+                            // 声调在头上
+                            c.to_string()
+                        }
                     }
                 }
-            },
-            Err(_) => {
-                c.to_string()
+                Err(_) => c.to_string(),
             }
-        }
-    }).collect::<String>();
+        }).collect::<String>();
 
     match a.style {
         // 首字母
@@ -198,16 +197,19 @@ fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {
-    let ret: Vec<String> = PINYIN_MAP.binary_search_by_key(&c, |&(k, _)| k )
-            .map(|index| {
-                let pinyin_list = PINYIN_MAP[index].1.split(',').collect::<Vec<&str>>();
-                if pinyin_list.is_empty() || a.heteronym {
-                    pinyin_list.iter().map(|pinyin| pinyin.to_string()).collect::<Vec<String>>()
-                } else {
-                    vec![pinyin_list[0].to_string()]
-                }
-            })
-            .unwrap_or(vec![]);
+    let ret: Vec<String> = PINYIN_MAP
+        .binary_search_by_key(&c, |&(k, _)| k)
+        .map(|index| {
+            let pinyin_list = PINYIN_MAP[index].1.split(',').collect::<Vec<&str>>();
+            if pinyin_list.is_empty() || a.heteronym {
+                pinyin_list
+                    .iter()
+                    .map(|pinyin| pinyin.to_string())
+                    .collect::<Vec<String>>()
+            } else {
+                vec![pinyin_list[0].to_string()]
+            }
+        }).unwrap_or_default();
     apply_style(ret, a)
 }
 

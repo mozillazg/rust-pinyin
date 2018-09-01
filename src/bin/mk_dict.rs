@@ -1,6 +1,5 @@
 use std::collections::HashSet;
 
-
 fn main() {
     let dict = include_str!("../../pinyin-data/pinyin.txt");
 
@@ -34,9 +33,11 @@ fn main() {
         ('ň', "n3"),
         ('', "m2"),
     ];
-    let phonetic_symbol_set = phonetic_symbol_map.iter().map(|item| item.0).collect::<HashSet<char>>();
+    let phonetic_symbol_set = phonetic_symbol_map
+        .iter()
+        .map(|item| item.0)
+        .collect::<HashSet<char>>();
     assert_eq!(phonetic_symbol_map.len(), phonetic_symbol_set.len());
-
 
     // 拼音库    PINYIN_MAP
     let mut pinyin_map: Vec<(char, String)> = Vec::new();
@@ -44,8 +45,8 @@ fn main() {
 
     for line in dict.lines() {
         let line = line.trim();
-        
-        if !line.starts_with("#") {
+
+        if !line.starts_with('#') {
             let kv = line.split(':').collect::<Vec<&str>>();
             assert_eq!(kv.len() >= 2, true);
 
@@ -61,11 +62,14 @@ fn main() {
                 let c = ::std::char::from_u32(code_point).unwrap();
                 c
             };
-            
+
             let pinyin_list: Vec<String> = {
-                let tmp = v.split("#").collect::<Vec<&str>>();
+                let tmp = v.split('#').collect::<Vec<&str>>();
                 assert_eq!(tmp.len(), 2);
-                let pinyin_list = tmp[0].split(",").map(|item| item.trim().to_string()).collect::<Vec<String>>();
+                let pinyin_list = tmp[0]
+                    .split(',')
+                    .map(|item| item.trim().to_string())
+                    .collect::<Vec<String>>();
 
                 let comment = tmp[1].trim().chars().collect::<Vec<char>>()[0];
                 assert_eq!(comment, c);
@@ -73,7 +77,7 @@ fn main() {
                 pinyin_list
             };
 
-            if pinyin_set.insert(c) == true {
+            if pinyin_set.insert(c) {
                 let item = (c, pinyin_list.join(","));
                 pinyin_map.push(item);
             } else {
@@ -84,16 +88,21 @@ fn main() {
     assert_eq!(pinyin_map.len(), pinyin_set.len());
 
     // NOTE: 使用稳定版的 sort
-    phonetic_symbol_map.sort_by_key(| &(k, _)| k );
-    pinyin_map.sort_by_key(| &(k, _)| k );
+    phonetic_symbol_map.sort_by_key(|&(k, _)| k);
+    pinyin_map.sort_by_key(|&(k, _)| k);
 
-    let template = format!("
+    let template = format!(
+        "
 
 pub static PINYIN_MAP: [(char, &str); {}] = {:?};
 pub static PHONETIC_SYMBOL_MAP: [(char, &str); {}] = {:?};
 
-    ", pinyin_map.len(), pinyin_map,
-    phonetic_symbol_map.len(), phonetic_symbol_map);
-    
+    ",
+        pinyin_map.len(),
+        pinyin_map,
+        phonetic_symbol_map.len(),
+        phonetic_symbol_map
+    );
+
     println!("{}", template);
 }
