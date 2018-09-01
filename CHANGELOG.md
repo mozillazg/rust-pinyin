@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.4.0] (2018-09-01)
+
+* 移除依赖、增强编译性能和速度 (via [#20]. Thanks [@LuoZijun])
+* 使用 [pinyin-data] v0.6.1 的拼音数据
+
 
 ## [0.3.0] (2018-04-30)
 
@@ -68,6 +73,9 @@
 
 [pinyin-data]: https://github.com/mozillazg/pinyin-data
 
+[#20]: https://github.com/mozillazg/rust-pinyin/pull/20
+[@LuoZijun]: https://github.com/LuoZijun
+
 [0.0.2]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.1...v0.0.2
 [0.0.3]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.2...v0.0.3
 [0.0.4]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.3...v0.0.4
@@ -76,3 +84,4 @@
 [0.1.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.6...v0.1.0
 [0.2.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.1.0...v0.2.0
 [0.3.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.2.0...v0.3.0
+[0.4.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.3.0...v0.4.0
