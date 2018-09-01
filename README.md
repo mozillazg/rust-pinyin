@@ -7,19 +7,6 @@
 
 汉语拼音转换工具 Rust 版
 
-Build
-------------
-
-```bash
-
-git clone --recurse-submodules https://github.com/mozillazg/rust-pinyin.git
-cd rust-pinyin
-cargo run --bin mk_dict > src/dict.rs
-cargo test
-cargo build
-cargo run --example main
-```
-
 
 Installation
 ------------
@@ -28,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.3"
+pinyin = "0.4"
 ```
 
 and this to your crate root:
@@ -79,6 +66,20 @@ pub fn main() {
 }
 ```
 
+
+Build
+------------
+
+```
+$ make build
+```
+
+Test
+------------
+
+```
+$ make test
+```
 
 
 Related Projects

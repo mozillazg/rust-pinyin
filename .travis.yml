@@ -39,7 +39,8 @@ after_success:
   - |
       if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
         RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-tarpaulin
-        cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
+        cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
+          --exclude-files 'tests/*' --exclude-files 'src/bin/*'
       fi
 
 matrix:
