@@ -11,7 +11,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! pinyin = "0.4"
+//! pinyin = "0.5"
 //! ```
 //!
 //! and this to your crate root:
