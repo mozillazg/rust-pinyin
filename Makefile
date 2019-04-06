@@ -20,7 +20,7 @@ lint:
 	@cargo run --bin mk_dict > src/dict.rs.new
 	@mv src/dict.rs.new src/dict.rs
 	@cargo fmt
-	@cargo clippy -- -A unreadable_literal
+	@cargo clippy -- -A clippy::unreadable_literal
 
 .PHONY: doc
 doc:

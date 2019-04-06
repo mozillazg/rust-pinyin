@@ -162,7 +162,8 @@ fn to_fixed(p: &str, a: &Args) -> String {
                                     // NOTE: 该方法在 rustc 1.17.0 (56124baa9 2017-04-24) 版本当中需要引入 `use std::ascii::AsciiExt;`
                                     // !c.is_ascii_digit()
                                     *c != '0' && *c != '1' && *c != '2' && *c != '3' && *c != '4'
-                                }).collect::<String>()
+                                })
+                                .collect::<String>()
                         }
                         Style::Tone2 | Style::FinalsTone2 => {
                             // 返回使用数字标识声调的字符
@@ -176,7 +177,8 @@ fn to_fixed(p: &str, a: &Args) -> String {
                 }
                 Err(_) => c.to_string(),
             }
-        }).collect::<String>();
+        })
+        .collect::<String>();
 
     match a.style {
         // 首字母
@@ -209,7 +211,8 @@ fn single_pinyin(c: char, a: &Args) -> Vec<String> {
             } else {
                 vec![pinyin_list[0].to_string()]
             }
-        }).unwrap_or_default();
+        })
+        .unwrap_or_default();
     apply_style(ret, a)
 }
 
