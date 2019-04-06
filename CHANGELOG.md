@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.5.0] (2019-04-07)
+
+* 使用 [pinyin-data] v0.7.0 的拼音数据
+
+
 ## [0.4.0] (2018-09-01)
 
 * 移除依赖、增强编译性能和速度 (via [#20]. Thanks [@LuoZijun])
@@ -85,3 +90,4 @@
 [0.2.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.1.0...v0.2.0
 [0.3.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.2.0...v0.3.0
 [0.4.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.3.0...v0.4.0
+[0.5.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.4.0...v0.5.0

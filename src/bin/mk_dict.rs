@@ -59,8 +59,7 @@ fn main() {
                 assert_eq!(tmp.len(), 2);
 
                 let code_point = u32::from_str_radix(tmp[1], 16).unwrap();
-                let c = ::std::char::from_u32(code_point).unwrap();
-                c
+                ::std::char::from_u32(code_point).unwrap()
             };
 
             let pinyin_list: Vec<String> = {
