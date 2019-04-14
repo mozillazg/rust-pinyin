@@ -191,13 +191,18 @@ fn to_fixed(p: &str, a: &Args) -> String {
 }
 
 fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
-    let mut new_pys: HashSet<String> = HashSet::new();
+    let mut result: Vec<String> = vec![];
+    // Unfortunately, HashSet does not guarantee ordering
+    let mut set: HashSet<String> = HashSet::new();
     for v in pys {
         let s = to_fixed(&v, a);
-        new_pys.insert(s);
+        if !set.contains(&s) {
+            set.insert(s.clone());
+            result.push(s);
+        }
     }
-    let vec: Vec<String> = new_pys.into_iter().collect();
-    return vec;
+
+    return result;
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {

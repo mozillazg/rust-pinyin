@@ -2,7 +2,7 @@ extern crate pinyin;
 
 mod test_case;
 
-use std::collections::HashSet;
+
 use test_case::TestCase;
 
 #[test]
@@ -247,6 +247,7 @@ fn test_no_phonetic_symbol() {
     assert_eq!(expect, result);
 }
 
+/*
 #[test]
 fn test_hash_set_should_keep_order() {
     let mut set: HashSet<i32> = HashSet::new();
@@ -257,3 +258,4 @@ fn test_hash_set_should_keep_order() {
     let vec: Vec<i32> = set.into_iter().collect();
     assert_eq!(vec![5, 10, 1], vec);
 }
+*/

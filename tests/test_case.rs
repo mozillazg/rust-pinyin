@@ -1,3 +1,5 @@
+extern crate pinyin;
+
 pub struct TestCase {
     pub hans: String,
     pub args: pinyin::Args,
