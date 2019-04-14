@@ -11,7 +11,7 @@ lazy_static! {
     };
 }
 
-pub static PINYIN_MAP: [(char, &str); 41451] = [
+static PINYIN_MAP: [(char, &str); 41451] = [
     ('〇', "líng,yuán,xīng"),
     ('㐀', "qiū"),
     ('㐁', "tiàn"),

@@ -108,7 +108,7 @@ lazy_static! {{
     }};
 }}
 
-pub static PINYIN_MAP: [(char, &str); {}] = {:?};
+static PINYIN_MAP: [(char, &str); {}] = {:?};
 pub static PHONETIC_SYMBOL_MAP: [(char, &str); {}] = {:?};
 
     ",
