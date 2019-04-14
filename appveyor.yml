@@ -5,6 +5,7 @@ environment:
     - RUST_TOOL_CHAIN: stable
   #- RUST_TOOL_CHAIN: nightly
 install:
+  - git submodule update --init --recursive
   - ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
   - scoop install rustup
   - refreshenv
