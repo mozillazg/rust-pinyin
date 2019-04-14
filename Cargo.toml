@@ -10,6 +10,7 @@ description = "Convert Chinese to pinyin"
 documentation = "https://docs.rs/pinyin/"
 keywords = ["pinyin", "hanzi", "Chinese"]
 exclude = ["pinyin-data"]
+#build = 'src/bin/mk_dict.rs'
 
 [badges]
 travis-ci = { repository = "mozillazg/rust-pinyin" }
@@ -25,6 +26,7 @@ path = "./examples/main.rs"
 
 
 [dependencies]
+lazy_static = "1"
 
 
 [features]

@@ -55,9 +55,12 @@
 //! }
 //! ```
 
+#[macro_use]
+extern crate lazy_static;
+
 mod dict;
 
-pub use dict::{PHONETIC_SYMBOL_MAP, PINYIN_MAP};
+pub use dict::{PHONETIC_SYMBOL_MAP, PINYIN_HASHMAP};
 
 // 声母表
 const _INITIALS: [&str; 21] = [
@@ -199,20 +202,17 @@ fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {
-    let ret: Vec<String> = PINYIN_MAP
-        .binary_search_by_key(&c, |&(k, _)| k)
-        .map(|index| {
-            let pinyin_list = PINYIN_MAP[index].1.split(',').collect::<Vec<&str>>();
-            if pinyin_list.is_empty() || a.heteronym {
-                pinyin_list
-                    .iter()
-                    .map(|pinyin| pinyin.to_string())
-                    .collect::<Vec<String>>()
+    let ret: Vec<String> = match PINYIN_HASHMAP.get(&c) {
+        Some(candidates) => {
+            if candidates.is_empty() || a.heteronym {
+                candidates.to_vec()
             } else {
-                vec![pinyin_list[0].to_string()]
+                vec![candidates[0].to_string()]
             }
-        })
-        .unwrap_or_default();
+        }
+        None => vec![],
+    };
+
     apply_style(ret, a)
 }
 
