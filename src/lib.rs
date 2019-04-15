@@ -205,23 +205,14 @@ fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {
-    let ret: Vec<String> = match PINYIN_HASHMAP.get(
-        //&(u32::from(c) as u16)) {
-        &c,
-    ) {
+    let ret: Vec<String> = match PINYIN_HASHMAP.get(&c) {
         Some(candidates_str) => {
             let candidates = candidates_str.split(',').collect::<Vec<&str>>();
             if candidates.is_empty() || a.heteronym {
-                //candidates.to_vec()
                 candidates
                     .iter()
                     .map(std::string::ToString::to_string)
                     .collect::<Vec<String>>()
-            //let mut retVec : Vec<String> = vec![];
-            //for c in candidates{
-            //    retVec.push(String::from(&**c))
-            //}
-            //retVec
             } else {
                 vec![candidates[0].to_string()]
             }

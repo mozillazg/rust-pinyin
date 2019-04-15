@@ -20,7 +20,6 @@ impl Hasher for IntegerHasher {
 
     #[inline]
     fn write(&mut self, bytes: &[u8]) {
-        let _len = bytes.len();
         let mut hash: u64 = 0;
         for (i, byte) in bytes.iter().enumerate() {
             hash += u64::from(*byte) << (8 * i);
