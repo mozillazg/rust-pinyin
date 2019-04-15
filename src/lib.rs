@@ -59,7 +59,7 @@
 extern crate lazy_static;
 
 mod dict;
-mod integer_hasher;
+pub mod integer_hasher;
 mod pinyin_map;
 
 pub use dict::PHONETIC_SYMBOL_MAP;
