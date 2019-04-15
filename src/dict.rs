@@ -1,17 +1,4 @@
-use std::collections::HashMap;
-
-lazy_static! {
-    pub static ref PINYIN_HASHMAP: HashMap<char, Vec<String>> = {
-        let mut m = HashMap::new();
-        for item in PINYIN_MAP.iter() {
-            m.insert(item.0, item.1.split(',').map(String::from).collect());
-        }
-
-        m
-    };
-}
-
-static PINYIN_MAP: [(char, &str); 41451] = [
+pub static PINYIN_MAP: [(char, &str); 41451] = [
     ('〇', "líng,yuán,xīng"),
     ('㐀', "qiū"),
     ('㐁', "tiàn"),

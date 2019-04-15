@@ -92,25 +92,8 @@ fn main() {
 
     let template = format!(
         "
-use std::collections::HashMap;
-
-lazy_static! {{
-    pub static ref PINYIN_HASHMAP: HashMap<char, Vec<String>> = {{
-        let mut m = HashMap::new();
-        for item in PINYIN_MAP.iter() {{
-            m.insert(
-                item.0,
-                item.1.split(',').map(String::from).collect(),
-            );
-        }}
-
-        m
-    }};
-}}
-
-static PINYIN_MAP: [(char, &str); {}] = {:?};
+pub static PINYIN_MAP: [(char, &str); {}] = {:?};
 pub static PHONETIC_SYMBOL_MAP: [(char, &str); {}] = {:?};
-
     ",
         pinyin_map.len(),
         pinyin_map,
