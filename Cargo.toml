@@ -23,9 +23,8 @@ path = "./src/bin/mk_dict.rs"
 name = "main"
 path = "./examples/main.rs"
 
-
 [dependencies]
-
+lazy_static = "1"
 
 [features]
 unstable = []
