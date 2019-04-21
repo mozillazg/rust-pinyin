@@ -2,7 +2,6 @@ extern crate pinyin;
 
 mod test_case;
 
-
 use test_case::TestCase;
 
 #[test]

@@ -9,7 +9,7 @@ repository = "https://github.com/mozillazg/rust-pinyin"
 description = "Convert Chinese to pinyin"
 documentation = "https://docs.rs/pinyin/"
 keywords = ["pinyin", "hanzi", "Chinese"]
-exclude = ["pinyin-data"]
+exclude = ["pinyin-data/*/**"]
 
 [badges]
 travis-ci = { repository = "mozillazg/rust-pinyin" }
@@ -23,9 +23,8 @@ path = "./src/bin/mk_dict.rs"
 name = "main"
 path = "./examples/main.rs"
 
-
 [dependencies]
-
+lazy_static = "1"
 
 [features]
 unstable = []
