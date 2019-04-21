@@ -22,8 +22,8 @@ rust:
 script:
   - |
       cargo clean &&
-      cargo build &&
-      cargo test &&
+      cargo build --release &&
+      cargo test --release &&
       cargo doc -p pinyin --no-deps &&
       cargo run --example main &&
       cargo bench

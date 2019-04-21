@@ -92,10 +92,8 @@ fn main() {
 
     let template = format!(
         "
-
 pub static PINYIN_MAP: [(char, &str); {}] = {:?};
 pub static PHONETIC_SYMBOL_MAP: [(char, &str); {}] = {:?};
-
     ",
         pinyin_map.len(),
         pinyin_map,
