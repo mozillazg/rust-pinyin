@@ -245,16 +245,3 @@ fn test_no_phonetic_symbol() {
     );
     assert_eq!(expect, result);
 }
-
-/*
-#[test]
-fn test_hash_set_should_keep_order() {
-    let mut set: HashSet<i32> = HashSet::new();
-    set.insert(5);
-    set.insert(10);
-    set.insert(1);
-
-    let vec: Vec<i32> = set.into_iter().collect();
-    assert_eq!(vec![5, 10, 1], vec);
-}
-*/
