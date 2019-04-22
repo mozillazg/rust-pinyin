@@ -64,6 +64,7 @@ mod pinyin_map;
 
 pub use dict::PHONETIC_SYMBOL_MAP;
 pub use pinyin_map::PINYIN_HASHMAP;
+use std::collections::HashSet;
 
 // 声母表
 const _INITIALS: [&str; 21] = [
@@ -196,12 +197,18 @@ fn to_fixed(p: &str, a: &Args) -> String {
 }
 
 fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
-    let mut new_pys: Vec<String> = vec![];
+    let mut result: Vec<String> = vec![];
+    // Unfortunately, HashSet does not guarantee ordering
+    let mut set: HashSet<String> = HashSet::new();
     for v in pys {
         let s = to_fixed(&v, a);
-        new_pys.push(s);
+        if !set.contains(&s) {
+            set.insert(s.clone());
+            result.push(s);
+        }
     }
-    new_pys
+
+    return result;
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {

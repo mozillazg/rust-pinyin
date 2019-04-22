@@ -1,27 +1,8 @@
 extern crate pinyin;
 
-struct TestCase {
-    hans: String,
-    args: pinyin::Args,
-    result: Vec<Vec<String>>,
-    lazy_result: Vec<String>,
-}
+mod test_case;
 
-impl TestCase {
-    pub fn new(
-        hans: String,
-        args: pinyin::Args,
-        result: Vec<Vec<String>>,
-        lazy_result: Vec<String>,
-    ) -> TestCase {
-        TestCase {
-            hans,
-            args,
-            result,
-            lazy_result,
-        }
-    }
-}
+use test_case::TestCase;
 
 #[test]
 fn test_pinyin() {
@@ -140,18 +121,23 @@ fn test_pinyin() {
             ],
             vec!["o1ng".to_string(), "uo2".to_string(), "e2n".to_string()],
         ),
-        TestCase::new(
+        TestCase::new2(
             "中国人".to_string(),
             pinyin::Args {
                 style: pinyin::Style::Normal,
                 heteronym: true,
             },
-            vec![
-                vec!["zhong".to_string(), "zhong".to_string()],
-                vec!["guo".to_string()],
-                vec!["ren".to_string()],
-            ],
-            vec!["zhong".to_string(), "guo".to_string(), "ren".to_string()],
+            vec![vec!["zhong"], vec!["guo"], vec!["ren"]],
+            vec!["zhong", "guo", "ren"],
+        ),
+        TestCase::new2(
+            "阿拉巴".to_string(),
+            pinyin::Args {
+                style: pinyin::Style::Normal,
+                heteronym: true,
+            },
+            vec![vec!["a", "e"], vec!["la"], vec!["ba"]],
+            vec!["a", "la", "ba"],
         ),
     ];
     for data in &test_data {
