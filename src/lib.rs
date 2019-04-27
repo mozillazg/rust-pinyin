@@ -208,7 +208,7 @@ fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
         }
     }
 
-    return result;
+    result
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {
