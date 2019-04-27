@@ -57,7 +57,7 @@ pub fn main() {
     // 开启多音字模式
     args = pinyin::Args::new();
     args.heteronym = true;
-    // [["zhong", "zhong"] ["guo"] ["ren"]]
+    // [["zhong"] ["guo"] ["ren"]]
     println!("{:?}",  pinyin::pinyin(hans, &args));
 
     // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
