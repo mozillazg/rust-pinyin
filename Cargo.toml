@@ -12,8 +12,9 @@ keywords = ["pinyin", "hanzi", "Chinese"]
 exclude = ["pinyin-data/**/*"]
 
 [badges]
-travis-ci = { repository = "mozillazg/rust-pinyin" }
-coveralls = { repository = "mozillazg/rust-pinyin" }
+travis-ci = { repository = "mozillazg/rust-pinyin", branch = "master" }
+appveyor = { repository = "mozillazg/rust-pinyin", branch = "master", service = "github" }
+coveralls = { repository = "mozillazg/rust-pinyin", branch = "master" }
 
 [[bin]]
 name = "mk_dict"

@@ -1,5 +1,6 @@
 //! 汉语拼音转换工具 Rust 版。
 //! [![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)
+//! [![Build status](https://ci.appveyor.com/api/projects/status/bemojvswjsqo796s/branch/master?svg=true)](https://ci.appveyor.com/project/mozillazg/rust-pinyin/branch/master)
 //! [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)
 //! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
 //! [![GitHub stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&label=Star)](https://github.com/mozillazg/rust-pinyin)
