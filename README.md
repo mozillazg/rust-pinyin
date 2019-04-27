@@ -81,6 +81,11 @@ Test
 $ make test
 ```
 
+Data
+-----
+
+使用来自 [pinyin-data](https://github.com/mozillazg/pinyin-data) 的拼音数据。
+
 
 Related Projects
 -----------------
