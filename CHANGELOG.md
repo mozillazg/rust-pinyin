@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0]
+
+* Use hashmap instead of binary search (via [#27]. Thanks [@hanabi1224])
+* 无声调相关风格下对结果去重, Fixed [#25] (via [#28]. Thanks [@hanabi1224])
+* 增加 Windows CI (via [#29]. Thanks [@hanabi1224])
+
+
 ## [0.5.0] (2019-04-07)
 
 * 使用 [pinyin-data] v0.7.0 的拼音数据
@@ -79,7 +86,10 @@
 [pinyin-data]: https://github.com/mozillazg/pinyin-data
 
 [#20]: https://github.com/mozillazg/rust-pinyin/pull/20
+[#25]: https://github.com/mozillazg/rust-pinyin/issues/25
+[#28]: https://github.com/mozillazg/rust-pinyin/pull/28
 [@LuoZijun]: https://github.com/LuoZijun
+[@hanabi1224]: https://github.com/hanabi1224
 
 [0.0.2]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.1...v0.0.2
 [0.0.3]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.2...v0.0.3
@@ -91,3 +101,4 @@
 [0.3.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.2.0...v0.3.0
 [0.4.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.3.0...v0.4.0
 [0.5.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.4.0...v0.5.0
+[0.6.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.5.0...v0.6.0
