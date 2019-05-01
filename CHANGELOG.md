@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.6.0]
+## [0.6.0] (2019-05-01)
 
 * Use hashmap instead of binary search (via [#27]. Thanks [@hanabi1224])
 * 无声调相关风格下对结果去重, Fixed [#25] (via [#28]. Thanks [@hanabi1224])
@@ -87,7 +87,9 @@
 
 [#20]: https://github.com/mozillazg/rust-pinyin/pull/20
 [#25]: https://github.com/mozillazg/rust-pinyin/issues/25
+[#27]: https://github.com/mozillazg/rust-pinyin/pull/27
 [#28]: https://github.com/mozillazg/rust-pinyin/pull/28
+[#29]: https://github.com/mozillazg/rust-pinyin/pull/29
 [@LuoZijun]: https://github.com/LuoZijun
 [@hanabi1224]: https://github.com/hanabi1224
 
