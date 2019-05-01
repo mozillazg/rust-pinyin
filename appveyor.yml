@@ -1,0 +1,29 @@
+image:
+  - Visual Studio 2017
+environment:
+  matrix:
+    - RUST_TOOL_CHAIN: stable
+  #- RUST_TOOL_CHAIN: nightly
+install:
+  - git submodule update --init --recursive
+  - ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+  - scoop install rustup
+  - refreshenv
+  - rustup default %RUST_TOOL_CHAIN%
+  - rustup component add rustfmt
+  - rustc -V
+  - cargo -V
+build_script:
+  - cargo build --release
+  - cargo fmt --all -- --check
+test_script:
+  - cargo test --release
+  - cargo doc -p pinyin --no-deps
+  - cargo run --example main
+  - cargo bench
+  - cargo fmt --all -- --check
+#branches:
+#  only:
+#    - master
+pull_requests:
+  do_not_increment_build_number: true

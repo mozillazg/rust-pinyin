@@ -1,5 +1,6 @@
 //! 汉语拼音转换工具 Rust 版。
 //! [![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)
+//! [![Build status](https://ci.appveyor.com/api/projects/status/bemojvswjsqo796s/branch/master?svg=true)](https://ci.appveyor.com/project/mozillazg/rust-pinyin/branch/master)
 //! [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)
 //! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
 //! [![GitHub stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&label=Star)](https://github.com/mozillazg/rust-pinyin)
@@ -11,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! pinyin = "0.5"
+//! pinyin = "0.6"
 //! ```
 //!
 //! and this to your crate root:
@@ -46,7 +47,7 @@
 //!     // 开启多音字模式
 //!     args = pinyin::Args::new();
 //!     args.heteronym = true;
-//!     // [["zhong", "zhong"] ["guo"] ["ren"]]
+//!     // [["zhong"] ["guo"] ["ren"]]
 //!     println!("{:?}",  pinyin::pinyin(hans, &args));
 //!
 //!     // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
@@ -55,9 +56,16 @@
 //! }
 //! ```
 
-mod dict;
+#[macro_use]
+extern crate lazy_static;
 
-pub use dict::{PHONETIC_SYMBOL_MAP, PINYIN_MAP};
+mod dict;
+pub mod integer_hasher;
+mod pinyin_map;
+
+pub use dict::PHONETIC_SYMBOL_MAP;
+pub use pinyin_map::PINYIN_HASHMAP;
+use std::collections::HashSet;
 
 // 声母表
 const _INITIALS: [&str; 21] = [
@@ -190,29 +198,36 @@ fn to_fixed(p: &str, a: &Args) -> String {
 }
 
 fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
-    let mut new_pys: Vec<String> = vec![];
+    let mut result: Vec<String> = vec![];
+    // Unfortunately, HashSet does not guarantee ordering
+    let mut set: HashSet<String> = HashSet::new();
     for v in pys {
         let s = to_fixed(&v, a);
-        new_pys.push(s);
+        if !set.contains(&s) {
+            set.insert(s.clone());
+            result.push(s);
+        }
     }
-    new_pys
+
+    result
 }
 
 fn single_pinyin(c: char, a: &Args) -> Vec<String> {
-    let ret: Vec<String> = PINYIN_MAP
-        .binary_search_by_key(&c, |&(k, _)| k)
-        .map(|index| {
-            let pinyin_list = PINYIN_MAP[index].1.split(',').collect::<Vec<&str>>();
-            if pinyin_list.is_empty() || a.heteronym {
-                pinyin_list
+    let ret: Vec<String> = match PINYIN_HASHMAP.get(&c) {
+        Some(candidates_str) => {
+            let candidates = candidates_str.split(',').collect::<Vec<&str>>();
+            if candidates.is_empty() || a.heteronym {
+                candidates
                     .iter()
-                    .map(|pinyin| pinyin.to_string())
+                    .map(std::string::ToString::to_string)
                     .collect::<Vec<String>>()
             } else {
-                vec![pinyin_list[0].to_string()]
+                vec![candidates[0].to_string()]
             }
-        })
-        .unwrap_or_default();
+        }
+        None => vec![],
+    };
+
     apply_style(ret, a)
 }
 
