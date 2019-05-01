@@ -16,10 +16,6 @@ travis-ci = { repository = "mozillazg/rust-pinyin", branch = "master" }
 appveyor = { repository = "mozillazg/rust-pinyin", branch = "master", service = "github" }
 coveralls = { repository = "mozillazg/rust-pinyin", branch = "master" }
 
-[[bin]]
-name = "mk_dict"
-path = "./src/bin/mk_dict.rs"
-
 [[example]]
 name = "main"
 path = "./examples/main.rs"
