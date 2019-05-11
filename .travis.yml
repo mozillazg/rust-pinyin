@@ -10,7 +10,13 @@ cache:
 addons:
   apt:
     packages:
-      - libssl-dev
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - binutils-dev
+      - cmake # also required for cargo-update
+    sources:
+      - kalakris-cmake
 
 rust:
   - 1.29.0
