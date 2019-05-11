@@ -2,7 +2,10 @@ language: rust
 sudo: required
 dist: trusty
 
-cache: cargo
+cache:
+  directories:
+    - $HOME/.rustup/
+    - $HOME/.cargo/
 
 addons:
   apt:
@@ -28,16 +31,16 @@ script:
   - cargo bench
   - |
     if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-      # install cargo-tarpaulin here to that dependency crates can be cached properly
-      cargo install cargo-tarpaulin
+      # install cargo-travis here to that dependency crates can be cached properly
+      cargo install cargo-update || echo "cargo-update already installed"
+      cargo install cargo-travis || echo "cargo-travis already installed"
+      cargo install-update -a # update outdated cached binaries
     fi
 
 after_success:
   - |
     if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-      RUSTFLAGS="--cfg procmacro2_semver_exempt"
-      cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
-        --exclude-files 'tests/*' --exclude-files 'src/bin/*'
+      cargo coveralls
     fi
 
 matrix:
