@@ -1,6 +1,6 @@
-use crate::pinyin;
-use crate::Args;
-use crate::Style;
+use super::pinyin;
+use super::Args;
+use super::Style;
 
 use libc::{c_char, size_t};
 use std::ffi::{CStr, CString};
