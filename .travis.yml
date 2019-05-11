@@ -20,21 +20,25 @@ rust:
   - nightly
 
 script:
+  - cargo clean
+  - cargo build --release
+  - cargo test --release
+  - cargo doc -p pinyin --no-deps
+  - cargo run --example main
+  - cargo bench
   - |
-      cargo clean &&
-      cargo build --release &&
-      cargo test --release &&
-      cargo doc -p pinyin --no-deps &&
-      cargo run --example main &&
-      cargo bench
+    if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+      # install cargo-tarpaulin here to that dependency crates can be cached properly
+      cargo install cargo-tarpaulin
+    fi
 
 after_success:
   - |
-      if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-        RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-tarpaulin
-        cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
-          --exclude-files 'tests/*' --exclude-files 'src/bin/*'
-      fi
+    if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+      RUSTFLAGS="--cfg procmacro2_semver_exempt"
+      cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
+        --exclude-files 'tests/*' --exclude-files 'src/bin/*'
+    fi
 
 matrix:
   allow_failures:
