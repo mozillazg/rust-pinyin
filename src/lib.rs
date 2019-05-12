@@ -57,7 +57,16 @@
 //! ```
 
 #[macro_use]
+mod macros;
+#[macro_use]
 extern crate lazy_static;
+
+#[cfg(feature = "cffi")]
+extern crate libc;
+#[cfg(feature = "cffi")]
+mod c_ffi;
+#[cfg(feature = "cffi")]
+pub use c_ffi::*;
 
 mod dict;
 pub mod integer_hasher;
@@ -75,23 +84,24 @@ const _INITIALS: [&str; 21] = [
 
 /// 拼音风格
 #[derive(Debug, PartialEq, Eq, Hash)]
+#[repr(C)]
 pub enum Style {
     /// 普通风格，不带声调（默认风格）。如： `pin yin`
-    Normal,
+    Normal = 0,
     /// 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`
-    Tone,
+    Tone = 1,
     /// 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
-    Tone2,
+    Tone2 = 2,
     /// 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`
-    Initials,
+    Initials = 3,
     /// 首字母风格，只返回拼音的首字母部分。如： `p y`
-    FirstLetter,
+    FirstLetter = 4,
     /// 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
-    Finals,
+    Finals = 5,
     /// 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`
-    FinalsTone,
+    FinalsTone = 6,
     /// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
-    FinalsTone2,
+    FinalsTone2 = 7,
 }
 
 /// 参数

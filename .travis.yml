@@ -32,6 +32,8 @@ script:
   - cargo clean
   - cargo build --release
   - cargo test --release
+  - cargo build --release --all-features
+  - cargo test --release --all-features
   - cargo doc -p pinyin --no-deps
   - cargo run --example main
   - cargo bench
