@@ -15,11 +15,11 @@ install:
   - cargo -V
 build_script:
   - cargo build --release
-  - cargo build --release --features cffi
+  - cargo build --release --all-features
   - cargo fmt --all -- --check
 test_script:
   - cargo test --release
-  - cargo test --release --features cffi
+  - cargo test --release --all-features
   - cargo doc -p pinyin --no-deps
   - cargo run --example main
   - cargo bench
