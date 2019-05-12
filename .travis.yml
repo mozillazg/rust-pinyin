@@ -46,7 +46,7 @@ script:
 after_success:
   - |
     if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-      cargo coveralls
+      cargo coveralls --all-features --release --exclude-pattern 'tests/*,src/bin/*'
     fi
 
 matrix:
