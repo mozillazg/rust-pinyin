@@ -2,12 +2,21 @@ language: rust
 sudo: required
 dist: trusty
 
-cache: cargo
+cache:
+  directories:
+    - $HOME/.rustup/
+    - $HOME/.cargo/
 
 addons:
   apt:
     packages:
-      - libssl-dev
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - binutils-dev
+      - cmake # also required for cargo-update
+    sources:
+      - kalakris-cmake
 
 rust:
   - 1.29.0
@@ -20,22 +29,26 @@ rust:
   - nightly
 
 script:
+  - cargo clean
+  - cargo build --release
+  - cargo test --release
+  - cargo build --release --all-features
+  - cargo test --release --all-features
+  - cargo doc -p pinyin --no-deps
+  - cargo run --example main
+  - cargo bench
   - |
-    cargo clean &&
-    cargo build --release &&
-    cargo test --release &&
-    cargo build --release --features cffi &&
-    cargo test --release --features cffi &&
-    cargo doc -p pinyin --no-deps &&
-    cargo run --example main &&
-    cargo bench
+    if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+      # install cargo-travis here to that dependency crates can be cached properly
+      cargo install cargo-update || echo "cargo-update already installed"
+      cargo install cargo-travis || echo "cargo-travis already installed"
+      cargo install-update -a # update outdated cached binaries
+    fi
 
 after_success:
   - |
     if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-      RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-tarpaulin
-      cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
-        --exclude-files 'tests/*' --exclude-files 'src/bin/*'
+      cargo coveralls --all-features --release --exclude-pattern 'tests/*,src/bin/*'
     fi
 
 matrix:
