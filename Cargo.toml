@@ -20,8 +20,9 @@ coveralls = { repository = "mozillazg/rust-pinyin", branch = "master" }
 name = "main"
 path = "./examples/main.rs"
 
+
 [dependencies]
-lazy_static = "1"
+
 
 [features]
 unstable = []
