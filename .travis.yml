@@ -2,38 +2,26 @@ language: rust
 sudo: required
 dist: trusty
 
-cache: cargo
-
 addons:
   apt:
     packages:
       - libssl-dev
 
 rust:
-  - 1.29.0
-  - 1.30.0
-  - 1.31.0
-  - 1.32.0
-  - 1.33.0
   - stable
   - beta
   - nightly
 
 script:
-  - |
-      cargo clean &&
-      cargo build --release &&
-      cargo test --release &&
-      cargo doc -p pinyin --no-deps &&
-      cargo run --example main &&
-      cargo bench
+  - cargo build
+  - cargo test
+  - cargo doc
 
 after_success:
   - |
       if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
         RUSTFLAGS="--cfg procmacro2_semver_exempt" cargo install cargo-tarpaulin
-        cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
-          --exclude-files 'tests/*' --exclude-files 'src/bin/*'
+        cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
       fi
 
 matrix:
