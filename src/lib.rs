@@ -1,271 +1,60 @@
-//! 汉语拼音转换工具 Rust 版。
-//! [![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)
-//! [![Build status](https://ci.appveyor.com/api/projects/status/bemojvswjsqo796s/branch/master?svg=true)](https://ci.appveyor.com/project/mozillazg/rust-pinyin/branch/master)
-//! [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)
-//! [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
-//! [![GitHub stars](https://img.shields.io/github/stars/mozillazg/rust-pinyin.svg?style=social&label=Star)](https://github.com/mozillazg/rust-pinyin)
-//!
-//! # Usage
-//!
-//! This crate is [on crates.io](https://crates.io/crates/pinyin) and can be
-//! used by adding `pinyin` to your dependencies in your project's `Cargo.toml`.
-//!
-//! ```toml
-//! [dependencies]
-//! pinyin = "0.6"
-//! ```
-//!
-//! and this to your crate root:
-//!
-//! ```rust
-//! extern crate pinyin;
-//! ```
-//!
-//! # 示例
-//!
-//! ```
-//! extern crate pinyin;
-//!
-//! pub fn main() {
-//!     let hans = "中国人";
-//!     let mut args = pinyin::Args::new();
-//!
-//!     // 默认输出 [["zhong"] ["guo"] ["ren"]]
-//!     println!("{:?}",  pinyin::pinyin(hans, &args));
-//!
-//!     // ["zhong", "guo", "ren"]
-//!     println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
-//!
-//!     // 包含声调 [["zhōng"], ["guó"], ["rén"]]
-//!     args.style = pinyin::Style::Tone;
-//!     println!("{:?}",  pinyin::pinyin(hans, &args));
-//!
-//!     // 声调用数字表示 [["zho1ng"] ["guo2"] ["re2n"]]
-//!     args.style = pinyin::Style::Tone2;
-//!     println!("{:?}",  pinyin::pinyin(hans, &args));
-//!
-//!     // 开启多音字模式
-//!     args = pinyin::Args::new();
-//!     args.heteronym = true;
-//!     // [["zhong"] ["guo"] ["ren"]]
-//!     println!("{:?}",  pinyin::pinyin(hans, &args));
-//!
-//!     // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
-//!     args.style = pinyin::Style::Tone2;
-//!     println!("{:?}",  pinyin::pinyin(hans, &args));
-//! }
-//! ```
+use crate::data::CHAR_BLOCKS;
+use std::convert::{identity, TryFrom};
 
-#[macro_use]
-extern crate lazy_static;
+mod data;
+mod pinyin;
+#[cfg(feature = "heteronym")]
+mod pinyin_multi;
 
-mod dict;
-pub mod integer_hasher;
-mod pinyin_map;
+pub use crate::pinyin::{Pinyin, PinyinStrIter, ToPinyin};
+#[cfg(feature = "heteronym")]
+pub use crate::pinyin_multi::{PinyinMulti, PinyinMultiIter, PinyinMultiStrIter, ToPinyinMulti};
 
-pub use dict::PHONETIC_SYMBOL_MAP;
-pub use pinyin_map::PINYIN_HASHMAP;
-use std::collections::HashSet;
-
-// 声母表
-const _INITIALS: [&str; 21] = [
-    "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch", "sh",
-    "z", "c", "s",
-];
-
-/// 拼音风格
-#[derive(Debug, PartialEq, Eq, Hash)]
-pub enum Style {
-    /// 普通风格，不带声调（默认风格）。如： `pin yin`
-    Normal,
-    /// 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`
-    Tone,
-    /// 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
-    Tone2,
-    /// 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`
-    Initials,
-    /// 首字母风格，只返回拼音的首字母部分。如： `p y`
-    FirstLetter,
-    /// 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
-    Finals,
-    /// 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`
-    FinalsTone,
-    /// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
-    FinalsTone2,
-}
-
-/// 参数
-#[derive(Debug, PartialEq, Eq, Hash)]
-pub struct Args {
-    /// 拼音风格
-    pub style: Style,
-    /// 是否启用多音字模式
-    pub heteronym: bool,
-}
-
-impl Args {
-    /// 返回一个默认参数
-    ///
-    /// ```ignore
-    /// Args {
-    ///    style: Style::Normal,
-    ///    heteronym: false,
-    /// }
-    /// ```
-    pub fn new() -> Args {
-        Args {
-            style: Style::Normal,
-            heteronym: false,
-        }
-    }
-}
-
-impl Default for Args {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
-// 获取单个拼音中的声母
-fn initial(p: &str) -> String {
-    let mut s = "".to_string();
-    for v in &_INITIALS {
-        if p.starts_with(v) {
-            s = v.to_string();
-            break;
-        }
-    }
-    s
-}
-
-// 获取单个拼音中的韵母
-fn _final(p: &str) -> String {
-    let i = initial(p);
-    if i == "" {
-        return p.to_string();
-    }
-    let s: Vec<&str> = p.splitn(2, &i).collect();
-    s.concat()
-}
-
-fn to_fixed(p: &str, a: &Args) -> String {
-    if let Style::Initials = a.style {
-        return initial(p).to_string();
-    };
-
-    // 替换拼音中的带声调字符
-    let py = p
-        .chars()
-        .map(|c| {
-            match PHONETIC_SYMBOL_MAP.binary_search_by_key(&c, |&(k, _)| k) {
-                Ok(index) => {
-                    let symbol = PHONETIC_SYMBOL_MAP[index].1;
-                    match a.style {
-                        // 不包含声调
-                        Style::Normal | Style::FirstLetter | Style::Finals => {
-                            // 去掉声调: a1 -> a
-                            symbol
-                                .chars()
-                                .filter(|c: &char| {
-                                    // NOTE: 该方法在 rustc 1.17.0 (56124baa9 2017-04-24) 版本当中需要引入 `use std::ascii::AsciiExt;`
-                                    // !c.is_ascii_digit()
-                                    *c != '0' && *c != '1' && *c != '2' && *c != '3' && *c != '4'
-                                })
-                                .collect::<String>()
-                        }
-                        Style::Tone2 | Style::FinalsTone2 => {
-                            // 返回使用数字标识声调的字符
-                            symbol.to_string()
-                        }
-                        _ => {
-                            // 声调在头上
-                            c.to_string()
-                        }
-                    }
-                }
-                Err(_) => c.to_string(),
-            }
-        })
-        .collect::<String>();
-
-    match a.style {
-        // 首字母
-        Style::FirstLetter => py.chars().nth(0).unwrap().to_string(),
-        // 韵母
-        Style::Finals | Style::FinalsTone | Style::FinalsTone2 => _final(&py),
-        _ => py,
-    }
-}
-
-fn apply_style(pys: Vec<String>, a: &Args) -> Vec<String> {
-    let mut result: Vec<String> = vec![];
-    // Unfortunately, HashSet does not guarantee ordering
-    let mut set: HashSet<String> = HashSet::new();
-    for v in pys {
-        let s = to_fixed(&v, a);
-        if !set.contains(&s) {
-            set.insert(s.clone());
-            result.push(s);
-        }
-    }
-
-    result
-}
-
-fn single_pinyin(c: char, a: &Args) -> Vec<String> {
-    let ret: Vec<String> = match PINYIN_HASHMAP.get(&c) {
-        Some(candidates_str) => {
-            let candidates = candidates_str.split(',').collect::<Vec<&str>>();
-            if candidates.is_empty() || a.heteronym {
-                candidates
-                    .iter()
-                    .map(std::string::ToString::to_string)
-                    .collect::<Vec<String>>()
-            } else {
-                vec![candidates[0].to_string()]
-            }
-        }
-        None => vec![],
-    };
-
-    apply_style(ret, a)
-}
-
-/// 汉字转拼音
+/// 将给定输入字符串的拼音通过给定映射函数后存入 `Vec` 中
 ///
-/// ```
-/// let hans = "中国人";
-/// let args = pinyin::Args::new();
-///
-/// // 默认输出 [["zhong"] ["guo"] ["ren"]]
-/// println!("{:?}",  pinyin::pinyin(hans, &args));
-/// ```
-pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
-    let mut ret: Vec<Vec<String>> = Vec::new();
-    let chars: Vec<char> = s.chars().collect();
-    for c in chars {
-        ret.push(single_pinyin(c, a));
-    }
-
-    ret
+/// 这个函数会跳过任何没有拼音的字符。本函数主要用于测试目的。
+pub fn to_pinyin_vec<F>(input: &str, f: F) -> Vec<&'static str>
+where
+    F: Fn(Pinyin) -> &'static str,
+{
+    input.to_pinyin().filter_map(identity).map(f).collect()
 }
 
-/// 汉字转拼音, 与 ``pinyin`` 的区别是返回值不同，每个汉字只取一个音
-///
-/// ```
-/// let hans = "中国人";
-/// let args = pinyin::Args::new();
-///
-/// // 默认输出 ["zhong", "guo", "ren"]
-/// println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
-/// ```
-pub fn lazy_pinyin(s: &str, a: &Args) -> Vec<String> {
-    let mut ret: Vec<String> = Vec::new();
-    for pinyin_vc in pinyin(s, a) {
-        if !pinyin_vc.is_empty() {
-            ret.push(pinyin_vc[0].to_string());
+/// 单个字符的拼音数据
+struct PinyinData {
+    #[cfg(feature = "plain")]
+    plain: &'static str,
+    #[cfg(feature = "with_tone")]
+    with_tone: &'static str,
+    #[cfg(feature = "with_tone_num")]
+    with_tone_num: &'static str,
+    split: usize,
+}
+
+/// 在 [start, end) 之间字符的数据块
+struct CharBlock {
+    /// 本块的第一个字符
+    start_code: u32,
+    /// 本块字符的数据索引
+    /// 零值表示对应字符没有拼音数据，非零值表示对应的拼音数据为 `PINYIN_DATA[i]`。
+    data: &'static [u16],
+    /// 本块字符对应的多音字数据索引
+    /// 对应的多音字数据为 `HETERONYM_TABLE[i]`。
+    #[cfg(feature = "heteronym")]
+    heteronym: &'static [u16],
+}
+
+#[inline]
+fn get_block_and_index(ch: char) -> Option<(&'static CharBlock, usize)> {
+    let code = u32::from(ch);
+    for block in CHAR_BLOCKS.iter() {
+        if code < block.start_code {
+            return None;
+        }
+        let idx = usize::try_from(code - block.start_code).unwrap();
+        if idx < block.data.len() {
+            return Some((block, idx));
         }
     }
-
-    ret
+    None
 }
