@@ -26,6 +26,13 @@ coveralls = { repository = "mozillazg/rust-pinyin", branch = "master" }
 
 [features]
 default = [
+    "compat",
+    "plain",
+    "with_tone",
+    "with_tone_num",
+    "heteronym",
+]
+compat = [
     "plain",
     "with_tone",
     "with_tone_num",

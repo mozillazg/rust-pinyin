@@ -1,11 +1,15 @@
 use crate::data::CHAR_BLOCKS;
 use std::convert::{identity, TryFrom};
 
+#[cfg(feature = "compat")]
+mod compat;
 mod data;
 mod pinyin;
 #[cfg(feature = "heteronym")]
 mod pinyin_multi;
 
+#[cfg(feature = "compat")]
+pub use crate::compat::*;
 pub use crate::pinyin::{Pinyin, PinyinStrIter, ToPinyin};
 #[cfg(feature = "heteronym")]
 pub use crate::pinyin_multi::{PinyinMulti, PinyinMultiIter, PinyinMultiStrIter, ToPinyinMulti};
