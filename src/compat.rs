@@ -1,7 +1,7 @@
 #![allow(deprecated)]
 
 use crate::{Pinyin, ToPinyin, ToPinyinMulti};
-use std::collections::hash_map::{Entry, HashMap};
+use std::collections::HashSet;
 use std::convert::identity;
 
 /// 拼音风格
@@ -87,19 +87,12 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
         s.to_pinyin_multi()
             .map(|multi| match multi {
                 Some(multi) => {
-                    let mut set = HashMap::new();
+                    let mut set = HashSet::new();
                     multi
                         .into_iter()
-                        .filter_map(|pinyin| {
-                            let s = apply_style(pinyin, &a.style);
-                            match set.entry(s) {
-                                Entry::Occupied(_) => None,
-                                Entry::Vacant(entry) => {
-                                    entry.insert(());
-                                    Some(s.to_string())
-                                }
-                            }
-                        })
+                        .map(|pinyin| apply_style(pinyin, &a.style))
+                        .filter(|s| set.insert(*s))
+                        .map(str::to_string)
                         .collect()
                 }
                 None => vec![],
