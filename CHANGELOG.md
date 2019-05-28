@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.7.0 (?)
+
+* 重新设计 API 使用迭代器及静态数据，实现无运行时开销 (via [#36])
+
 ## [0.6.0] (2019-05-01)
 
 * Use hashmap instead of binary search (via [#27]. Thanks [@hanabi1224])
