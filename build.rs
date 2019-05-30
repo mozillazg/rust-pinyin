@@ -161,7 +161,7 @@ fn generate_pinyin_data(data: &InputData) -> io::Result<PinyinDataIndex> {
         // 计算切分声母和韵母的位置
         const INITIALS: &[&str] = &[
             "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch",
-            "sh", "z", "c", "s",
+            "sh", "z", "c", "s", "y",
         ];
         let split = INITIALS
             .iter()
