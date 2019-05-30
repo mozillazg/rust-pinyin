@@ -42,3 +42,11 @@ plain = []
 with_tone = []
 with_tone_num = []
 heteronym = []
+
+[[example]]
+name = "basic"
+required-features = ["plain", "with_tone", "with_tone_num", "heteronym"]
+
+[[test]]
+name = "compat"
+required-features = ["compat"]

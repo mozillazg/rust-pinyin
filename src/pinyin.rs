@@ -117,8 +117,10 @@ pub trait ToPinyin {
 }
 
 /// ```
+/// # #[cfg(feature = "plain")] {
 /// use pinyin::ToPinyin;
 /// assert_eq!('拼'.to_pinyin().unwrap().plain(), "pin");
+/// # }
 /// ```
 impl ToPinyin for char {
     type Output = Option<Pinyin>;
@@ -134,12 +136,14 @@ impl ToPinyin for char {
 }
 
 /// ```
+/// # #[cfg(feature = "plain")] {
 /// use pinyin::{ToPinyin, Pinyin};
 /// let mut iter = "拼音".to_pinyin();
 /// let mut next_plain = || iter.next().and_then(|p| p).map(Pinyin::plain);
 /// assert_eq!(next_plain(), Some("pin"));
 /// assert_eq!(next_plain(), Some("yin"));
 /// assert_eq!(next_plain(), None);
+/// # }
 /// ```
 impl<'a> ToPinyin for &'a str {
     type Output = PinyinStrIter<'a>;
