@@ -73,6 +73,7 @@ pub trait ToPinyinMulti {
 }
 
 /// ```
+/// # #[cfg(feature = "with_tone")] {
 /// use pinyin::{Pinyin, ToPinyinMulti};
 /// let mut iter = '还'.to_pinyin_multi().unwrap().into_iter();
 /// let mut next_pinyin = || iter.next().map(Pinyin::with_tone);
@@ -80,6 +81,7 @@ pub trait ToPinyinMulti {
 /// assert_eq!(next_pinyin(), Some("fú"));
 /// assert_eq!(next_pinyin(), Some("huán"));
 /// assert_eq!(next_pinyin(), None);
+/// # }
 /// ```
 impl ToPinyinMulti for char {
     type Output = Option<PinyinMulti>;
@@ -101,6 +103,7 @@ impl ToPinyinMulti for char {
 }
 
 /// ```
+/// # #[cfg(feature = "with_tone")] {
 /// use pinyin::{Pinyin, ToPinyinMulti};
 /// let mut iter = "还没".to_pinyin_multi();
 /// let mut next_heteronym = || {
@@ -111,6 +114,7 @@ impl ToPinyinMulti for char {
 /// assert_eq!(next_heteronym(), Some(vec!["hái", "fú", "huán"]));
 /// assert_eq!(next_heteronym(), Some(vec!["méi", "mò", "me"]));
 /// assert_eq!(next_heteronym(), None);
+/// # }
 /// ```
 impl<'a> ToPinyinMulti for &'a str {
     type Output = PinyinMultiStrIter<'a>;
