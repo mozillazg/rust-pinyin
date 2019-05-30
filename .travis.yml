@@ -1,18 +1,5 @@
 language: rust
-sudo: required
 dist: trusty
-
-
-addons:
-  apt:
-    packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
-      - cmake # also required for cargo-update
-    sources:
-      - kalakris-cmake
 
 rust:
   - stable
@@ -30,7 +17,7 @@ after_success:
         curl -sL https://github.com/xd009642/tarpaulin/releases/download/0.8.3/cargo-tarpaulin-0.8.3-travis.tar.gz | \
           tar xvz -C $HOME/.cargo/bin
         cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
-          --exclude-files 'tests/*' --exclude-files 'src/bin/*'
+          --exclude-files 'tests/*'
       fi
 
 matrix:
