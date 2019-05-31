@@ -158,16 +158,20 @@ fn generate_pinyin_data(data: &InputData) -> io::Result<PinyinDataIndex> {
         for (field, converter) in STYLES.iter() {
             write!(output, r#"{}: "{}", "#, field, converter(pinyin))?;
         }
-        // 计算切分声母和韵母的位置
-        const INITIALS: &[&str] = &[
-            "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh", "ch",
-            "sh", "z", "c", "s",
-        ];
-        let split = INITIALS
-            .iter()
-            .find(|initial| pinyin.starts_with(*initial))
-            .map_or(0, |initial| initial.len());
-        writeln!(output, "split: {} }},", split)?;
+        #[cfg(feature = "compat")]
+        {
+            // 计算切分声母和韵母的位置
+            const INITIALS: &[&str] = &[
+                "b", "p", "m", "f", "d", "t", "n", "l", "g", "k", "h", "j", "q", "x", "r", "zh",
+                "ch", "sh", "z", "c", "s",
+            ];
+            let split = INITIALS
+                .iter()
+                .find(|initial| pinyin.starts_with(*initial))
+                .map_or(0, |initial| initial.len());
+            write!(output, "split: {}, ", split)?;
+        }
+        writeln!(output, "}},")?;
         Ok(())
     };
     // 插入一个空的拼音数据作为零位
