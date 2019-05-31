@@ -59,53 +59,23 @@ impl Pinyin {
         &self.0.plain[..ch.len_utf8()]
     }
 
-    /// 声母风格
-    ///
-    /// *仅在启用 `plain` 特性时可用*
-    /// ```
-    /// # use pinyin::*;
-    /// assert_eq!(to_pinyin_vec("中国", Pinyin::initials), vec!["zh", "g"]);
-    /// assert_eq!(to_pinyin_vec("安心", Pinyin::initials), vec!["", "x"]);
-    /// ```
-    #[cfg(feature = "plain")]
-    pub fn initials(self) -> &'static str {
+    #[cfg(feature = "compat")]
+    pub(crate) fn initials(self) -> &'static str {
         &self.0.plain[..self.0.split]
     }
 
-    /// 不带声调的韵母风格
-    ///
-    /// *仅在启用 `plain` 特性时可用*
-    /// ```
-    /// # use pinyin::*;
-    /// assert_eq!(to_pinyin_vec("中国", Pinyin::finals_plain), vec!["ong", "uo"]);
-    /// assert_eq!(to_pinyin_vec("安心", Pinyin::finals_plain), vec!["an", "in"]);
-    /// ```
-    #[cfg(feature = "plain")]
-    pub fn finals_plain(self) -> &'static str {
+    #[cfg(feature = "compat")]
+    pub(crate) fn finals_plain(self) -> &'static str {
         &self.0.plain[self.0.split..]
     }
 
-    /// 带声调的韵母风格
-    ///
-    /// *仅在启用 `with_tone` 特性时可用*
-    /// ```
-    /// # use pinyin::*;
-    /// assert_eq!(to_pinyin_vec("中国", Pinyin::finals_with_tone), vec!["ōng", "uó"]);
-    /// ```
-    #[cfg(feature = "with_tone")]
-    pub fn finals_with_tone(self) -> &'static str {
+    #[cfg(feature = "compat")]
+    pub(crate) fn finals_with_tone(self) -> &'static str {
         &self.0.with_tone[self.0.split..]
     }
 
-    /// 声调在各个拼音之后，使用数字0-4表示的韵母风格
-    ///
-    /// *仅在启用 `with_tone_num` 特性时可用*
-    /// ```
-    /// # use pinyin::*;
-    /// assert_eq!(to_pinyin_vec("中国", Pinyin::finals_with_tone_num), vec!["o1ng", "uo2"]);
-    /// ```
-    #[cfg(feature = "with_tone_num")]
-    pub fn finals_with_tone_num(self) -> &'static str {
+    #[cfg(feature = "compat")]
+    pub(crate) fn finals_with_tone_num(self) -> &'static str {
         &self.0.with_tone_num[self.0.split..]
     }
 }
