@@ -15,7 +15,6 @@ script:
   - cargo test --no-default-features --features=plain,heteronym
   - cargo test --no-default-features --features=with_tone,heteronym
   - cargo test --no-default-features --features=with_tone_num,heteronym
-  - cat tests/pinyin/*.txt | cargo run --manifest-path coverage-check/Cargo.toml
   - cargo doc
 
 after_success:
