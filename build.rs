@@ -133,7 +133,9 @@ const STYLES: &[Style] = &[
                 Some((base, tone)) => {
                     const TONES: &[char] = &['0', '1', '2', '3', '4'];
                     result.push(base);
-                    result.push(TONES[usize::try_from(tone).unwrap()]);
+                    if tone > 0 {
+                        result.push(TONES[usize::try_from(tone).unwrap()]);
+                    }
                 }
                 None => result.push(ch),
             }
