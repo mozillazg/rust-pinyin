@@ -15,6 +15,7 @@ script:
   - cargo test --no-default-features --features=plain,heteronym
   - cargo test --no-default-features --features=with_tone,heteronym
   - cargo test --no-default-features --features=with_tone_num,heteronym
+  - cat tests/pinyin/*.txt | cargo run --manifest-path coverage-check/Cargo.toml
   - cargo doc
 
 after_success:
@@ -23,7 +24,7 @@ after_success:
         curl -sL https://github.com/xd009642/tarpaulin/releases/download/0.8.3/cargo-tarpaulin-0.8.3-travis.tar.gz | \
           tar xvz -C $HOME/.cargo/bin
         cargo tarpaulin --ciserver travis-ci --coveralls $TRAVIS_JOB_ID \
-          --exclude-files 'tests/*'
+          --exclude-files 'tests/*' --exclude-files 'coverage-check/*'
       fi
 
 matrix:

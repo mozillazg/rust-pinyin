@@ -19,6 +19,9 @@ include = [
 ]
 edition = "2018"
 
+[workspace]
+members = ["coverage-check"]
+
 [badges]
 travis-ci = { repository = "mozillazg/rust-pinyin", branch = "master" }
 appveyor = { repository = "mozillazg/rust-pinyin", branch = "master", service = "github" }
