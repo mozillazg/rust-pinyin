@@ -135,3 +135,66 @@ impl<'a> Iterator for PinyinMultiStrIter<'a> {
         self.0.next().map(|c| c.to_pinyin_multi())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[cfg(feature = "with_tone")]
+    use crate::Pinyin;
+    use crate::{PinyinMulti, ToPinyinMulti};
+
+    fn zi() -> PinyinMulti {
+        '子'.to_pinyin_multi().expect("no pinyin?")
+    }
+
+    #[test]
+    fn pinyin_multi_count() {
+        assert_eq!(zi().count(), 2);
+    }
+
+    #[test]
+    #[cfg(feature = "with_tone")]
+    fn pinyin_multi_get_opt() {
+        assert_eq!(zi().get_opt(0).map(Pinyin::with_tone), Some("zi"));
+        assert_eq!(zi().get_opt(1).map(Pinyin::with_tone), Some("zǐ"));
+        assert_eq!(zi().get_opt(2).map(Pinyin::with_tone), None);
+    }
+
+    #[test]
+    #[cfg(feature = "with_tone")]
+    fn pinyin_multi_get() {
+        assert_eq!(zi().get(0).with_tone(), "zi");
+        assert_eq!(zi().get(1).with_tone(), "zǐ");
+    }
+
+    #[test]
+    #[should_panic]
+    fn pinyin_multi_get_panic() {
+        zi().get(2);
+    }
+
+    #[test]
+    #[cfg(feature = "with_tone")]
+    fn pinyin_multi_iter() {
+        let mut iter = zi().into_iter();
+        assert_eq!(iter.next().map(Pinyin::with_tone), Some("zi"));
+        assert_eq!(iter.next().map(Pinyin::with_tone), Some("zǐ"));
+        assert_eq!(iter.next().map(Pinyin::with_tone), None);
+    }
+
+    #[test]
+    #[cfg(feature = "with_tone")]
+    fn str_to_pinyin_multi() {
+        let actual = "还没"
+            .to_pinyin_multi()
+            .map(|multi| {
+                multi
+                    .unwrap()
+                    .into_iter()
+                    .map(Pinyin::with_tone)
+                    .collect::<Vec<_>>()
+            })
+            .collect::<Vec<_>>();
+        let expected = vec![vec!["hái", "fú", "huán"], vec!["méi", "mò", "me"]];
+        assert_eq!(actual, expected);
+    }
+}

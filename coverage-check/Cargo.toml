@@ -1,0 +1,13 @@
+[package]
+name = "coverage-check"
+version = "0.1.0"
+authors = ["Xidorn Quan <me@upsuper.org>"]
+edition = "2018"
+
+[dependencies]
+termcolor = "1.0.4"
+
+[dependencies.pinyin]
+path = ".."
+default-features = false
+features = ["with_tone"]

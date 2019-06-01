@@ -135,3 +135,13 @@ impl<'a> Iterator for PinyinStrIter<'a> {
         self.0.next().map(|c| c.to_pinyin())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::ToPinyin;
+
+    #[test]
+    fn special_code_point() {
+        assert!('\u{10FFFF}'.to_pinyin().is_none());
+    }
+}
