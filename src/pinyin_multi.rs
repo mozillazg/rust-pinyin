@@ -26,12 +26,11 @@ impl PinyinMulti {
     /// 获取指定序号的拼音，如果序号超过总数则返回 `None`
     pub fn get_opt(self, idx: usize) -> Option<Pinyin> {
         if idx == 0 {
-            Some(Pinyin(self.first))
-        } else {
-            self.other_indexes
-                .get(usize::try_from(idx).unwrap() - 1)
-                .map(|i| Pinyin(&PINYIN_DATA[usize::try_from(*i).unwrap()]))
+            return Some(Pinyin(self.first));
         }
+        self.other_indexes
+            .get(usize::try_from(idx).unwrap() - 1)
+            .map(|i| Pinyin(&PINYIN_DATA[usize::try_from(*i).unwrap()]))
     }
 }
 
