@@ -1,7 +1,7 @@
-use colored::{Color, Colorize};
 use pinyin::ToPinyin;
 use std::collections::HashSet;
-use std::io::{self, stdin, BufRead};
+use std::io::{self, BufRead, Write};
+use termcolor::{Color, ColorChoice, ColorSpec, StandardStream, WriteColor};
 
 const CHARS: &[&[char]] = &[
     &['a', 'ā', 'á', 'ǎ', 'à'],
@@ -14,7 +14,7 @@ const CHARS: &[&[char]] = &[
 
 fn main() -> io::Result<()> {
     let mut chars = HashSet::new();
-    let stdin = stdin();
+    let stdin = io::stdin();
     for line in stdin.lock().lines() {
         let line = line?;
         for opt_pinyin in line.as_str().to_pinyin() {
@@ -23,6 +23,7 @@ fn main() -> io::Result<()> {
             }
         }
     }
+    let mut stdout = StandardStream::stdout(ColorChoice::Auto);
     for line in CHARS.iter() {
         for ch in line.iter() {
             let color = if chars.contains(ch) {
@@ -30,9 +31,10 @@ fn main() -> io::Result<()> {
             } else {
                 Color::Red
             };
-            print!("{}\t", ch.to_string().color(color).bold());
+            stdout.set_color(ColorSpec::new().set_fg(Some(color)).set_bold(true))?;
+            write!(&mut stdout, "{}\t", ch)?;
         }
-        println!();
+        writeln!(&mut stdout)?;
     }
     Ok(())
 }

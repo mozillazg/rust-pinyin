@@ -5,7 +5,7 @@ authors = ["Xidorn Quan <me@upsuper.org>"]
 edition = "2018"
 
 [dependencies]
-colored = "1.8.0"
+termcolor = "1.0.4"
 
 [dependencies.pinyin]
 path = ".."
