@@ -11,8 +11,10 @@ documentation = "https://docs.rs/pinyin/"
 keywords = ["pinyin", "hanzi", "Chinese"]
 include = [
     "/build.rs",
+    "/examples/*",
     "/pinyin-data/pinyin.txt",
     "/src/**/*",
+    "/tests/**/*",
     "/Cargo.toml",
     "/LICENSE",
     "/README.md",
