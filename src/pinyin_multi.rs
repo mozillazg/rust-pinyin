@@ -139,7 +139,9 @@ impl<'a> Iterator for PinyinMultiStrIter<'a> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{Pinyin, PinyinMulti, ToPinyinMulti};
+    #[cfg(feature = "with_tone")]
+    use crate::Pinyin;
+    use crate::{PinyinMulti, ToPinyinMulti};
 
     fn zi() -> PinyinMulti {
         '子'.to_pinyin_multi().expect("no pinyin?")
