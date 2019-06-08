@@ -46,6 +46,7 @@ const PHONETIC_SYMBOL_MAP: &[(char, char, u8)] = &[
     ('ḿ', 'm', 2),
 ];
 
+#[cfg(any(feature = "with_tone_num", feature = "with_tone_num_end"))]
 const TONE_NUMS: &[char] = &['0', '1', '2', '3', '4'];
 const TONE_MAP: &[(char, u8)] = &[('\u{304}', 1), ('\u{30c}', 3), ('\u{300}', 4)];
 const NON_PINYIN_TONE: &[char] = &['ê'];
@@ -311,7 +312,11 @@ fn create_out_file(name: &str) -> io::Result<impl Write> {
     Ok(BufWriter::new(File::create(&path)?))
 }
 
-#[cfg(any(feature = "plain", feature = "with_tone_num"))]
+#[cfg(any(
+    feature = "plain",
+    feature = "with_tone_num",
+    feature = "with_tone_num_end"
+))]
 fn get_phonetic_info(ch: char) -> Option<(char, u8)> {
     PHONETIC_SYMBOL_MAP
         .iter()
