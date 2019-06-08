@@ -46,6 +46,7 @@ const PHONETIC_SYMBOL_MAP: &[(char, char, u8)] = &[
     ('ḿ', 'm', 2),
 ];
 
+const TONE_NUMS: &[char] = &['0', '1', '2', '3', '4'];
 const TONE_MAP: &[(char, u8)] = &[('\u{304}', 1), ('\u{30c}', 3), ('\u{300}', 4)];
 const NON_PINYIN_TONE: &[char] = &['ê'];
 
@@ -131,14 +132,34 @@ const STYLES: &[Style] = &[
         for ch in input.chars() {
             match get_phonetic_info(ch) {
                 Some((base, tone)) => {
-                    const TONES: &[char] = &['0', '1', '2', '3', '4'];
                     result.push(base);
                     if tone > 0 {
-                        result.push(TONES[usize::try_from(tone).unwrap()]);
+                        result.push(TONE_NUMS[usize::try_from(tone).unwrap()]);
                     }
                 }
                 None => result.push(ch),
             }
+        }
+        result.into()
+    }),
+    #[cfg(feature = "with_tone_num_end")]
+    ("with_tone_num_end", |input| {
+        let mut result = String::new();
+        let mut output_tone = None;
+        for ch in input.chars() {
+            match get_phonetic_info(ch) {
+                Some((base, tone)) => {
+                    result.push(base);
+                    if tone > 0 {
+                        assert!(output_tone.is_none());
+                        output_tone = Some(TONE_NUMS[usize::try_from(tone).unwrap()]);
+                    }
+                }
+                None => result.push(ch),
+            }
+        }
+        if let Some(tone) = output_tone {
+            result.push(tone);
         }
         result.into()
     }),

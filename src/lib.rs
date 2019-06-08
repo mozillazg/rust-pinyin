@@ -32,6 +32,8 @@ struct PinyinData {
     with_tone: &'static str,
     #[cfg(feature = "with_tone_num")]
     with_tone_num: &'static str,
+    #[cfg(feature = "with_tone_num_end")]
+    with_tone_num_end: &'static str,
     #[cfg(feature = "compat")]
     split: usize,
 }
