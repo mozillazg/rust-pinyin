@@ -32,7 +32,7 @@ impl Pinyin {
         self.0.with_tone
     }
 
-    /// 声调在各个拼音之后，使用数字0-4表示的风格
+    /// 声调在各个拼音之后，使用数字1-4表示的风格
     ///
     /// *仅在启用 `with_tone_num` 特性时可用*
     /// ```
@@ -42,6 +42,18 @@ impl Pinyin {
     #[cfg(feature = "with_tone_num")]
     pub fn with_tone_num(self) -> &'static str {
         self.0.with_tone_num
+    }
+
+    /// 声调在拼音最后，使用数字1-4表示的风格
+    ///
+    /// *仅在启用 `with_tone_num_end` 特性时可用*
+    /// ```
+    /// # use pinyin::*;
+    /// assert_eq!(to_pinyin_vec("拼音", Pinyin::with_tone_num_end), vec!["pin1", "yin1"]);
+    /// ```
+    #[cfg(feature = "with_tone_num_end")]
+    pub fn with_tone_num_end(self) -> &'static str {
+        self.0.with_tone_num_end
     }
 
     /// 首字母风格

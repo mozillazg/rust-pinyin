@@ -27,6 +27,14 @@ fn main() {
     }
     println!();
 
+    // 声调用数字在末尾表示，输出 zhong1 guo2 ren2
+    for pinyin in hans.to_pinyin() {
+        if let Some(pinyin) = pinyin {
+            print!("{} ", pinyin.with_tone_num_end());
+        }
+    }
+    println!();
+
     // 多音字，输出
     // zho1ng zho4ng
     // guo2

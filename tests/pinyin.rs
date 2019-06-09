@@ -25,6 +25,12 @@ fn pinyin_with_tone_num() -> io::Result<()> {
 }
 
 #[test]
+#[cfg(feature = "with_tone_num_end")]
+fn pinyin_with_tone_num_end() -> io::Result<()> {
+    run_test_cases("with_tone_num_end", Pinyin::with_tone_num_end)
+}
+
+#[test]
 #[cfg(feature = "plain")]
 fn pinyin_first_letter() -> io::Result<()> {
     run_test_cases("first_letter", Pinyin::first_letter)
