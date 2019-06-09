@@ -6,6 +6,11 @@ rust:
   - beta
   - nightly
 
+before_script:
+  - rustup component add rustfmt clippy
+  - rustfmt --version
+  - cargo clippy --version
+
 script:
   - cargo build
   - cargo test
@@ -17,6 +22,8 @@ script:
   - cargo test --no-default-features --features=with_tone,heteronym
   - cargo test --no-default-features --features=with_tone_num,heteronym
   - cargo test --no-default-features --features=with_tone_num_end,heteronym
+  - cargo fmt --all -- --check
+  - cargo clippy
   - cargo doc
 
 after_success:
