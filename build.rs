@@ -46,10 +46,34 @@ const PHONETIC_SYMBOL_MAP: &[(char, char, u8)] = &[
     ('ḿ', 'm', 2),
 ];
 
+#[rustfmt::skip]
+const LETTER_TABLE: &[char] = &[
+    'b', 'p', 'm', 'f', 'd',
+    't', 'n', 'l', 'g', 'k',
+    'h', 'j', 'q', 'x', 'r',
+    'z', 'c', 's',
+                   'w', 'y',
+    // 因为数据源里面不会使用 `v` 以及其它的 简写字母，所以这里注释掉
+    // 'v', 'ẑ', 'ĉ', 'ŝ', 'ŋ',
+
+    '\u{0304}', '\u{030C}', '\u{0300}', // Unicode 声调连字符
+    'a', 'ā', 'á', 'ǎ', 'à',
+    'e', 'ē', 'é', 'ě', 'è',
+    'i', 'ī', 'í', 'ǐ', 'ì',
+    //   "m̄"       "m̌"  "m̀"
+    'm',      'ḿ',
+    //   "n̄"
+    'n',      'ń', 'ň', 'ǹ',
+    'o', 'ō', 'ó', 'ǒ', 'ò',
+    'u', 'ū', 'ú', 'ǔ', 'ù',
+    //   "ê̄"       "ê̌"
+    'ê',      'ế',      'ề',
+    //   'ǖ'
+    'ü',      'ǘ', 'ǚ', 'ǜ',
+];
+
 #[cfg(any(feature = "with_tone_num", feature = "with_tone_num_end"))]
 const TONE_NUMS: &[char] = &['0', '1', '2', '3', '4'];
-const TONE_MAP: &[(char, u8)] = &[('\u{304}', 1), ('\u{30c}', 3), ('\u{300}', 4)];
-const NON_PINYIN_TONE: &[char] = &['ê'];
 
 type Style = (&'static str, fn(&str) -> Cow<'_, str>);
 type InputData = Vec<(u32, Vec<&'static str>)>;
@@ -86,19 +110,21 @@ fn build_data() -> InputData {
                 None => unreachable!("no colon found in line {}", i),
             };
             let code_point = line[..colon_pos].trim();
-            let pinyin = line[colon_pos + 1..].trim();
-            // 检查我们理解拼音数据中的每个字符
-            for ch in pinyin.chars() {
-                let is_known = ch.is_ascii()
-                    || PHONETIC_SYMBOL_MAP.iter().any(|(c, _, _)| *c == ch)
-                    || TONE_MAP.iter().any(|(c, _)| *c == ch)
-                    || NON_PINYIN_TONE.iter().any(|c| *c == ch);
-                assert!(
-                    is_known,
-                    "unknown character {:?} at line {}: {}",
-                    ch, i, line,
-                );
+            let pinyin_list: Vec<_> = line[colon_pos + 1..].trim().split(',').collect();
+
+            // 确保输入数据的字符全部在我们预料之中。
+            // 同时也可以提前知道一些被遗弃的码位，如: U+E7C8 和 U+E7C7
+            for pinyin in pinyin_list.iter() {
+                for ch in pinyin.chars() {
+                    let is_known = LETTER_TABLE.contains(&ch);
+                    assert!(
+                        is_known,
+                        "unknown character {:?} at line {}: {}",
+                        ch, i, line,
+                    );
+                }
             }
+
             // 解析码位
             const CODE_POINT_PREFIX: &str = "U+";
             assert!(code_point.starts_with(CODE_POINT_PREFIX));
@@ -107,7 +133,7 @@ fn build_data() -> InputData {
                 Ok(code) => code,
                 Err(_) => unreachable!("invalid code point {} at line {}", code, i),
             };
-            (code, pinyin.split(',').collect())
+            (code, pinyin_list)
         })
         .collect::<Vec<_>>();
     input_data.sort_by_key(|(code, _)| *code);
