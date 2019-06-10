@@ -57,3 +57,7 @@ required-features = ["plain", "with_tone", "with_tone_num", "with_tone_num_end",
 [[test]]
 name = "compat"
 required-features = ["compat"]
+
+[[test]]
+name = "special_pinyin"
+required-features = ["with_tone_num_end", "heteronym"]
