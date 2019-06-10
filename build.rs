@@ -143,13 +143,7 @@ fn build_data() -> InputData {
 const STYLES: &[Style] = &[
     #[cfg(feature = "plain")]
     ("plain", |input| {
-        input
-            .chars()
-            .map(|c| match get_phonetic_info(c) {
-                Some((base, _)) => base,
-                None => c,
-            })
-            .collect()
+        input.chars().filter_map(|c| get_char_info(c).0).collect()
     }),
     #[cfg(feature = "with_tone")]
     ("with_tone", |input| Cow::from(input)),
@@ -157,14 +151,12 @@ const STYLES: &[Style] = &[
     ("with_tone_num", |input| {
         let mut result = String::new();
         for ch in input.chars() {
-            match get_phonetic_info(ch) {
-                Some((base, tone)) => {
-                    result.push(base);
-                    if tone > 0 {
-                        result.push(TONE_NUMS[usize::try_from(tone).unwrap()]);
-                    }
-                }
-                None => result.push(ch),
+            let (ch, tone) = get_char_info(ch);
+            if let Some(ch) = ch {
+                result.push(ch);
+            }
+            if tone > 0 {
+                result.push(TONE_NUMS[usize::try_from(tone).unwrap()]);
             }
         }
         result.into()
@@ -174,15 +166,13 @@ const STYLES: &[Style] = &[
         let mut result = String::new();
         let mut output_tone = None;
         for ch in input.chars() {
-            match get_phonetic_info(ch) {
-                Some((base, tone)) => {
-                    result.push(base);
-                    if tone > 0 {
-                        assert!(output_tone.is_none());
-                        output_tone = Some(TONE_NUMS[usize::try_from(tone).unwrap()]);
-                    }
-                }
-                None => result.push(ch),
+            let (ch, tone) = get_char_info(ch);
+            if let Some(ch) = ch {
+                result.push(ch);
+            }
+            if tone > 0 {
+                assert!(output_tone.is_none());
+                output_tone = Some(TONE_NUMS[usize::try_from(tone).unwrap()]);
             }
         }
         if let Some(tone) = output_tone {
@@ -343,9 +333,13 @@ fn create_out_file(name: &str) -> io::Result<impl Write> {
     feature = "with_tone_num",
     feature = "with_tone_num_end"
 ))]
-fn get_phonetic_info(ch: char) -> Option<(char, u8)> {
-    PHONETIC_SYMBOL_MAP
-        .iter()
-        .find(|(c, _, _)| *c == ch)
-        .map(|(_, base, tone)| (*base, *tone))
+fn get_char_info(ch: char) -> (Option<char>, u8) {
+    if let Some((_, base, tone)) = PHONETIC_SYMBOL_MAP.iter().find(|(c, _, _)| *c == ch) {
+        return (Some(*base), *tone);
+    }
+    const TONE_MAP: &[(char, u8)] = &[('\u{304}', 1), ('\u{30c}', 3), ('\u{300}', 4)];
+    if let Some((_, tone)) = TONE_MAP.iter().find(|(c, _)| *c == ch) {
+        return (None, *tone);
+    }
+    (Some(ch), 0)
 }
