@@ -14,12 +14,10 @@ install:
   - rustc -V
   - cargo -V
 build_script:
-  - cargo build --release
-  - cargo fmt --all -- --check
+  - cargo build
 test_script:
-  - cargo test --release
-  - cargo doc -p pinyin --no-deps
-  - cargo run --example main
+  - cargo test
+  - cargo doc
   - cargo bench
   - cargo fmt --all -- --check
 #branches:

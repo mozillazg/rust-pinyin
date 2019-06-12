@@ -16,13 +16,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.6"
-```
-
-and this to your crate root:
-
-```
-extern crate pinyin;
+pinyin = "0.7"
 ```
 
 
@@ -36,34 +30,47 @@ Usage
 ------
 
 ```rust
-extern crate pinyin;
+use pinyin::{ToPinyin, ToPinyinMulti};
 
-pub fn main() {
+fn main() {
     let hans = "中国人";
-    let mut args = pinyin::Args::new();
 
-    // 默认输出 [["zhong"] ["guo"] ["ren"]]
-    println!("{:?}",  pinyin::pinyin(hans, &args));
-    // ["zhong", "guo", "ren"]
-    println!("{:?}",  pinyin::lazy_pinyin(hans, &args));
+    // 无声调，输出 zhong guo ren
+    for pinyin in hans.to_pinyin() {
+        if let Some(pinyin) = pinyin {
+            print!("{} ", pinyin.plain());
+        }
+    }
+    println!();
 
-    // 包含声调 [["zhōng"], ["guó"], ["rén"]]
-    args.style = pinyin::Style::Tone;
-    println!("{:?}",  pinyin::pinyin(hans, &args));
+    // 包含声调，输出 zhōng guó rén
+    for pinyin in hans.to_pinyin() {
+        if let Some(pinyin) = pinyin {
+            print!("{} ", pinyin.with_tone());
+        }
+    }
+    println!();
 
-    // 声调用数字表示 [["zho1ng"] ["guo2"] ["re2n"]]
-    args.style = pinyin::Style::Tone2;
-    println!("{:?}",  pinyin::pinyin(hans, &args));
+    // 声调用数字表示，输出 zho1ng guo2 re2n
+    for pinyin in hans.to_pinyin() {
+        if let Some(pinyin) = pinyin {
+            print!("{} ", pinyin.with_tone_num());
+        }
+    }
+    println!();
 
-    // 开启多音字模式
-    args = pinyin::Args::new();
-    args.heteronym = true;
-    // [["zhong"] ["guo"] ["ren"]]
-    println!("{:?}",  pinyin::pinyin(hans, &args));
-
-    // [["zho1ng", "zho4ng"] ["guo2"] ["re2n"]]
-    args.style = pinyin::Style::Tone2;
-    println!("{:?}",  pinyin::pinyin(hans, &args));
+    // 多音字，输出
+    // zho1ng zho4ng
+    // guo2
+    // re2n
+    for multi in hans.to_pinyin_multi() {
+        if let Some(multi) = multi {
+            for pinyin in multi {
+                print!("{} ", pinyin.with_tone_num());
+            }
+            println!();
+        }
+    }
 }
 ```
 
@@ -72,14 +79,14 @@ Build
 ------------
 
 ```
-$ make build
+$ cargo build
 ```
 
 Test
 ------------
 
 ```
-$ make test
+$ cargo test
 ```
 
 Data
