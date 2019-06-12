@@ -13,6 +13,11 @@ const RAW_DATA: &str = include_str!(concat!(
     "/pinyin-data/pinyin.txt"
 ));
 
+#[cfg(any(
+    feature = "plain",
+    feature = "with_tone_num",
+    feature = "with_tone_num_end"
+))]
 const PHONETIC_SYMBOL_MAP: &[(char, char, u8)] = &[
     ('ā', 'a', 1),
     ('á', 'a', 2),
