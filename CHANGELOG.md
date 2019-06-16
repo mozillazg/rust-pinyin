@@ -1,10 +1,11 @@
 # Changelog
 
-## [0.7.0](2019-06-12)
+## [0.7.0] (2019-06-12)
 
 * 重新设计 API 使用迭代器及静态数据，实现无运行时开销 (via [#36])
-* 修正部分非常见拼音在数字调号时依然使用音调符号的问题 (via [#25])
+* 修正部分非常见拼音在数字调号时依然使用音调符号的问题 (via [#51])
 * 当音节以数字声调标记法输出时，字母`ü`不再被改写为字母`v` (via [#52])
+* 添加声调数字在拼音末尾的表示形式 (via [#44])
 
 
 ## [0.6.0] (2019-05-01)
@@ -99,6 +100,10 @@
 [#29]: https://github.com/mozillazg/rust-pinyin/pull/29
 [@LuoZijun]: https://github.com/LuoZijun
 [@hanabi1224]: https://github.com/hanabi1224
+[#36]: https://github.com/mozillazg/rust-pinyin/pull/36
+[#44]: https://github.com/mozillazg/rust-pinyin/pull/44
+[#51]: https://github.com/mozillazg/rust-pinyin/pull/51
+[#52]: https://github.com/mozillazg/rust-pinyin/pull/52
 
 [0.0.2]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.1...v0.0.2
 [0.0.3]: https://github.com/mozillazg/rust-pinyin/compare/v0.0.2...v0.0.3
@@ -111,3 +116,4 @@
 [0.4.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.3.0...v0.4.0
 [0.5.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.4.0...v0.5.0
 [0.6.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.5.0...v0.6.0
+[0.7.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.6.0...v0.7.0
