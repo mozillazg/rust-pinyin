@@ -1,10 +1,9 @@
 # rust-pinyin
 
-[![Build Status](https://img.shields.io/travis/mozillazg/rust-pinyin/master.svg)](https://travis-ci.org/mozillazg/rust-pinyin)
-[![Build status](https://ci.appveyor.com/api/projects/status/bemojvswjsqo796s/branch/master?svg=true)](https://ci.appveyor.com/project/mozillazg/rust-pinyin/branch/master)
-[![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin)
+[![Build Status](https://github.com/mozillazg/rust-pinyin/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/mozillazg/rust-pinyin/actions/workflows/ci.yml)
 [![Crates.io Version](https://img.shields.io/crates/v/pinyin.svg)](https://crates.io/crates/pinyin)
 [![Doc](https://img.shields.io/badge/doc-reference-blue.svg)](https://docs.rs/pinyin/)
+<!-- [![Coverage Status](https://img.shields.io/coveralls/mozillazg/rust-pinyin/master.svg)](https://coveralls.io/github/mozillazg/rust-pinyin) -->
 
 汉语拼音转换工具 Rust 版
 
@@ -16,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.7"
+pinyin = "0.9"
 ```
 
 

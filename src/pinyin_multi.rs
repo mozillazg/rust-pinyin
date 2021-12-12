@@ -77,8 +77,8 @@ pub trait ToPinyinMulti {
 /// let mut iter = '还'.to_pinyin_multi().unwrap().into_iter();
 /// let mut next_pinyin = || iter.next().map(Pinyin::with_tone);
 /// assert_eq!(next_pinyin(), Some("hái"));
-/// assert_eq!(next_pinyin(), Some("fú"));
 /// assert_eq!(next_pinyin(), Some("huán"));
+/// assert_eq!(next_pinyin(), Some("fú"));
 /// assert_eq!(next_pinyin(), None);
 /// # }
 /// ```
@@ -110,7 +110,7 @@ impl ToPinyinMulti for char {
 ///         .and_then(|m| m)
 ///         .map(|m| m.into_iter().map(Pinyin::with_tone).collect::<Vec<_>>())
 /// };
-/// assert_eq!(next_heteronym(), Some(vec!["hái", "fú", "huán"]));
+/// assert_eq!(next_heteronym(), Some(vec!["hái", "huán", "fú"]));
 /// assert_eq!(next_heteronym(), Some(vec!["méi", "mò", "me"]));
 /// assert_eq!(next_heteronym(), None);
 /// # }
@@ -194,7 +194,7 @@ mod tests {
                     .collect::<Vec<_>>()
             })
             .collect::<Vec<_>>();
-        let expected = vec![vec!["hái", "fú", "huán"], vec!["méi", "mò", "me"]];
+        let expected = vec![vec!["hái", "huán", "fú"], vec!["méi", "mò", "me"]];
         assert_eq!(actual, expected);
     }
 }
