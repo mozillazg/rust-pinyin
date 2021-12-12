@@ -30,6 +30,9 @@ jobs:
         components: rustfmt, clippy
         override: true
 
+    - name: init
+      run: git submodule update --init --recursive
+
     - name: Test
       run: bash ci/script.sh
 
