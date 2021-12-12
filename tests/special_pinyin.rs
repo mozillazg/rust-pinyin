@@ -4,10 +4,10 @@ use pinyin::ToPinyinMulti;
 fn special_pinyin() {
     assert_eq!(
         list_all_heteronym('欸'),
-        &["ai1", "ai3", "xie4", "ê2", "ei2", "ê3", "ei3", "ê4", "ei4", "ê1", "ei1"],
+        &["ai1", "ai3", "ê1", "ê2", "ê3", "ê4", "xie4", "ei2", "ei3", "ei4", "ei1"],
     );
     assert_eq!(list_all_heteronym('嘸'), &["fu3", "wu3", "m1", "m2"]);
-    assert_eq!(list_all_heteronym('呣'), &["m2", "mou2", "m4"]);
+    assert_eq!(list_all_heteronym('呣'), &["m2", "m4", "mou2"]);
 }
 
 fn list_all_heteronym(ch: char) -> Vec<&'static str> {
