@@ -95,7 +95,7 @@ fn main() -> io::Result<()> {
     let pinyin_index = generate_pinyin_data(&data)?;
     let heteronym_index = generate_heteronym_table(&data, &pinyin_index)?;
     generate_char_table(&data, &pinyin_index, &heteronym_index)?;
-    
+
     let phrase_data = build_phrase_data();
     generate_phrase_table(&phrase_data, &pinyin_index)?;
 
@@ -378,30 +378,50 @@ fn generate_char_table(
     Ok(())
 }
 
-fn generate_phrase_table(
-    data: &PhraseInputData,
-    pinyin_index: &PinyinDataIndex,
-) -> io::Result<()> {
+fn generate_phrase_table(data: &PhraseInputData, pinyin_index: &PinyinDataIndex) -> io::Result<()> {
     // 输出字符表
-    let mut output = create_out_file("phrase_table.rs")?;
-    writeln!(output, "{{")?;
-    writeln!(output, "let mut m = HashMap::new();")?;
-    for (phrase, pinyins) in data {
-        let mut syllables = 0;
-        let mut pinyin_indices: Vec<String> = pinyins.iter().map(|pinyin| {
-            pinyin.split(' ').map(
-                |syllable| {
-                    syllables += 1;
-                    pinyin_index.get(syllable).unwrap().to_string()
-                }
-            ).collect::<Vec<String>>().join(", ")
-        }).collect();
-        let pad_len = 19 - syllables;
-        pinyin_indices.extend(std::iter::repeat("0".to_string()).take(pad_len));
-        writeln!(output, "    m.insert(\"{}\", &[{}]);", phrase, pinyin_indices.join(", "))?;
+    let mut phrase_tables = (2..20)
+        .map(|phrase_len| create_out_file(&format!("phrase_table_{}.rs", phrase_len)))
+        .collect::<Result<Vec<_>, _>>()?;
+    let mut phrase_table_heteronyms = create_out_file("phrase_table_heteronyms.rs")?;
+    writeln!(phrase_table_heteronyms, "&[")?;
+    for table in &mut phrase_tables {
+        writeln!(table, "{{")?;
+        writeln!(table, "let mut m = HashMap::new();")?;
     }
-    writeln!(output, "m")?;
-    writeln!(output, "}}")?;
+    for (phrase, pinyins) in data {
+        let pinyin_indices: Vec<String> = pinyins
+            .iter()
+            .map(|pinyin| {
+                let pinyin = pinyin
+                    .split(' ')
+                    .map(|syllable| pinyin_index.get(syllable).unwrap().to_string())
+                    .collect::<Vec<String>>()
+                    .join(",");
+                format!("&[{}]", pinyin)
+            })
+            .collect();
+        if pinyins.len() > 1 {
+            writeln!(
+                phrase_table_heteronyms,
+                "(\"{}\",&[{}]),",
+                phrase,
+                pinyin_indices.join(",")
+            )?;
+        } else {
+            writeln!(
+                phrase_tables[phrase.chars().count() - 2],
+                "m.insert(\"{}\", {});",
+                phrase,
+                pinyin_indices[0].to_string()
+            )?;
+        };
+    }
+    for table in &mut phrase_tables {
+        writeln!(table, "m")?;
+        writeln!(table, "}}")?;
+    }
+    writeln!(phrase_table_heteronyms, "]")?;
     Ok(())
 }
 
