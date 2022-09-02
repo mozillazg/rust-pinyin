@@ -384,20 +384,24 @@ fn generate_phrase_table(
 ) -> io::Result<()> {
     // 输出字符表
     let mut output = create_out_file("phrase_table.rs")?;
-    writeln!(output, "&[")?;
+    writeln!(output, "{{")?;
+    writeln!(output, "let mut m = HashMap::new();")?;
     for (phrase, pinyins) in data {
-        let pinyin_indices: Vec<String> = pinyins.iter().map(|pinyin| {
-            let pinyin_indices_list = pinyin.split(' ').map(
+        let mut syllables = 0;
+        let mut pinyin_indices: Vec<String> = pinyins.iter().map(|pinyin| {
+            pinyin.split(' ').map(
                 |syllable| {
-                    // dbg!(syllable);
+                    syllables += 1;
                     pinyin_index.get(syllable).unwrap().to_string()
                 }
-            ).collect::<Vec<String>>().join(", ");
-            format!("&[{}]", pinyin_indices_list)
+            ).collect::<Vec<String>>().join(", ")
         }).collect();
-        writeln!(output, "    (\"{}\", &[{}]),", phrase, pinyin_indices.join(", "))?;
+        let pad_len = 19 - syllables;
+        pinyin_indices.extend(std::iter::repeat("0".to_string()).take(pad_len));
+        writeln!(output, "    m.insert(\"{}\", &[{}]);", phrase, pinyin_indices.join(", "))?;
     }
-    writeln!(output, "]")?;
+    writeln!(output, "m")?;
+    writeln!(output, "}}")?;
     Ok(())
 }
 

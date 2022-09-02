@@ -2,6 +2,7 @@
 
 use crate::{CharBlock, PinyinData};
 use std::collections::HashMap;
+use lazy_static::lazy_static;
 
 pub(crate) static PINYIN_DATA: &[PinyinData] =
     include!(concat!(env!("OUT_DIR"), "/pinyin_data.rs"));
@@ -12,5 +13,8 @@ pub(crate) static HETERONYM_TABLE: &[&[u16]] =
 
 pub(crate) static CHAR_BLOCKS: &[CharBlock] = include!(concat!(env!("OUT_DIR"), "/char_blocks.rs"));
 
-pub(crate) static PHRASE_TABLE: &[(&'static str, &[&[usize]])] =
-    include!(concat!(env!("OUT_DIR"), "/phrase_table.rs"));
+lazy_static! {
+    pub(crate) static ref PHRASE_TABLE: HashMap<&'static str, &'static [u16; 19]> = {
+        HashMap::from(include!(concat!(env!("OUT_DIR"), "/phrase_table.rs")))
+    };
+}
