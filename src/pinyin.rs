@@ -150,6 +150,7 @@ impl<'a> Iterator for PinyinStrIter<'a> {
     }
 }
 
+/// *辅助迭代器*，用于获取词组串的拼音信息
 pub struct PinyinPhraseIter<'a>(Iter<'a, &'a str>);
 
 impl<'a> Iterator for PinyinPhraseIter<'a> {
@@ -185,6 +186,21 @@ impl<'a> Iterator for PinyinPhraseIter<'a> {
     }
 }
 
+/// 分词后给每一个词语注音，如果一个词语中含有不支持的字符，词语的注音为None，
+/// 不然就生成一个Some(vec![..])，vec里面是词语中每个字的注音。
+/// ```
+/// # #[cfg(feature = "plain")] {
+/// use pinyin::{ToPinyin, Pinyin};
+/// let mut iter = ["薄荷", "是", "便宜货"].iter().to_pinyin();
+/// let mut next_plain = || iter.next().map(|ps|
+///     ps.map(|ps| ps.iter().map(|p|
+///         Pinyin::plain(*p)).collect::<Vec<_>>()));
+/// assert_eq!(next_plain(), Some(Some(vec!["bo", "he"])));
+/// assert_eq!(next_plain(), Some(Some(vec!["shi"])));
+/// assert_eq!(next_plain(), Some(Some(vec!["pian", "yi", "huo"])));
+/// assert_eq!(next_plain(), None);
+/// # }
+/// ```
 impl<'a> ToPinyin for Iter<'a, &'a str> {
     type Output = PinyinPhraseIter<'a>;
 
