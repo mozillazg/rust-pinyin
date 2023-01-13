@@ -378,18 +378,23 @@ fn generate_char_table(
     Ok(())
 }
 
+// Important: Always stay in sync with value used in seq! in src/pinyin.rs
+const MAX_PHRASE_LENGTH: usize = 9;
+
 fn generate_phrase_table(data: &PhraseInputData, pinyin_index: &PinyinDataIndex) -> io::Result<()> {
     // 输出字符表
-    let mut phrase_tables = (2..20)
+    let mut phrase_tables = (2..MAX_PHRASE_LENGTH + 1)
         .map(|phrase_len| create_out_file(&format!("phrase_table_{}.rs", phrase_len)))
         .collect::<Result<Vec<_>, _>>()?;
-    let mut phrase_table_heteronyms = create_out_file("phrase_table_heteronyms.rs")?;
-    writeln!(phrase_table_heteronyms, "&[")?;
     for table in &mut phrase_tables {
         writeln!(table, "{{")?;
         writeln!(table, "let mut m = HashMap::new();")?;
     }
     for (phrase, pinyins) in data {
+        // Skip phrases that are too long
+        if phrase.chars().count() > MAX_PHRASE_LENGTH {
+            continue;
+        }
         let pinyin_indices: Vec<String> = pinyins
             .iter()
             .map(|pinyin| {
@@ -401,27 +406,17 @@ fn generate_phrase_table(data: &PhraseInputData, pinyin_index: &PinyinDataIndex)
                 format!("&[{}]", pinyin)
             })
             .collect();
-        if pinyins.len() > 1 {
-            writeln!(
-                phrase_table_heteronyms,
-                "(\"{}\",&[{}]),",
-                phrase,
-                pinyin_indices.join(",")
-            )?;
-        } else {
-            writeln!(
-                phrase_tables[phrase.chars().count() - 2],
-                "m.insert(\"{}\", {});",
-                phrase,
-                pinyin_indices[0].to_string()
-            )?;
-        };
+        writeln!(
+            phrase_tables[phrase.chars().count() - 2],
+            "m.insert(\"{}\", {});",
+            phrase,
+            pinyin_indices[0].to_string()
+        )?;
     }
     for table in &mut phrase_tables {
         writeln!(table, "m")?;
         writeln!(table, "}}")?;
     }
-    writeln!(phrase_table_heteronyms, "]")?;
     Ok(())
 }
 

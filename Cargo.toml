@@ -23,6 +23,7 @@ edition = "2018"
 
 [dependencies]
 lazy_static = "1.4.0"
+seq-macro = "0.3.2"
 
 [workspace]
 members = ["coverage-check"]

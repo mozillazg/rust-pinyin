@@ -1,6 +1,8 @@
-use crate::data::PINYIN_DATA;
+use crate::data::*;
 use crate::{get_block_and_index, PinyinData};
+use seq_macro::seq;
 use std::convert::TryFrom;
+use std::slice::Iter;
 use std::str::Chars;
 
 /// 单个字符的拼音信息
@@ -148,12 +150,118 @@ impl<'a> Iterator for PinyinStrIter<'a> {
     }
 }
 
+pub struct PinyinPhraseIter<'a>(Iter<'a, &'a str>);
+
+impl<'a> Iterator for PinyinPhraseIter<'a> {
+    type Item = Option<Vec<Pinyin>>;
+
+    #[inline]
+    fn next(&mut self) -> Option<Self::Item> {
+        self.0.next().map(|s| {
+            // Important: Always stay in sync with MAX_PHRASE_LENGTH in build.rs
+            seq!(N in 2..=9 {
+                match s.chars().count() {
+                    1 => s
+                        .chars()
+                        .next()
+                        .unwrap()
+                        .to_pinyin()
+                        .map(|pinyin| vec![pinyin]),
+                    #(N => match PHRASE_TABLE_~N.get(s) {
+                        Some(pinyin_indices) => Some(
+                            pinyin_indices
+                                .iter()
+                                .map(|idx| Pinyin(&PINYIN_DATA[*idx as usize]))
+                                .collect(),
+                        ),
+                        None => {
+                            s.to_pinyin().collect()
+                        },
+                    },)*
+                    _ => s.to_pinyin().collect(),
+                }
+            })
+        })
+    }
+}
+
+impl<'a> ToPinyin for Iter<'a, &'a str> {
+    type Output = PinyinPhraseIter<'a>;
+
+    fn to_pinyin(&self) -> Self::Output {
+        PinyinPhraseIter(self.to_owned())
+    }
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::ToPinyin;
+    use crate::{Pinyin, ToPinyin};
 
     #[test]
     fn special_code_point() {
         assert!('\u{10FFFF}'.to_pinyin().is_none());
+    }
+
+    #[test]
+    fn phrase_pinyin() {
+        [
+            (vec!["重新"], vec![Some(vec!["chóng", "xīn"])]),
+            (vec!["同行"], vec![Some(vec!["tóng", "háng"])]),
+            // tone may change, wait for issue: https://github.com/mozillazg/phrase-pinyin-data/issues/43
+            (
+                vec!["便宜", "便宜货"],
+                vec![Some(vec!["pián", "yí"]), Some(vec!["pián", "yí", "huò"])],
+            ),
+            (
+                vec!["贪便宜", "便宜从事"],
+                vec![
+                    Some(vec!["tān", "pián", "yí"]),
+                    Some(vec!["biàn", "yí", "cóng", "shì"]),
+                ],
+            ),
+            (vec!["打量"], vec![Some(vec!["dǎ", "liàng"])]),
+            (
+                vec!["薄荷", "薄弱", "衣服", "薄"],
+                vec![
+                    Some(vec!["bò", "hé"]),
+                    Some(vec!["bó", "ruò"]),
+                    Some(vec!["yī", "fú"]),
+                    Some(vec!["báo"]),
+                ],
+            ),
+            (
+                vec!["高血压", "流血"],
+                vec![Some(vec!["gāo", "xuè", "yā"]), Some(vec!["liú", "xiě"])],
+            ),
+            // "大喝一声" is out-of-vocabulary right now,
+            // so we comment that out for now
+            (
+                vec![
+                    // "大喝一声",
+                    "喝水", "喝彩",
+                ],
+                vec![
+                    // Some(vec!["dà", "hè", "yī", "shēng"]),
+                    Some(vec!["hē", "shuǐ"]),
+                    Some(vec!["hè", "cǎi"]),
+                ],
+            ),
+            (vec!["\u{10FFFF}"], vec![None]),
+            (vec!["\u{10FFFF}你好"], vec![None]),
+        ]
+        .iter()
+        .for_each(|(phrase, pinyin)| {
+            assert_eq!(
+                &phrase
+                    .iter()
+                    .to_pinyin()
+                    .map(|pinyins| pinyins.map(|pinyins| pinyins
+                        .iter()
+                        .map(|p| Pinyin::with_tone(*p))
+                        .collect::<Vec<_>>()))
+                    .collect::<Vec<_>>(),
+                pinyin
+            )
+        })
     }
 }
