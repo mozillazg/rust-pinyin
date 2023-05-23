@@ -20,5 +20,5 @@
 7. 检查发布结果是否符合预期：
    * https://crates.io/crates/pinyin
    * https://docs.rs/pinyin/
-8. 推送 tags:
-   * `git push --tags`
+8. 推送变更:
+   * `git push && git push --tags`
