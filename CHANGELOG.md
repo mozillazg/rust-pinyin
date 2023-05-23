@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.10.0] (2023-05-23)
+
+* 使用 [pinyin-data] v0.13.0 的拼音数据
+
+
 ## [0.9.0] (2021-12-12)
 
 * 使用 [pinyin-data] v0.12.0 的拼音数据
@@ -129,4 +134,5 @@
 [0.7.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.6.0...v0.7.0
 [0.8.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.7.0...v0.8.0
 [0.9.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.8.0...v0.9.0
+[0.10.0]: https://github.com/mozillazg/rust-pinyin/compare/v0.9.0...v0.10.0
 
