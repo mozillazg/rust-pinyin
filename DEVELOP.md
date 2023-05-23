@@ -15,8 +15,10 @@
    * 如果是大版本（1.x.y -> 2.0.0）更新，执行 `bumpversion --verbose major` 命令。
    * 如果是不兼容/新功能版本（1.2.y -> 1.3.0），执行 `bumpversion --verbose minor` 命令。
    * 如果是 bugfix 之类的小版本（1.2.3 -> 1.2.4），执行 `bumpversion --verbose patch` 命令。
-5. 准备发布新版本:
+6. 准备发布新版本:
    * `cargo publish`
-6. 检查发布结果是否符合预期：
+7. 检查发布结果是否符合预期：
    * https://crates.io/crates/pinyin
    * https://docs.rs/pinyin/
+8. 推送 tags:
+   * `git push --tags`
