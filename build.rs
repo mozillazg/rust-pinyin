@@ -13,6 +13,11 @@ const RAW_DATA: &str = include_str!(concat!(
     "/pinyin-data/pinyin.txt"
 ));
 
+const RAW_PHRASE_DATA: &str = include_str!(concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/phrase-pinyin-data/pinyin.txt"
+));
+
 #[cfg(any(
     feature = "plain",
     feature = "with_tone_num",
@@ -81,6 +86,7 @@ const TONE_NUMS: &[char] = &['0', '1', '2', '3', '4'];
 
 type Style = (&'static str, fn(&str) -> Cow<'_, str>);
 type InputData = Vec<(u32, Vec<&'static str>)>;
+type PhraseInputData = HashMap<&'static str, Vec<&'static str>>;
 type PinyinDataIndex = HashMap<&'static str, usize>;
 type HeteronymDataIndex = HashMap<u32, usize>;
 
@@ -89,6 +95,10 @@ fn main() -> io::Result<()> {
     let pinyin_index = generate_pinyin_data(&data)?;
     let heteronym_index = generate_heteronym_table(&data, &pinyin_index)?;
     generate_char_table(&data, &pinyin_index, &heteronym_index)?;
+
+    let phrase_data = build_phrase_data();
+    generate_phrase_table(&phrase_data, &pinyin_index)?;
+
     // 输出这行以保证改动项目的其他文件不会触发编译脚本重新执行
     println!("cargo:rerun-if-changed=build.rs");
     Ok(())
@@ -141,6 +151,47 @@ fn build_data() -> InputData {
         })
         .collect::<Vec<_>>();
     input_data.sort_by_key(|(code, _)| *code);
+    input_data
+}
+
+fn build_phrase_data() -> PhraseInputData {
+    let mut input_data: HashMap<&str, Vec<&str>> = HashMap::new();
+    RAW_PHRASE_DATA
+        .lines()
+        .enumerate()
+        // 移除注释和空格
+        .map(|(i, mut line)| {
+            if let Some(hash_pos) = line.find('#') {
+                line = &line[..hash_pos];
+            }
+            (i, line.trim())
+        })
+        // 移除空行
+        .filter(|(_, line)| !line.is_empty())
+        .for_each(|(i, line)| {
+            // Split the line by colon
+            let colon_pos = match line.find(':') {
+                Some(pos) => pos,
+                None => unreachable!("no colon found in line {}", i),
+            };
+            let phrase = line[..colon_pos].trim();
+            let pinyin = line[colon_pos + 1..].trim();
+
+            // 确保输入数据的字符全部在我们预料之中。
+            // 同时也可以提前知道一些被遗弃的码位，如: U+E7C8 和 U+E7C7
+            for syllable in pinyin.split(' ') {
+                for ch in syllable.chars() {
+                    let is_known = LETTER_TABLE.contains(&ch);
+                    assert!(
+                        is_known,
+                        "unknown character {:?} at line {}: {}",
+                        ch, i, line,
+                    );
+                }
+            }
+
+            input_data.entry(phrase).or_default().push(pinyin);
+        });
     input_data
 }
 
@@ -324,6 +375,48 @@ fn generate_char_table(
         writeln!(output, "}},")?;
     }
     writeln!(output, "]")?;
+    Ok(())
+}
+
+// Important: Always stay in sync with value used in seq! in src/pinyin.rs
+const MAX_PHRASE_LENGTH: usize = 9;
+
+fn generate_phrase_table(data: &PhraseInputData, pinyin_index: &PinyinDataIndex) -> io::Result<()> {
+    // 输出字符表
+    let mut phrase_tables = (2..MAX_PHRASE_LENGTH + 1)
+        .map(|phrase_len| create_out_file(&format!("phrase_table_{}.rs", phrase_len)))
+        .collect::<Result<Vec<_>, _>>()?;
+    for table in &mut phrase_tables {
+        writeln!(table, "{{")?;
+        writeln!(table, "let mut m = HashMap::new();")?;
+    }
+    for (phrase, pinyins) in data {
+        // Skip phrases that are too long
+        if phrase.chars().count() > MAX_PHRASE_LENGTH {
+            continue;
+        }
+        let pinyin_indices: Vec<String> = pinyins
+            .iter()
+            .map(|pinyin| {
+                let pinyin = pinyin
+                    .split(' ')
+                    .map(|syllable| pinyin_index.get(syllable).unwrap().to_string())
+                    .collect::<Vec<String>>()
+                    .join(",");
+                format!("&[{}]", pinyin)
+            })
+            .collect();
+        writeln!(
+            phrase_tables[phrase.chars().count() - 2],
+            "m.insert(\"{}\", {});",
+            phrase,
+            pinyin_indices[0].to_string()
+        )?;
+    }
+    for table in &mut phrase_tables {
+        writeln!(table, "m")?;
+        writeln!(table, "}}")?;
+    }
     Ok(())
 }
 
