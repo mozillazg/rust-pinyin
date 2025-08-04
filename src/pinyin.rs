@@ -1,6 +1,5 @@
 use crate::data::PINYIN_DATA;
 use crate::{get_block_and_index, PinyinData};
-use std::convert::TryFrom;
 use std::str::Chars;
 
 /// 单个字符的拼音信息
@@ -32,7 +31,7 @@ impl Pinyin {
         self.0.with_tone
     }
 
-    /// 声调在各个拼音之后，使用数字1-4表示的风格
+    /// 声调在各个拼音之后，使用数字 1-4 表示的风格
     ///
     /// *仅在启用 `with_tone_num` 特性时可用*
     /// ```
@@ -44,7 +43,7 @@ impl Pinyin {
         self.0.with_tone_num
     }
 
-    /// 声调在拼音最后，使用数字1-4表示的风格
+    /// 声调在拼音最后，使用数字 1-4 表示的风格
     ///
     /// *仅在启用 `with_tone_num_end` 特性时可用*
     /// ```
@@ -92,7 +91,7 @@ impl Pinyin {
     }
 }
 
-/// 用于获取拼音信息的trait
+/// 用于获取拼音信息的 trait
 pub trait ToPinyin {
     type Output;
     fn to_pinyin(&self) -> Self::Output;
@@ -108,11 +107,9 @@ impl ToPinyin for char {
     type Output = Option<Pinyin>;
 
     fn to_pinyin(&self) -> Option<Pinyin> {
-        get_block_and_index(*self).and_then(|(block, index)| {
-            match usize::try_from(block.data[index]).unwrap() {
-                0 => None,
-                idx => Some(Pinyin(&PINYIN_DATA[idx])),
-            }
+        get_block_and_index(*self).and_then(|(block, index)| match usize::from(block.data[index]) {
+            0 => None,
+            idx => Some(Pinyin(&PINYIN_DATA[idx])),
         })
     }
 }

@@ -2,7 +2,6 @@
 
 use crate::{Pinyin, ToPinyin, ToPinyinMulti};
 use std::collections::HashSet;
-use std::convert::identity;
 
 /// 拼音风格
 #[deprecated = "请使用 `Pinyin` 的方法代替"]
@@ -10,19 +9,19 @@ use std::convert::identity;
 pub enum Style {
     /// 普通风格，不带声调（默认风格）。如： `pin yin`
     Normal,
-    /// 声调风格1，拼音声调在韵母第一个字母上。如： `pīn yīn`
+    /// 声调风格 1，拼音声调在韵母第一个字母上。如： `pīn yīn`
     Tone,
-    /// 声调风格2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
+    /// 声调风格 2，即拼音声调在各个拼音之后，用数字 [0-4] 进行表示。如： `pi1n yi1n`
     Tone2,
-    /// 声母风格，只返回各个拼音的声母部分。如： 中国 的拼音 `zh g`
+    /// 声母风格，只返回各个拼音的声母部分。如：中国 的拼音 `zh g`
     Initials,
     /// 首字母风格，只返回拼音的首字母部分。如： `p y`
     FirstLetter,
-    /// 韵母风格1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
+    /// 韵母风格 1，只返回各个拼音的韵母部分，不带声调。如： `ong uo`
     Finals,
-    /// 韵母风格2，带声调，声调在韵母第一个字母上。如： `ōng uó`
+    /// 韵母风格 2，带声调，声调在韵母第一个字母上。如： `ōng uó`
     FinalsTone,
-    /// 韵母风格2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
+    /// 韵母风格 2，带声调，声调在各个拼音之后，用数字 [0-4] 进行表示。如： `o1ng uo2`
     FinalsTone2,
 }
 
@@ -108,7 +107,7 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
     }
 }
 
-/// 汉字转拼音, 与 ``pinyin`` 的区别是返回值不同，每个汉字只取一个音
+/// 汉字转拼音，与 ``pinyin`` 的区别是返回值不同，每个汉字只取一个音
 ///
 /// ```
 /// let hans = "中国人";
@@ -120,7 +119,7 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
 #[deprecated = "请使用 `ToPinyin` 代替"]
 pub fn lazy_pinyin(s: &str, a: &Args) -> Vec<String> {
     s.to_pinyin()
-        .filter_map(identity)
+        .flatten()
         .map(|pinyin| apply_style(pinyin, &a.style).to_string())
         .collect()
 }

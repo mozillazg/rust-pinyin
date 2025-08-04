@@ -52,7 +52,7 @@ fn run_test_cases(suffix: &str, converter: fn(Pinyin) -> &'static str) -> io::Re
             })
             .collect::<io::Result<Vec<_>>>()?;
 
-        let expected_path = input_path.with_extension(format!("txt-{}", suffix));
+        let expected_path = input_path.with_extension(format!("txt-{suffix}"));
         if !expected_path.exists() {
             let mut expected_file = File::create(expected_path)?;
             for line in input.iter() {
@@ -86,7 +86,7 @@ fn list_test_cases() -> io::Result<Vec<PathBuf>> {
                 Ok(entry) => entry.path(),
                 Err(e) => return Some(Err(e)),
             };
-            let is_input = path.extension().map_or(false, |ext| ext == "txt");
+            let is_input = path.extension().is_some_and(|ext| ext == "txt");
             let result = if is_input { Some(path) } else { None };
             Ok(result).transpose()
         })

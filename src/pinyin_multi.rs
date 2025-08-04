@@ -1,6 +1,5 @@
 use crate::data::{HETERONYM_TABLE, PINYIN_DATA};
 use crate::{get_block_and_index, Pinyin, PinyinData};
-use std::convert::TryFrom;
 use std::str::Chars;
 
 /// 单个字符的多音字信息
@@ -18,7 +17,7 @@ impl PinyinMulti {
         self.other_indexes.len() + 1
     }
 
-    /// 获取指定序号的拼音，如果序号超过总数则panic
+    /// 获取指定序号的拼音，如果序号超过总数则 panic
     pub fn get(self, idx: usize) -> Pinyin {
         self.get_opt(idx).unwrap()
     }
@@ -29,8 +28,8 @@ impl PinyinMulti {
             return Some(Pinyin(self.first));
         }
         self.other_indexes
-            .get(usize::try_from(idx).unwrap() - 1)
-            .map(|i| Pinyin(&PINYIN_DATA[usize::try_from(*i).unwrap()]))
+            .get(idx - 1)
+            .map(|i| Pinyin(&PINYIN_DATA[usize::from(*i)]))
     }
 }
 
@@ -56,14 +55,13 @@ impl Iterator for PinyinMultiIter {
     type Item = Pinyin;
 
     fn next(&mut self) -> Option<Pinyin> {
-        self.inner.get_opt(self.index).map(|pinyin| {
+        self.inner.get_opt(self.index).inspect(|_pinyin| {
             self.index += 1;
-            pinyin
         })
     }
 }
 
-/// 用于获取多音字信息的trait
+/// 用于获取多音字信息的 trait
 ///
 /// *仅在启用 `heteronym` 特性时可用*
 pub trait ToPinyinMulti {
@@ -87,11 +85,11 @@ impl ToPinyinMulti for char {
 
     fn to_pinyin_multi(&self) -> Option<PinyinMulti> {
         get_block_and_index(*self).and_then(|(block, index)| {
-            let first = match usize::try_from(block.data[index]).unwrap() {
+            let first = match usize::from(block.data[index]) {
                 0 => return None,
                 idx => &PINYIN_DATA[idx],
             };
-            let idx = usize::try_from(block.heteronym[index]).unwrap();
+            let idx = usize::from(block.heteronym[index]);
             let other_indexes = HETERONYM_TABLE[idx];
             Some(PinyinMulti {
                 first,
