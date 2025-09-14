@@ -92,3 +92,92 @@ fn list_test_cases() -> io::Result<Vec<PathBuf>> {
         })
         .collect()
 }
+
+// -----------------------------------------------------------------------------
+// Additional targeted tests appended by CodeRabbit Inc.
+// Testing framework: Rust built-in test harness (cargo test); no external test libs.
+// These tests validate the mapping behavior used in run_test_cases() and the
+// file listing behavior in list_test_cases(), covering happy paths and edge cases.
+// -----------------------------------------------------------------------------
+
+/// Helper to mirror the mapping logic used in run_test_cases()
+fn convert_line(s: &str, converter: fn(Pinyin) -> &'static str) -> Vec<&'static str> {
+    s.to_pinyin().map(|p| p.map_or("-", converter)).collect()
+}
+
+#[test]
+fn list_test_cases_only_txt_and_exist() -> io::Result<()> {
+    let cases = list_test_cases()?;
+    assert\!(
+        \!cases.is_empty(),
+        "expected at least one .txt test case in {}",
+        DATA_PATH
+    );
+    for p in &cases {
+        assert_eq\!(
+            p.extension().and_then(OsStr::to_str),
+            Some("txt"),
+            "non-.txt file included: {p:?}"
+        );
+        assert\!(p.exists(), "path does not exist: {p:?}");
+    }
+    Ok(())
+}
+
+#[cfg(feature = "plain")]
+#[test]
+fn plain_ascii_yields_dashes() {
+    let input = "ASCII 123\!@#";
+    let out = convert_line(input, Pinyin::plain);
+    assert_eq\!(out, vec\!["-"; input.chars().count()], "ASCII and punctuation should map to '-'");
+}
+
+#[cfg(feature = "plain")]
+#[test]
+fn plain_known_word_beijing() {
+    let out = convert_line("北京", Pinyin::plain);
+    assert_eq\!(out, vec\!["bei", "jing"]);
+}
+
+#[cfg(feature = "with_tone")]
+#[test]
+fn with_tone_known_word_beijing() {
+    let out = convert_line("北京", Pinyin::with_tone);
+    assert_eq\!(out, vec\!["běi", "jīng"]);
+}
+
+#[cfg(feature = "with_tone_num")]
+#[test]
+fn with_tone_num_known_word_beijing() {
+    let out = convert_line("北京", Pinyin::with_tone_num);
+    assert_eq\!(out, vec\!["bei3", "jing1"]);
+}
+
+#[cfg(feature = "with_tone_num_end")]
+#[test]
+fn with_tone_num_end_known_word_beijing() {
+    let out = convert_line("北京", Pinyin::with_tone_num_end);
+    assert_eq\!(out, vec\!["bei3", "jing1"]);
+}
+
+#[cfg(feature = "plain")]
+#[test]
+fn first_letter_mixed_input() {
+    let out = convert_line("北京abc", Pinyin::first_letter);
+    assert_eq\!(out, vec\!["b", "j", "-", "-", "-"]);
+}
+
+#[cfg(feature = "plain")]
+#[test]
+fn plain_handles_emoji_and_cjk() {
+    let out = convert_line("😀中", Pinyin::plain);
+    assert_eq\!(out, vec\!["-", "zhong"]);
+}
+
+#[cfg(feature = "plain")]
+#[test]
+fn plain_output_len_matches_input_chars() {
+    let input = "你好Rust🚀";
+    let out = convert_line(input, Pinyin::plain);
+    assert_eq\!(out.len(), input.chars().count(), "output tokens must match char count");
+}
