@@ -1,5 +1,5 @@
 use crate::data::CHAR_BLOCKS;
-use std::convert::{identity, TryFrom};
+use std::convert::TryFrom;
 
 #[cfg(feature = "compat")]
 mod compat;
@@ -21,7 +21,7 @@ pub fn to_pinyin_vec<F>(input: &str, f: F) -> Vec<&'static str>
 where
     F: Fn(Pinyin) -> &'static str,
 {
-    input.to_pinyin().filter_map(identity).map(f).collect()
+    input.to_pinyin().flatten().map(f).collect()
 }
 
 /// 单个字符的拼音数据

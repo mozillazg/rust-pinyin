@@ -17,24 +17,22 @@ jobs:
     strategy:
       matrix:
         # os: [ubuntu-latest, macos-latest, windows-latest]
-        os: [ubuntu-latest]
+        os: [ ubuntu-latest ]
 
     steps:
 
-    - uses: actions/checkout@v2
-    - name: Install minimal stable with clippy and rustfmt
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        components: rustfmt, clippy
-        override: true
+      - uses: actions/checkout@v4
+      - name: Install minimal stable with clippy and rustfmt
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
 
-    - name: init
-      run: git submodule update --init --recursive
+      - name: init
+        run: git submodule update --init --recursive
 
-    - name: Test
-      run: bash ci/script.sh
+      - name: Test
+        run: bash ci/script.sh
 
     # - name: coveralls
     #   run: bash ci/coveralls.sh
