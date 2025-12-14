@@ -1,5 +1,5 @@
 use crate::data::PINYIN_DATA;
-use crate::{get_block_and_index, PinyinData};
+use crate::{PinyinData, get_block_and_index};
 use std::str::Chars;
 
 /// 单个字符的拼音信息
@@ -134,6 +134,7 @@ impl<'a> ToPinyin for &'a str {
 }
 
 /// *辅助迭代器*，用于获取字符串的拼音信息
+#[derive(Debug, Clone)]
 pub struct PinyinStrIter<'a>(Chars<'a>);
 
 impl<'a> Iterator for PinyinStrIter<'a> {

@@ -1,5 +1,5 @@
 use crate::data::{HETERONYM_TABLE, PINYIN_DATA};
-use crate::{get_block_and_index, Pinyin, PinyinData};
+use crate::{Pinyin, PinyinData, get_block_and_index};
 use std::str::Chars;
 
 /// 单个字符的多音字信息
@@ -46,6 +46,7 @@ impl IntoIterator for PinyinMulti {
 }
 
 /// *辅助迭代器*，用于迭代一个字的多个拼音
+#[derive(Clone)]
 pub struct PinyinMultiIter {
     inner: PinyinMulti,
     index: usize,
