@@ -6,7 +6,12 @@ cargo fmt --all -- --check
 cargo clippy --all-targets --all-features -- -D warnings
 
 cargo build
+
+cargo run --example basic
+
 cargo test
+
+cargo test --all-features
 
 cargo test --no-default-features --features=plain
 cargo test --no-default-features --features=with_tone
