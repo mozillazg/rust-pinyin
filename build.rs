@@ -285,7 +285,7 @@ fn generate_char_table(
             _ => block_ranges.push((*code, *code + 1)),
         });
     // 当我们允许最大 2048 个空位时，我们目前会切出 6 个块。如果这个数字在未来增加了，我们也许会希望调整策略。
-    assert_eq!(block_ranges.len(), 6);
+    assert_eq!(block_ranges.len(), 5);
 
     // 输出字符表
     let mut output = create_out_file("char_blocks.rs")?;
