@@ -1,5 +1,5 @@
 use crate::data::{HETERONYM_TABLE, PINYIN_DATA};
-use crate::{Pinyin, PinyinData, get_block_and_index};
+use crate::{get_block_and_index, Pinyin, PinyinData};
 use std::str::Chars;
 
 /// 单个字符的多音字信息

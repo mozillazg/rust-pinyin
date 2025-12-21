@@ -1,5 +1,5 @@
 use crate::data::PINYIN_DATA;
-use crate::{PinyinData, get_block_and_index};
+use crate::{get_block_and_index, PinyinData};
 use std::str::Chars;
 
 /// 单个字符的拼音信息
