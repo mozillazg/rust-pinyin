@@ -25,6 +25,7 @@ where
 }
 
 /// 单个字符的拼音数据
+#[derive(Debug, PartialEq, Eq)]
 struct PinyinData {
     #[cfg(feature = "plain")]
     plain: &'static str,
@@ -39,6 +40,7 @@ struct PinyinData {
 }
 
 /// 在 [start, end) 之间字符的数据块
+#[derive(Debug, PartialEq, Eq)]
 struct CharBlock {
     /// 本块的第一个字符
     start_code: u32,
