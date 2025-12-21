@@ -30,15 +30,15 @@ impl TestCase {
         result: Vec<Vec<&str>>,
         lazy_result: Vec<&str>,
     ) -> TestCase {
-        return TestCase {
-            hans: hans,
-            args: args,
+        TestCase {
+            hans,
+            args,
             result: result
                 .into_iter()
                 .map(|vec| vec.into_iter().map(String::from).collect())
                 .collect(),
             lazy_result: lazy_result.into_iter().map(String::from).collect(),
-        };
+        }
     }
 }
 
@@ -222,7 +222,7 @@ fn test_non_chinese_lazy_pinyin() {
 fn test_new_args() {
     let args = pinyin::Args::new();
     assert_eq!(pinyin::Style::Normal, args.style);
-    assert_eq!(false, args.heteronym);
+    assert!(!args.heteronym);
 
     let expected = pinyin::Args {
         style: pinyin::Style::Normal,
@@ -235,11 +235,11 @@ fn test_new_args() {
 fn test_default_args() {
     let args: pinyin::Args = Default::default();
     assert_eq!(pinyin::Style::Normal, args.style);
-    assert_eq!(false, args.heteronym);
+    assert!(!args.heteronym);
 
     let args = pinyin::Args::default();
     assert_eq!(pinyin::Style::Normal, args.style);
-    assert_eq!(false, args.heteronym);
+    assert!(!args.heteronym);
 
     let expected = pinyin::Args {
         style: pinyin::Style::Normal,

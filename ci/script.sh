@@ -3,7 +3,7 @@
 set -ex
 
 cargo fmt --all -- --check
-cargo clippy
+cargo clippy --all-targets --all-features -- -D warnings
 
 cargo build
 cargo test
