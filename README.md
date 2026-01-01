@@ -15,7 +15,7 @@ Add this to your `Cargo.toml`:
 
 ```
 [dependencies]
-pinyin = "0.10"
+pinyin = "0.11"
 ```
 
 Documentation

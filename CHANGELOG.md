@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.11.0] (2025-xx-yy)
+## [0.11.0] (2026-01-01)
 
 * 使用 [pinyin-data] v0.15.0 的拼音数据
 * 为 Pinyin, PinyinMulti 增加对 Debug, Clone, PartialEq, Eq 的支持
