@@ -1,5 +1,9 @@
+#![no_std]
 use crate::data::CHAR_BLOCKS;
-use std::convert::TryFrom;
+use core::convert::TryFrom;
+
+#[macro_use]
+extern crate alloc;
 
 #[cfg(feature = "compat")]
 mod compat;
@@ -17,7 +21,7 @@ pub use crate::pinyin_multi::{PinyinMulti, PinyinMultiIter, PinyinMultiStrIter, 
 /// 将给定输入字符串的拼音通过给定映射函数后存入 `Vec` 中
 ///
 /// 这个函数会跳过任何没有拼音的字符。本函数主要用于测试目的。
-pub fn to_pinyin_vec<F>(input: &str, f: F) -> Vec<&'static str>
+pub fn to_pinyin_vec<F>(input: &str, f: F) -> alloc::vec::Vec<&'static str>
 where
     F: Fn(Pinyin) -> &'static str,
 {

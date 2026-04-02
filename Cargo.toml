@@ -61,3 +61,6 @@ required-features = ["compat"]
 [[test]]
 name = "special_pinyin"
 required-features = ["with_tone_num_end", "heteronym"]
+
+[dependencies]
+hashbrown = { version = "0.16.1", features = ["alloc"] }

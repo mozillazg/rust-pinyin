@@ -1,7 +1,8 @@
 #![allow(deprecated)]
 
 use crate::{Pinyin, ToPinyin, ToPinyinMulti};
-use std::collections::HashSet;
+use alloc::string::{String, ToString};
+use alloc::vec::Vec;
 
 /// 拼音风格
 #[deprecated = "请使用 `Pinyin` 的方法代替"]
@@ -86,7 +87,7 @@ pub fn pinyin(s: &str, a: &Args) -> Vec<Vec<String>> {
         s.to_pinyin_multi()
             .map(|multi| match multi {
                 Some(multi) => {
-                    let mut set = HashSet::new();
+                    let mut set = hashbrown::HashSet::new();
                     multi
                         .into_iter()
                         .map(|pinyin| apply_style(pinyin, &a.style))
