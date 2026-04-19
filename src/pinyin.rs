@@ -1,6 +1,6 @@
 use crate::data::PINYIN_DATA;
 use crate::{get_block_and_index, PinyinData};
-use std::str::Chars;
+use core::str::Chars;
 
 /// 单个字符的拼音信息
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]

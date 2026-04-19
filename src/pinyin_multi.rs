@@ -1,6 +1,6 @@
 use crate::data::{HETERONYM_TABLE, PINYIN_DATA};
 use crate::{get_block_and_index, Pinyin, PinyinData};
-use std::str::Chars;
+use core::str::Chars;
 
 /// 单个字符的多音字信息
 ///
@@ -194,6 +194,7 @@ mod tests {
     #[test]
     #[cfg(feature = "with_tone")]
     fn str_to_pinyin_multi() {
+        use alloc::vec::Vec;
         let actual = "还没"
             .to_pinyin_multi()
             .map(|multi| {
