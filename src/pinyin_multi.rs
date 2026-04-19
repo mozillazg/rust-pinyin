@@ -60,6 +60,11 @@ impl Iterator for PinyinMultiIter {
             self.index += 1;
         })
     }
+
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        let remaining = self.inner.count() - self.index;
+        (remaining, Some(remaining))
+    }
 }
 
 /// 用于获取多音字信息的 trait
@@ -133,6 +138,11 @@ impl<'a> Iterator for PinyinMultiStrIter<'a> {
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         self.0.next().map(|c| c.to_pinyin_multi())
+    }
+
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {
+        self.0.size_hint()
     }
 }
 
