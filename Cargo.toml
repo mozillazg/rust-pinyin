@@ -63,4 +63,4 @@ name = "special_pinyin"
 required-features = ["with_tone_num_end", "heteronym"]
 
 [dependencies]
-hashbrown = { version = "0.16.1", features = ["alloc"] }
+hashbrown = { version = "0.17.1", features = ["alloc"] }
